@@ -95,7 +95,7 @@ export const coderunnerRouter = createTRPCRouter({
     }),
   getRequests: publicProcedure.query(async ({ ctx }) => {
     const requests = await ctx.db.codeRequest.findMany({
-      take: 300,
+      take: 2000,
     });
     return requests ?? null;
   }),
@@ -395,7 +395,7 @@ export const coderunnerRouter = createTRPCRouter({
           timeout: 5,
         };
         console.timeEnd("myCodeBlock");
-        console.log("Fetching...")
+        console.log("Fetching...");
         const response = await fetch(codeRunnerUrl, {
           method: "POST",
           headers: {
@@ -403,7 +403,7 @@ export const coderunnerRouter = createTRPCRouter({
           },
           body: JSON.stringify(singleSubmission),
         });
-        console.log("Fetched")
+        console.log("Fetched");
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -422,8 +422,8 @@ export const coderunnerRouter = createTRPCRouter({
           status: { id: number; description: string };
         } = await response.json();
         console.log(result);
-        if(result.compile_output) {
-            console.log("Compile output: " + fromBase64(result.compile_output));
+        if (result.compile_output) {
+          console.log("Compile output: " + fromBase64(result.compile_output));
         }
         result.id = input.testId;
 
