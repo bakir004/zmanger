@@ -386,8 +386,8 @@ export const coderunnerRouter = createTRPCRouter({
         )?.code;
         let completeCode = "";
         completeCode += (topOfFile ?? "") + "\n";
-        completeCode += input.userCode ?? "" + "\n";
-        completeCode += aboveMain ?? "" + "\n";
+        completeCode += (input.userCode ?? "") + "\n";
+        completeCode += (aboveMain ?? "") + "\n";
         completeCode += wrapMainCodeInMainFunction(mainCodeForThisTest);
         const singleSubmission = {
           language_id: 54,
