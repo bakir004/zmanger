@@ -8,6 +8,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "../components/ui/sonner";
 import Navbar from "./_components/Navbar";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "ETF Zmanger",
@@ -27,6 +29,8 @@ export default function RootLayout({
         },
       }}
     >
+      <Analytics />
+      <SpeedInsights />
       <html lang="en" className={`${GeistSans.variable}`}>
         <TRPCReactProvider>
           <body className="dark">
