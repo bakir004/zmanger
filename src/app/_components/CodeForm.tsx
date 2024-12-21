@@ -29,8 +29,8 @@ export function CodeForm({
   const user = useUser();
   const [code, setCode] = useState<string>("");
   const [isRunning, setIsRunning] = useState(false);
-  const [batchSize, setBatchSize] = useState<number>(3);
-  const [delay, setDelay] = useState<number>(2000);
+  // const [batchSize, setBatchSize] = useState<number>(3);
+  // const [delay, setDelay] = useState<number>(2000);
   const [timer, setTimer] = useState<Date>(new Date());
 
   const judgeSingleCodeRunner = api.coderunner.runSingle.useMutation({
@@ -45,17 +45,17 @@ export function CodeForm({
       message: string | null;
       status: { id: number; description: string };
     }) => {
-        appendOutput({
-          output:
-            (data.stdout ? fromBase64(data.stdout) : null) ??
-            (data.message ? fromBase64(data.message) : null) ??
-            "",
-          error:
-            (data.compile_output ? fromBase64(data.compile_output) : null) ??
-            (data.stderr ? fromBase64(data.stderr) : null) ??
-            "",
-          id: data.id,
-        });
+      appendOutput({
+        output:
+          (data.stdout ? fromBase64(data.stdout) : null) ??
+          (data.message ? fromBase64(data.message) : null) ??
+          "",
+        error:
+          (data.compile_output ? fromBase64(data.compile_output) : null) ??
+          (data.stderr ? fromBase64(data.stderr) : null) ??
+          "",
+        id: data.id,
+      });
     },
     onError: (error) => {
       console.error("Error:", error);
@@ -107,47 +107,47 @@ export function CodeForm({
   };
   const sendLogs = api.coderunner.sendLog.useMutation();
 
-  const batchCodeRunner = api.coderunner.runBatch.useMutation({
-    onSuccess: (
-      data: { output: string; error: string; mainCodeId: string }[],
-    ) => {
-      data.forEach((output) => {
-        appendOutput({
-          output: output.output,
-          error: output.error,
-          id: parseInt(output.mainCodeId),
-        });
-      });
-    },
-    onError: (error) => {
-      console.error("Error:", error);
-    },
-  });
+  // const batchCodeRunner = api.coderunner.runBatch.useMutation({
+  //   onSuccess: (
+  //     data: { output: string; error: string; mainCodeId: string }[],
+  //   ) => {
+  //     data.forEach((output) => {
+  //       appendOutput({
+  //         output: output.output,
+  //         error: output.error,
+  //         id: parseInt(output.mainCodeId),
+  //       });
+  //     });
+  //   },
+  //   onError: (error) => {
+  //     console.error("Error:", error);
+  //   },
+  // });
 
-  const batchRun = async (event: React.FormEvent) => {
-    setIsRunning(true);
-    event.preventDefault();
-    reset();
-    const allTestIds = Array.from({ length: tests.length }, (_, i) =>
-      i.toString(),
-    );
+  // const batchRun = async (event: React.FormEvent) => {
+  //   setIsRunning(true);
+  //   event.preventDefault();
+  //   reset();
+  //   const allTestIds = Array.from({ length: tests.length }, (_, i) =>
+  //     i.toString(),
+  //   );
 
-    for (let i = 0; i < allTestIds.length; i += batchSize) {
-      const testIdsBatch = allTestIds.slice(i, i + batchSize); // Get the next batch of test IDs
-      batchCodeRunner.mutate({
-        userId: user.user?.id ?? "null",
-        email: user.user?.emailAddresses[0]?.emailAddress ?? "null",
-        username: user.user?.fullName ?? "nepoznat",
-        userCode: code,
-        subject: subject,
-        testIds: testIdsBatch,
-      });
+  //   for (let i = 0; i < allTestIds.length; i += batchSize) {
+  //     const testIdsBatch = allTestIds.slice(i, i + batchSize); // Get the next batch of test IDs
+  //     batchCodeRunner.mutate({
+  //       userId: user.user?.id ?? "null",
+  //       email: user.user?.emailAddresses[0]?.emailAddress ?? "null",
+  //       username: user.user?.fullName ?? "nepoznat",
+  //       userCode: code,
+  //       subject: subject,
+  //       testIds: testIdsBatch,
+  //     });
 
-      if (i + batchSize < allTestIds.length) {
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-    }
-  };
+  //     if (i + batchSize < allTestIds.length) {
+  //       await new Promise((resolve) => setTimeout(resolve, delay));
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (numOutputs === tests.length) {
@@ -185,14 +185,6 @@ export function CodeForm({
           >
             {isRunning && <LoadingSpinnerSVG></LoadingSpinnerSVG>}
             Pokreni
-          </Button>
-          <Button
-            onClick={batchRun}
-            className="flex items-center gap-1 bg-orange-600 text-white hover:bg-orange-600"
-            disabled={isRunning}
-          >
-            {isRunning && <LoadingSpinnerSVG></LoadingSpinnerSVG>}
-            Pokreni (sa address sanitizerom)
           </Button>
           <Button
             onClick={clear}

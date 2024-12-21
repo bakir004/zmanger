@@ -37,6 +37,7 @@ export function TestTable({ fileNames }: { fileNames: string[] }) {
         error: output.error,
         id: output.id,
       };
+      console.log(newOutput);
       const unsortedOutputs = [...prevOutputs, newOutput];
       const sortedOutputs = unsortedOutputs.sort((a, b) =>
         a.id > b.id ? 1 : a.id < b.id ? -1 : 0,
@@ -62,8 +63,9 @@ export function TestTable({ fileNames }: { fileNames: string[] }) {
 
   useEffect(() => {
     const passedTests = outputs.filter(
-      (output: { output: string; id: number }, i) =>
-        output.output.trim() === tests.tests[i]?.expect.trim(),
+      (output: { output: string; id: number; error: string }, i) =>
+        output.output.trim() === tests.tests[i]?.expect.trim() &&
+        output.error === "",
     ).length;
     setPassed(passedTests);
   }, [outputs]);
@@ -123,7 +125,8 @@ export function TestTable({ fileNames }: { fileNames: string[] }) {
                 <TableRow
                   key={i}
                   className={`border-b border-neutral-500 ${
-                    tests.tests[i]?.expect.trim() === item.output.trim()
+                    tests.tests[i]?.expect.trim() === item.output.trim() &&
+                    item.error === ""
                       ? "bg-green-800/40 hover:bg-green-800/50"
                       : "bg-red-600/40 hover:bg-red-600/50"
                   }`}
