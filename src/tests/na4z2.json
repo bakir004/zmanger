@@ -1,0 +1,384 @@
+{
+  "tests": [
+    {
+      "id": 0,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT1 - Romberg integration - 1\nconst double PIPI1 = 4 * std::atan(1);\nauto sinf1 = [](double x) { return std::sin(x); };\nauto rig = RombergIntegration(sinf1, 0, PIPI1);\nstd::cout << rig.first << \" \" << rig.second;"
+        }
+      ],
+      "expect": "2 1"
+    },
+    {
+      "id": 1,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT2 - Romberg integration - 2\nauto inv1 = [](double x) { return 1 / x; };\nauto rig = RombergIntegration(inv1, 1, 2);\nstd::cout << rig.first << \" \" << rig.second;"
+        }
+      ],
+      "expect": "0.693147 1"
+    },
+    {
+      "id": 2,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT3 - Romberg integration - 3\nauto invsq1 = [](double x) { return x == 0 ? 0 : 1 / std::sqrt(x); };\nauto rig = RombergIntegration(invsq1, 0, 1);\nstd::cout << rig.first << \" \" << rig.second<< std::endl;\nrig = RombergIntegration(invsq1, 0, 1, 1e-8, 100000000);\nstd::cout << rig.first << \" \" << rig.second;"
+        }
+      ],
+      "expect": "1.99832 0\n1.99985 0"
+    },
+    {
+      "id": 3,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT4 - Romberg integration - 4\nauto sinc2 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto rig =  RombergIntegration(sinc2, 0, 1e8);\nstd::cout << rig.first << \" \" << rig.second;"
+        }
+      ],
+      "expect": "59.08 0"
+    },
+    {
+      "id": 4,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT5 - Romberg integration - 5\nauto sinc3 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto rig =  RombergIntegration(sinc3, 0, 1e8, 1e-8, 10000000);\nstd::cout << rig.first << \" \" << rig.second;"
+        }
+      ],
+      "expect": "2.2566 0"
+    },
+    {
+      "id": 5,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT6 -  Rombergintegration - Izuzetak 1\ntry\n{\nauto sinc3 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto rig =  RombergIntegration(sinc3, 0, 1e8, -10, 10000000);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 6,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT7 -  Rombergintegration - Izuzetak 2\ntry\n{\nauto sinc3 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto rig =  RombergIntegration(sinc3, 0, 1e8, 1e-8, -500, 1500);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 7,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT8 -  Rombergintegration - Izuzetak 3\ntry\n{\nauto sinc3 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto rig =  RombergIntegration(sinc3, 0, 1e8, 1e-8, 10000, -1500);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 8,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT9 -  Rombergintegration - Izuzetak 4\ntry\n{\nauto sinc3 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto rig =  RombergIntegration(sinc3, 0, 1e8, 1e-8, 10000,1000000);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 9,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT10 - Adaptive integration - 1\nconst double PIPI = 4 * std::atan(1);\nauto sinf = [](double x) { return std::sin(x); };\nauto aig = AdaptiveIntegration(sinf, 0, PIPI);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "2 1"
+    },
+    {
+      "id": 10,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT11 - Adaptive integration - 2\nauto inv = [](double x) { return 1 / x; };\nauto aig = AdaptiveIntegration(inv, 1, 2);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "0.693147 1"
+    },
+    {
+      "id": 11,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT12 - Adaptive integration - 3\nauto invsq = [](double x) { return x == 0 ? 0 : 1 / std::sqrt(x); };\nauto aig =  AdaptiveIntegration(invsq, 0, 1);\nstd::cout << aig.first << \" \" << aig.second << std::endl;\naig =  AdaptiveIntegration(invsq, 0, 1, 1e-8, 50);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "1.99998 0\n2 1"
+    },
+    {
+      "id": 12,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT13 - Adaptive integration - 4\nauto sinc = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto aig =  AdaptiveIntegration(sinc, 0, 1e8, 1e-10, 23);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "1.5708 0"
+    },
+    {
+      "id": 13,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT14 - Adaptive integration - 5\nauto sinc1 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto aig =  AdaptiveIntegration(sinc1, 0, 1e8, 1e-10, 20);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "6.80678 0"
+    },
+    {
+      "id": 14,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT15 - Adaptive integration - 6\nauto aig =  AdaptiveIntegration([](double x) { return 1 / std::sqrt(x); }, 0, 1, 1e-6, 40);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "2 1"
+    },
+    {
+      "id": 15,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT16 - Adaptive integration - 7\nauto aig =  AdaptiveIntegration([](double x) { return std::log(std::abs(x-1.372)); }, 0, 2, 1e-6, 40);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "-1.85823 1"
+    },
+    {
+      "id": 16,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT17 - Adaptive integration - 8\nauto aig =  AdaptiveIntegration([](double x) { return std::log(std::abs(x-1)); }, 0, 2, 1e-6, 40);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "-2 1"
+    },
+    {
+      "id": 17,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT18 - Adaptive integration - 9\nauto aig =  AdaptiveIntegration([](double x) { return std::log(std::abs(x-1)); }, 0, 2, 1e-8, 15);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "-1.99986 0"
+    },
+    {
+      "id": 18,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT19 - Adaptive integration - 10\nauto aig =  AdaptiveIntegration([](double x) { return std::log(std::abs(x-1)); }, 0, 2, 1e-8,22);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "-2 0"
+    },
+    {
+      "id": 19,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT20 - Adaptive integration - 11\nauto aig =  AdaptiveIntegration([](double x) { return std::log(std::abs(x-1)); }, 0, 2, 1e-8,35);\nstd::cout << aig.first << \" \" << aig.second;"
+        }
+      ],
+      "expect": "-2 1"
+    },
+    {
+      "id": 20,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT21 -  Adaptiveintegration - Izuzetak 1\ntry\n{\nauto sinc3 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto aig = AdaptiveIntegration(sinc3, 0, 1e8, -5);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 21,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT22 -  Adaptiveintegration - Izuzetak 2\ntry\n{\nauto sinc3 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto aig = AdaptiveIntegration(sinc3, 0, 1e8, 1e-8,-20);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 22,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT23 -  Adaptiveintegration - Izuzetak 3\ntry\n{\nauto sinc3 = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto aig = AdaptiveIntegration(sinc3, 0, 1e8, 1e-8,30,-5);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 23,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT24 - TanhSinh integration - 1\nauto rez = TanhSinhIntegration([](double x) { return std::log(std::abs(x-1.372)); }, 0, 2, 1e-5, 2000000);\n  std::cout << rez.first << \" \" << rez.second;;"
+        }
+      ],
+      "expect": "-1.85823 1"
+    },
+    {
+      "id": 24,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT25 - TanhSinh integration - 2\nconst double PIPI1 = 4 * std::atan(1);\nauto sinf = [](double x) { return std::sin(x); };\nauto rez = TanhSinhIntegration(sinf, 0, PIPI1);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "2 1"
+    },
+    {
+      "id": 25,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT26 - TanhSinh integration - 3\nauto sinc = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto rez = TanhSinhIntegration(sinc, 0, 1);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "0.946083 1"
+    },
+    {
+      "id": 26,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT27 - TanhSinh integration - 4\nauto rez = TanhSinhIntegration([](double x) { return std::log(x); }, 0, 1);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "-1 1"
+    },
+    {
+      "id": 27,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT28 - TanhSinh integration - 5\nauto sinc = [](double x) { return x == 0 ? 1 : std::sin(x) / x; };\nauto rez = TanhSinhIntegration(sinc, 0, 1e8, 1e-8, 10000000, 3.5);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "1.56713 0"
+    },
+    {
+      "id": 28,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT29 - TanhSinh integration - 6\nauto sinc = [](double x) { return std::sin(x) / x; };\nauto rez = TanhSinhIntegration(sinc, 0, 1e8, 1e-8, 10000000, 3.5);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "1.56713 0"
+    },
+    {
+      "id": 29,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT30 - TanhSinh integration - 7\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 1, 1e-8, 1000000);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "-1 1"
+    },
+    {
+      "id": 30,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT31 - TanhSinh integration - 8\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 2, 1e-8, 1000);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "-1.87805 0"
+    },
+    {
+      "id": 31,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT32 - TanhSinh integration - 9\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 2, 1e-4, 10000);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "-1.98866 0"
+    },
+    {
+      "id": 32,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT33 - TanhSinh integration - 10\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 2, 1e-4, 1000000);\nstd::cout << rez.first << \" \" << rez.second;"
+        }
+      ],
+      "expect": "-1.99974 0"
+    },
+    {
+      "id": 33,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT34 -  TanhSinh integration - Izuzetak 1\ntry\n{\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 1, -10, 1000000);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 34,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT35 -  TanhSinh integration - Izuzetak 2\ntry\n{\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 1, 1e-10, -100);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 35,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT36 -  TanhSinh integration - Izuzetak 3\ntry\n{\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 1, 1e-10, 100,-10);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 36,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT37 -  TanhSinh integration - Izuzetak 4\ntry\n{\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 1, 1e-10, 100,10,-3.5);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    },
+    {
+      "id": 37,
+      "patch": [
+        {
+          "position": "main",
+          "code": "//AT38 -  TanhSinh integration - Izuzetak 5\ntry\n{\nauto rez = TanhSinhIntegration([](double x) { return log(fabs(x - 1)); }, 0, 1, 1e-10, 10,100);\n}\ncatch (std::domain_error e)\n{\nstd::cout << \"'\" << e.what() << \"'\";\n}\ncatch (...)\n{\nstd::cout << \"Pogresan tip izuzetka\";\n}"
+        }
+      ],
+      "expect": "'Bad parameter'"
+    }
+  ]
+}
