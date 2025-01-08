@@ -1,0 +1,54 @@
+{
+  "tests": [
+    {
+      "id": 0,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 1: Test minimuma, pocetna tacka lijevo od minimuma\nstd::cout << FindMinimum([](double x) { return 1 + (x - 5) * (x - 5); }, 1);\n"
+        }
+      ],
+      "expect": "5"
+    },
+    {
+      "id": 1,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 2: Test minimuma, pocetna tacka desno od minimuma\nstd::cout << FindMinimum([](double x) { return 1 + (x - 5) * (x - 5); }, 20);\n"
+        }
+      ],
+      "expect": "5"
+    },
+    {
+      "id": 2,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 3: FindMinimum, izuzeci -1\ntry {\n    std::cout << FindMinimum([](double x) { return x; }, 1);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "'Minimum has not found'"
+    },
+    {
+      "id": 3,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 4: FindMinimum, izuzeci - 2\ntry {\n    FindMinimum([](double x) { return x; }, 1, -1, 1, 1, 1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    FindMinimum([](double x) { return x; }, 1, 1, -1, 1, 1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}\n"
+        }
+      ],
+      "expect": "'Invalid parameters'\n'Invalid parameters'"
+    },
+    {
+      "id": 4,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 5: FindMinimum, izuzeci - 3\ntry {\n    FindMinimum([](double x) { return x; }, 1, 1, 1, -1, 1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    FindMinimum([](double x) { return x; }, 1, 1, 1, 1, -1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what()<< \"'\";\n}"
+        }
+      ],
+      "expect": "'Invalid parameters'\n'Invalid parameters'"
+    }
+  ]
+}

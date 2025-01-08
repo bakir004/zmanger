@@ -1,0 +1,254 @@
+{
+  "tests": [
+    {
+      "id": 0,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 1: Ogradjivanje nule nadesno\ndouble a, b;\nbool s;\ns = BracketRoot([](double x) { return x - 3; }, 0, a, b);\nstd::cout << s << \" \" << (a < 3) << \" \" << (b > 3);\n"
+        }
+      ],
+      "expect": "1 1 1"
+    },
+    {
+      "id": 1,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 2: Ogradjivanje nule nalijevo\ndouble a, b;\nbool s;\ns = BracketRoot([](double x) { return x - 3; }, 100, a, b);\nstd::cout << s << \" \" << (a < 3) << \" \" << (b > 3);\n"
+        }
+      ],
+      "expect": "1 1 1"
+    },
+    {
+      "id": 2,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 3: Ogradjivanje, nema nule\ndouble a, b;\nbool s;\ns = BracketRoot([](double x) { return x * x + 1; }, 0, a, b);\nstd::cout << s;"
+        }
+      ],
+      "expect": "0"
+    },
+    {
+      "id": 3,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 4: Ogradjivanje, ispravnost parametara\ndouble a, b;\ntry {\n    BracketRoot([](double x) { return x + 1; }, 0, a, b, -1, 1, 1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    BracketRoot([](double x) { return x + 1; }, 0, a, b, 1, -1, 1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what()<<\"'\"<< std::endl;\n}\ntry {\n    BracketRoot([](double x) { return x + 1; }, 0, a, b, 1, 1, -1);\n}\ncatch(std::domain_error e) {\n    std::cout  << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "'Invalid parameters'\n'Invalid parameters'\n'Invalid parameters'"
+    },
+    {
+      "id": 4,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 5: Regula falsi, izvorna verzija\nauto fn = [](double x) { return 0.05 * (std::exp(10 * (x - 3)) - 1); };\nstd::cout << RegulaFalsiSolve(fn, 1, 4, Unmodified, 1e-10, 100000) << std::endl;\ntry {\n    std::cout << RegulaFalsiSolve(fn, 1, 4, Unmodified, 1e-10, 50000) << std::endl;\n}\ncatch(std::logic_error e) {\n    std::cout  << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "3\n'Given accuracy has not achieved'"
+    },
+    {
+      "id": 5,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 6: Regula falsi, Illinois verzija\nauto fn = [](double x) { return 0.05 * (std::exp(10 * (x - 3)) - 1); };\nstd::cout << RegulaFalsiSolve(fn, 1, 4, Illinois, 1e-10, 30) << std::endl;\ntry {\n    std::cout << RegulaFalsiSolve(fn, 1, 4, Illinois, 1e-10, 20) << std::endl;\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "3\n'Given accuracy has not achieved'"
+    },
+    {
+      "id": 6,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 7: Regula falsi, Slaviceva verzija\nauto fn = [](double x) { return 0.05 * (std::exp(10 * (x - 3)) - 1); };\nstd::cout << RegulaFalsiSolve(fn, 1, 4) << std::endl;\ntry {\n    std::cout << RegulaFalsiSolve(fn, 1, 4, Slavic, 1e-8, 40) << std::endl;\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "3\n'Given accuracy has not achieved'"
+    },
+    {
+      "id": 7,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 8: Regula falsi, Illinois + Slavic\nauto fn = [](double x) { return 0.05 * (std::exp(10 * (x - 3)) - 1); };\nstd::cout << RegulaFalsiSolve(fn, 1, 4, IllinoisSlavic, 1e-10, 20) << std::endl;\ntry {\n    std::cout << RegulaFalsiSolve(fn, 1, 4, IllinoisSlavic, 1e-10, 10) << std::endl;\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "3\n'Given accuracy has not achieved'"
+    },
+    {
+      "id": 8,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 9: Regula falsi, izuzeci\ntry {\n    RegulaFalsiSolve([](double x) { return x; }, 1, 2);\n}\ncatch(std::range_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    RegulaFalsiSolve([](double x) { return x; }, -1, 1, Slavic, -1, 1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    RegulaFalsiSolve([](double x) { return x; }, -1, 1, Slavic, 1, -1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "'Root must be bracketed'\n'Invalid parameters'\n'Invalid parameters'"
+    },
+    {
+      "id": 9,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 10: Ridders\nauto fn = [](double x) { return 0.05 * (std::exp(10 * (x - 3)) - 1); };\nstd::cout << RiddersSolve(fn, 1, 4, 1e-8, 20) << std::endl;\ntry {\n    std::cout << RiddersSolve(fn, 1, 4, 1e-8, 4) << std::endl;\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "3\n'Given accuracy has not achieved'"
+    },
+    {
+      "id": 10,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 11: Ridders, izuzeci\ntry {\n    RiddersSolve([](double x) { return x; }, 1, 2);\n}\ncatch(std::range_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    RiddersSolve([](double x) { return x; }, -1, 1, -1, 1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    RiddersSolve([](double x) { return x; }, -1, 1, 1, -1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "'Root must be bracketed'\n'Invalid parameters'\n'Invalid parameters'"
+    },
+    {
+      "id": 11,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 12: Newton Raphson\nauto fn = [](double x) { return x * x - 2; };\nauto fnprim = [](double x) { return 2 * x; };\nstd::cout << NewtonRaphsonSolve(fn, fnprim, 5, 1e-10, 0, 10) << std::endl;\n"
+        }
+      ],
+      "expect": "1.41421"
+    },
+    {
+      "id": 12,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 13: BracketRoot - new\ndouble a, b;\nbool s;\ns = BracketRoot([](double x) { return std::asin(x) - std::tan(x); }, 0, a, b);\nstd::cout << s << \" \" << (a < 3) << \" \" << (b > 3);"
+        }
+      ],
+      "expect": "1 1 0"
+    },
+    {
+      "id": 13,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 14: Newton-Raphson, izuzeci\nauto f = [](double x) { return x; };\nauto fp = [](double x) { return 1; };\ntry {\n    NewtonRaphsonSolve(f, fp, 1, -1, 0, 1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "'Invalid parameters'\n"
+    },
+    {
+      "id": 14,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 15: PolyRoots, verzija sa kompleksnim vektorom, nule -3, -2 i -1\nstd::vector<std::complex<double>> coeff{6, 11, 6, 1};\nstd::vector<std::complex<double>> sols{-3, -2, -1};\nstd::vector<std::complex<double>> z = PolyRoots(coeff);\nfor(int i = 0; i < z.size(); i++)\n    std::cout << (std::abs(z[i]-sols[i]) < 1e-8) << std::endl;"
+        }
+      ],
+      "expect": "1\n1\n1\n"
+    },
+    {
+      "id": 15,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 16: PolyRoots, verzija sa kompleksnim vektorom, nule 1-2i, 1+2i i 3\nstd::vector<std::complex<double>> coeff{-15, 11, -5, 1};\nstd::vector<std::complex<double>> sols{{1, -2}, {1, 2}, 3};\nstd::vector<std::complex<double>> z = PolyRoots(coeff);\nfor(int i = 0; i < z.size(); i++)\n    std::cout << (std::abs(z[i]-sols[i]) < 1e-8) << std::endl;"
+        }
+      ],
+      "expect": "0\n0\n1\n"
+    },
+    {
+      "id": 16,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 17: PolyRoots, kompleksni koeficijenti, nule 1+2i, 3 i 4-5i\nstd::vector<std::complex<double>> coeff{{-42, -9}, {29, -6}, {-8, 3}, 1};\nstd::vector<std::complex<double>> sols{{1, 2}, 3, {4, -5}};\nstd::vector<std::complex<double>> z = PolyRoots(coeff);\nfor(int i = 0; i < z.size(); i++)\n    std::cout << (std::abs(z[i]-sols[i]) < 1e-8) << std::endl;"
+        }
+      ],
+      "expect": "1\n1\n1\n"
+    },
+    {
+      "id": 17,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 18: Test PolyRoots, verzija sa realnim vektorom, nule -3, -2 i -1\nstd::vector<double> coeff{6, 11, 6, 1};\nstd::vector<std::complex<double>> sols{-3, -2, -1};\nstd::vector<std::complex<double>> z = PolyRoots(coeff);\nfor(int i = 0; i < z.size(); i++)\n    std::cout << (std::abs(z[i]-sols[i]) < 1e-8) << std::endl;"
+        }
+      ],
+      "expect": "1\n1\n1\n"
+    },
+    {
+      "id": 18,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 19: Test PolyRoots, verzija sa realnim vektorom, nule 1-2i, 1+2i i 3\nstd::vector<double> coeff{-15, 11, -5, 1};\nstd::vector<std::complex<double>> sols{{1, -2}, {1, 2}, 3};\nstd::vector<std::complex<double>> z = PolyRoots(coeff);\nfor(int i = 0; i < z.size(); i++)\n    std::cout << (std::abs(z[i]-sols[i]) < 1e-8) << std::endl;"
+        }
+      ],
+      "expect": "1\n1\n1\n"
+    },
+    {
+      "id": 19,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 20: PolyRoots, cetverostruka nula, nemoguce dobiti jako dobru tacnost\nstd::vector<double> coeff{1, 4, 6, 4, 1};\nstd::vector<std::complex<double>> sols{-1, -1, -1, -1};\nstd::vector<std::complex<double>> z = PolyRoots(coeff);\nfor(int i = 0; i < z.size(); i++)\n    std::cout << (std::abs(z[i]-sols[i]) < 1e-3) << std::endl;"
+        }
+      ],
+      "expect": "1\n1\n1\n1\n"
+    },
+    {
+      "id": 20,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 21: PolyRoots s kompleksnim koeficijentima, izuzeci\nstd::vector<std::complex<double>> coeff{6, 11, 6, 1};\ntry {\n    PolyRoots(coeff, 1e-10, 3, 3);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\"<< e.what() << \"'\"<< std::endl;\n}\ntry {\n    PolyRoots(coeff, -1, 1, 1);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\"<< e.what() << \"'\"<< std::endl;\n}\ntry {\n    PolyRoots(coeff, 1, -1, 1);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\"<< e.what() << \"'\"<< std::endl;\n}\ntry {\n    PolyRoots(coeff, 1, 1, -1);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "'Convergence has not achieved'\n'Invalid parameters'\n'Invalid parameters'\n'Invalid parameters'"
+    },
+    {
+      "id": 21,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 22: PolyRoots s realnim koeficijentima, izuzeci\nstd::vector<double> coeff{6, 11, 6, 1};\ntry {\n    PolyRoots(coeff, 1e-10, 3, 3);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\"<< e.what() << \"'\"<< std::endl;\n}\ntry {\n    PolyRoots(coeff, -1, 1, 1);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\"<< e.what() << \"'\"<< std::endl;\n}\ntry {\n    PolyRoots(coeff, 1, -1, 1);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\"<< e.what() << \"'\"<< std::endl;\n}\ntry {\n    PolyRoots(coeff, 1, 1, -1);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "'Convergence has not achieved'\n'Invalid parameters'\n'Invalid parameters'\n'Invalid parameters'"
+    },
+    {
+      "id": 22,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 23: Newton-Raphson, izuzeci 2\nauto f = [](double x) { return x; };\nauto fp = [](double x) { return 1; };\ntry {\n    NewtonRaphsonSolve(f, fp, 1, 1, -1);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    NewtonRaphsonSolve(f, fp, 1, 1e-10,12, 10);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\" << std::endl;\n}\ntry {\n    NewtonRaphsonSolve(f, fp, 1,1e-10, -3, 10);\n}\ncatch(std::domain_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}"
+        }
+      ],
+      "expect": "'Invalid parameters'\n'Invalid parameters'\n'Invalid parameters'"
+    },
+    {
+      "id": 23,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 24: Newton Raphson\nauto fn = [](double x) { return std::atan(x-1); };\nauto fnprim = [](double x) { return 1./(1+(x-1)*(x-1)); };\ntry{\n   NewtonRaphsonSolve(fn, fnprim, 3, 1e-10, 0, 1000);\n}\ncatch(std::logic_error e) {\n    std::cout << \"'\" << e.what() << \"'\";\n}\n"
+        }
+      ],
+      "expect": "'Convergence has not achieved'"
+    },
+    {
+      "id": 24,
+      "patch": [
+        {
+          "position": "main",
+          "code": "// Test 25: Newton Raphson\nauto fn = [](double x) { return std::atan(x-1); };\nauto fnprim = [](double x) { return 1./(1+(x-1)*(x-1)); };\nstd::cout << NewtonRaphsonSolve(fn, fnprim, 3, 1e-10, 0.5, 1000);"
+        }
+      ],
+      "expect": "1"
+    }
+  ]
+}
