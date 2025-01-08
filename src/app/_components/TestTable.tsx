@@ -10,7 +10,7 @@ import {
 } from "../../components/ui/table";
 import { CodeForm } from "./CodeForm";
 import { SelectForm } from "./Select";
-import asp6 from "../../tests/asp6.json";
+import asp9 from "../../tests/asp9.json";
 import { type Tests } from "~/lib/test";
 import { api } from "~/trpc/react";
 
@@ -18,8 +18,8 @@ export function TestTable({ fileNames }: { fileNames: string[] }) {
   const [outputs, setOutputs] = useState<
     { output: string; id: number; error: string }[]
   >([]);
-  const [selectedSubject, setSelectedSubject] = useState<string>("asp6");
-  const [tests, setTests] = useState<Tests>(asp6);
+  const [selectedSubject, setSelectedSubject] = useState<string>("asp9");
+  const [tests, setTests] = useState<Tests>(asp9);
   const [subjects, setSubjects] = useState<string[]>([]);
   const [passed, setPassed] = useState(0);
 
