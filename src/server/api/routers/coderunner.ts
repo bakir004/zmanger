@@ -95,7 +95,7 @@ export const coderunnerRouter = createTRPCRouter({
     }),
   getRequests: publicProcedure.query(async ({ ctx }) => {
     const requests = await ctx.db.codeRequest.findMany({
-      take: 2000,
+      take: 9999,
     });
     return requests ?? null;
   }),
