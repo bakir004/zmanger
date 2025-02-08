@@ -8,7 +8,9 @@ export default async function AspPage() {
   return (
     <SuspenseWrapper>
       <HydrateClient>
-        <TestPage fileNames={fileNames} />
+        Hvala na koristenju Zmangera. Slijedi maintenance period do izlaska prve
+        zadace iz TPa.
+        {/* <TestPage fileNames={fileNames} /> */}
       </HydrateClient>
     </SuspenseWrapper>
   );
