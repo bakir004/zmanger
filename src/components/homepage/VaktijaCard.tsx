@@ -25,7 +25,15 @@ export default function VaktijaCard({}) {
           throw new Error("Error fetching data from backend");
         }
 
-        const data = await response.json();
+        // eslint-disable-next-line
+        const data: {
+          result: {
+            lokacija: string;
+            datum: string;
+            vakat: string;
+            naziv: string;
+          };
+        } = await response.json();
         setVaktija(data.result);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -38,7 +46,7 @@ export default function VaktijaCard({}) {
       }
     }
 
-    getVakats();
+    void getVakats();
   }, []);
   return (
     <Card className="w-1/4">

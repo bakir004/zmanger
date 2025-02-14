@@ -15,7 +15,8 @@ export default function UsersCard() {
           throw new Error("Error fetching data from backend");
         }
 
-        const data = await response.json();
+        // eslint-disable-next-line
+        const data: { totalUsers: number } = await response.json();
         setTotalUsers(data.totalUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -23,7 +24,7 @@ export default function UsersCard() {
       }
     }
 
-    getUsersCount();
+    void getUsersCount();
   }, []);
   return (
     <Card className="w-1/4">

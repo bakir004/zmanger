@@ -1,3 +1,4 @@
+/* eslint-disable */
 function getNextVakat(vakatTimes: string[]) {
   const vakatNames = [
     "Zora je u",

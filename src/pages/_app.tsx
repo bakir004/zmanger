@@ -6,6 +6,7 @@ import Navbar from "~/components/Navbar";
 import { ThemeProvider } from "~/components/ThemeProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { type AppProps } from "next/app";
 
 export const metadata: Metadata = {
   title: "Zmanger",
@@ -13,13 +14,7 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function App({
-  Component,
-  pageProps,
-}: {
-  Component: any;
-  pageProps: any;
-}) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <ClerkProvider
       appearance={{

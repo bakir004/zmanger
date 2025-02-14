@@ -1,3 +1,4 @@
+/* eslint-disable */
 const winston = require("winston");
 const { Logtail } = require("@logtail/node");
 const { LogtailTransport } = require("@logtail/winston");

@@ -18,7 +18,7 @@ export default function CodeEditor({
 }) {
   const { theme } = useTheme();
   const [value, setValue] = useState(
-    initCode ||
+    initCode ??
       '// Nemojte ovdje kodirati, vas kod nece biti spasen...\n#include <iostream>\nint main(){\n  std::cout << "Hello, World!" << std::endl;\n  return 0;\n}',
   );
   const onChange = useCallback((val: string) => {

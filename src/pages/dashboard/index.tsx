@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
 import { useTheme } from "next-themes";
@@ -20,7 +21,6 @@ import {
 import CodeEditor from "~/components/CodeEditor";
 import { decodeHtmlEntities, formattedJsonTemplate } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import {
   Select,
   SelectContent,

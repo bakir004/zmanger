@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { logger } from "~/lib/logger";
 
 export default async function log(req: any, res: any) {

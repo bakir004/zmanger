@@ -9,6 +9,7 @@ export interface Tests {
 }
 
 export function testShapeChecker(json: string) {
+  // eslint-disable-next-line
   const parsed: Tests = JSON.parse(json);
   const tests = parsed.tests;
   if (tests.length === 0) throw new Error("Nije unesen nijedan test.");

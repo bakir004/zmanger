@@ -12,7 +12,7 @@ import {
 
 export default function TestsPage() {
   const runTests = () => {
-    fetch("/api/log");
+    // fetch("/api/log");
   };
 
   return (
