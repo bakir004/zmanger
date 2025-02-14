@@ -10,11 +10,22 @@ datasource db {
   url  	    = env("POSTGRES_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model TestGroup {
+  id      Int     @id @default(autoincrement())
+  name    String
+  tests   Tests[]
+  subject String
+}
 
-    @@index([name])
+model Tests {
+  id        Int       @id @default(autoincrement())
+  testGroup TestGroup @relation(fields: [testGroupId], references: [id])
+  testGroupId Int
+
+  number     Int
+  aboveMain  String?
+  main       String
+  topOfFile  String?
+  expect     String
+  stdin      String?
 }

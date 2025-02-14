@@ -1,3 +1,64 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  :root {
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+:root {
+  --editor-bg-light: #f1f5f9;
+  --gutter-bg-light: #f1f5f9;
+  --editor-bg-dark: #020617;
+  --gutter-bg-dark: #020617;
+}
+body {
+  font-family: "GeistSans", sans-serif;
+}
+code {
+  color: magenta;
+}
+.cm-theme {
+  height: 100%;
+}
+.cm-editor {
+  background-color: var(--editor-bg-light);
+}
+
+.cm-gutter {
+  background-color: var(--gutter-bg-light);
+}
+
+.dark .cm-editor {
+  background-color: var(--editor-bg-dark);
+}
+
+.dark .cm-gutter {
+  background-color: var(--gutter-bg-dark);
+}
+
+/* .cm-editor {
+  background-color: #020617;
+}
+
+.cm-gutter {
+  background-color: #020617;
+} */
