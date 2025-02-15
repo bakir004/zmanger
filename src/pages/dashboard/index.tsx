@@ -1,14 +1,11 @@
 /* eslint-disable */
 "use client";
-import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
-import { useTheme } from "next-themes";
 import { useCallback, useState } from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
 import { Button } from "~/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { FileJson } from "lucide-react";
 import { testJsonFormatter } from "~/lib/formatter";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -29,9 +26,10 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { testShapeChecker } from "~/lib/testShapeChecker";
+import { useRouter } from "next/router";
 
 export default function DashboardPage() {
-  const { theme } = useTheme();
+  const router = useRouter();
   const [valueOriginal, setValueOriginal] = useState("");
   const [valueFormatted, setValueFormatted] = useState("");
   const [testGroupName, setTestGroupName] = useState("");
@@ -45,19 +43,8 @@ export default function DashboardPage() {
     setValueFormatted(val);
     setError(null);
   }, []);
-  const codeMirrorTheme = theme === "dark" ? vscodeDark : vscodeLight;
 
   const autoformatJSON = () => {
-    try {
-      const json = JSON.parse(valueOriginal);
-      const formattedJson = testJsonFormatter(json);
-      setValueFormatted(JSON.stringify(formattedJson, null, 2));
-    } catch (e: any) {
-      setError("JSON nije validan: " + e.message);
-    }
-  };
-
-  const autoformatRaw = () => {
     try {
       const formattedJsonString = decodeHtmlEntities(valueOriginal);
       const parsed = JSON.parse(formattedJsonString);
@@ -68,10 +55,31 @@ export default function DashboardPage() {
     }
   };
 
-  const submit = () => {
+  const submit = async () => {
     try {
       const json = testShapeChecker(valueFormatted);
-      console.log(json);
+      const res = fetch("/api/tests/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          testsObject: json,
+          testGroupName,
+          testGroupSubject,
+        }),
+      });
+      toast.promise(res, {
+        loading: "Testovi se dodaju...",
+        success: () => {
+          return `Testovi su uspješno dodani!`;
+        },
+        error: "Desila se greška prilikom dodavanja testova",
+      });
+      const resres = await res;
+      if (resres.ok) {
+        router.push("/dashboard/tests");
+      }
     } catch (e: any) {
       setError("JSON nije validan: " + e.message);
     }
@@ -89,7 +97,7 @@ export default function DashboardPage() {
               traženi format
             </span>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-3xl">
+          <DialogContent className="sm:max-w-4xl">
             <DialogHeader>
               <DialogTitle>Pravilan oblik JSON objekta</DialogTitle>
               <DialogDescription>
@@ -99,48 +107,51 @@ export default function DashboardPage() {
                 Format JSON objekta u desnom (formatiranom) dijelu mora pratiti
                 sljedeći oblik:
               </div>
-              <CodeEditor
-                language="json"
-                initCode={formattedJsonTemplate}
-                readonly
-              />
+              <div className="w-full text-sm">
+                <CodeEditor
+                  language="json"
+                  value={formattedJsonTemplate}
+                  readonly
+                  width="100%"
+                />
+              </div>
               <div>
                 Dakle, <code>tests</code> je niz objekata. Svaki objekt mora
                 imati svoj <code>id</code>, <code>patch</code>, i{" "}
                 <code>expect</code> (<code>stdin</code> je neobavezan).{" "}
                 <code>patch</code> je niz od maksimalno 3 elementa koji opisuje
                 strukturu testa. Samo je objekat sa poljem{" "}
-                <code>position: &quot;main&quot;</code> obavezan.
+                <code>position: &quot;main&quot;</code> obavezan.{" "}
+                <code>expect</code> je niz stringova.
               </div>
             </DialogHeader>
           </DialogContent>
         </Dialog>
-        , popravite ga unutar desnog dijela i submitajte.
+        , popravite ga unutar desnog dijela. Nakon toga, dadnite ime skupu
+        testova i odaberite za koji predmet važe.
       </p>
       <section className="mb-4 flex gap-4">
         <div className="w-[calc(50%-0.5rem)]">
           <h3 className="text-lg font-semibold">Originalni JSON</h3>
           <div className="h-[600px] w-full text-xs">
-            <CodeMirror
+            <CodeEditor
               value={valueOriginal}
               width="100%"
               height="100%"
-              extensions={[json()]}
               onChange={onChangeOriginal}
-              theme={codeMirrorTheme}
+              language="json"
             />
           </div>
         </div>
         <div className="w-[calc(50%-0.5rem)]">
           <h3 className="text-lg font-semibold">Formatirani JSON</h3>
           <div className="h-[600px] w-full text-xs">
-            <CodeMirror
+            <CodeEditor
               value={valueFormatted}
               width="100%"
               height="100%"
-              extensions={[json()]}
               onChange={onChangeFormatted}
-              theme={codeMirrorTheme}
+              language="json"
             />
           </div>
         </div>
@@ -149,10 +160,6 @@ export default function DashboardPage() {
         <Button onClick={autoformatJSON} className="">
           Autoformat JSON
         </Button>
-        <Button onClick={autoformatRaw} className="">
-          Autoformat sa konverzijom specijalnih karaktera
-        </Button>
-        {/* <Label htmlFor="testgroup">Dadnite ime skupu testova:</Label> */}
         <Input
           id="testgroup"
           required

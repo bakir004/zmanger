@@ -24,7 +24,7 @@ export const formattedJsonTemplate = `{
         }
       ],
       "stdin": "<ulaz>"  // ulazni tok programa
-      "expect": "<ocekivani_izlaz>"  // ocekivani izlaz testa
+      "expect": ["<ocekivani_izlaz1>", "<ocekivani_izlaz2>", ...]  // ocekivani izlaz testa
     }
   ]
 }`;
@@ -39,3 +39,5 @@ export function decodeHtmlEntities(encodedStr: string): string {
     .replace(/&apos;/g, "'") // Replace &apos; with '
     .replace(/\//g, "/"); // Replace / with /
 }
+
+export const delimiter = "-~===~-";

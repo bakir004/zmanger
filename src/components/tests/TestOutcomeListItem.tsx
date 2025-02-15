@@ -17,6 +17,7 @@ export default function TestOutcomeListItem({
   passed: boolean;
   children: React.ReactNode;
 }) {
+  const stdin = `1 2 2\n3 4`;
   const code =
     "// Test performansi BinStabloMape\nBinStabloMapa <int, int> m;\nfor (int i(1000); i>-1000; i--)\n    m[i] = i*i;\ncout << m[-100];";
   return (
@@ -36,12 +37,26 @@ export default function TestOutcomeListItem({
           </DialogDescription>
         </DialogHeader>
         <section>
-          <div className="">
+          <div className="w-full max-w-full overflow-hidden">
             <h3 className="font-semibold">Kod testa</h3>
-            <CodeEditor language="cpp" initCode={code} readonly />
+            <CodeEditor
+              width="100%"
+              maxHeight="400px"
+              language="cpp"
+              value={code}
+              readonly
+            />
           </div>
           <div>
-            <h3 className="mb-2 font-semibold">Očekivani izlaz</h3>
+            <h3 className="my-2 font-semibold">
+              Standardni ulaz (<code>stdin</code>)
+            </h3>
+            <p className="whitespace-pre-wrap rounded px-4 py-2 font-mono dark:bg-slate-900">
+              {stdin}
+            </p>
+          </div>
+          <div>
+            <h3 className="my-2 font-semibold">Očekivani izlaz</h3>
             <p className="rounded px-4 py-2 font-mono dark:bg-slate-900">
               10000
             </p>

@@ -11,3 +11,16 @@
 //       "description": "Accepted"
 //     }
 //   }
+
+export interface Test {
+  id: number;
+  patch: Array<{
+    position: "main" | "above_main" | "top_of_file";
+    code: string;
+  }>;
+  expect: Array<string>;
+  stdin?: string;
+}
+export interface Tests {
+  tests: Array<Test>;
+}

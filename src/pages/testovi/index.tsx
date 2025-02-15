@@ -1,4 +1,5 @@
 "use client";
+import { useCallback, useState } from "react";
 import CodeEditor from "~/components/CodeEditor";
 import TestOutcomeListItem from "~/components/tests/TestOutcomeListItem";
 import { Button } from "~/components/ui/button";
@@ -14,6 +15,13 @@ export default function TestsPage() {
   const runTests = () => {
     // fetch("/api/log");
   };
+
+  const [value, setValue] = useState(
+    '// Nemojte ovdje kodirati, vas kod nece biti spasen...\n#include <iostream>\nint main(){\n  std::cout << "Hello, World!" << std::endl;\n  return 0;\n}',
+  );
+  const onChange = useCallback((val: string) => {
+    setValue(val);
+  }, []);
 
   return (
     <main className="mx-auto w-full max-w-screen-1280 px-4 pt-8">
@@ -54,7 +62,12 @@ export default function TestsPage() {
       </section>
       <section className="mt-4 flex h-[calc(100dvh-300px)] gap-4">
         <div className="h-full w-5/6">
-          <CodeEditor language="cpp" />
+          <CodeEditor
+            language="cpp"
+            value={value}
+            onChange={onChange}
+            height="100%"
+          />
         </div>
         <div className="flex w-1/6 flex-col gap-2 text-sm">
           <TestOutcomeListItem passed={true}>Test 1</TestOutcomeListItem>

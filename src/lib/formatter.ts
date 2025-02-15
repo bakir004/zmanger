@@ -1,12 +1,5 @@
 /* eslint-disable */
-export interface Test {
-  id: number;
-  patch: Array<{ position: string; code: string }>;
-  expect: string;
-}
-export interface Tests {
-  tests: Array<Test>;
-}
+import { Test, Tests } from "./types";
 
 export const testJsonFormatter = (json: any) => {
   const formattedTestJson: Tests = {
@@ -21,20 +14,26 @@ export const testJsonFormatter = (json: any) => {
       const newTest: Test = {
         id: 0,
         patch: [],
-        expect: "",
+        expect: [],
+        stdin: undefined,
       };
       const patchArray = item.tools[0].patch;
-      const newPatchArray: Array<{ position: string; code: string }> = [];
+      const newPatchArray: Array<{
+        position: "main" | "above_main" | "top_of_file";
+        code: string;
+      }> = [];
       patchArray.forEach((patch: any) => {
         newPatchArray.push({
           position: patch.position,
           code: patch.code,
         });
       });
-      const expectedOutput = item.tools[2].execute.expect[0];
+      const expectedOutputs = item.tools[2].execute.expect;
+      newTest.expect = [...expectedOutputs];
       newTest.id = i;
       newTest.patch = newPatchArray;
-      newTest.expect = expectedOutput;
+      if (item.tools[2].execute.environment)
+        newTest.stdin = item.tools[2].execute.environment.stdin;
       formattedTestJson.tests.push(newTest);
     });
     return formattedTestJson;

@@ -13,11 +13,11 @@ datasource db {
 model TestGroup {
   id      Int     @id @default(autoincrement())
   name    String
-  tests   Tests[]
+  tests   Test[]
   subject String
 }
 
-model Tests {
+model Test {
   id        Int       @id @default(autoincrement())
   testGroup TestGroup @relation(fields: [testGroupId], references: [id])
   testGroupId Int
