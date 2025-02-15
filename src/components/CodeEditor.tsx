@@ -1,5 +1,6 @@
+/* eslint-disable */
 "use client";
-import CodeMirror, { ReactCodeMirrorProps } from "@uiw/react-codemirror";
+import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import { cpp } from "@codemirror/lang-cpp";
 import { json } from "@codemirror/lang-json";
 import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";

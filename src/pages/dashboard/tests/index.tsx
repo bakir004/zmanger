@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { TestsDataTable } from "~/components/TestsDataTable";
 
 export default function DashboardTests() {

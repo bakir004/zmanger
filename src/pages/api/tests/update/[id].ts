@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { testShapeChecker } from "~/lib/testShapeChecker";
 import { Tests } from "~/lib/types";
-import { delimiter } from "~/lib/utils";
 
 const prisma = new PrismaClient();
 
