@@ -62,6 +62,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import { useRouter } from "next/router";
 
 export type TestGroup = {
   id: number;
@@ -97,6 +98,7 @@ export const columns: ColumnDef<TestGroup>[] = [
     accessorKey: "name",
     header: "Ime grupe testova",
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+    enableSorting: false,
   },
   {
     accessorKey: "testCount",
@@ -143,7 +145,7 @@ export const columns: ColumnDef<TestGroup>[] = [
       ) => {
         setTestGroupName(e.target.value);
       };
-      const submit = () => {
+      const submit = async () => {
         try {
           const json = testShapeChecker(value);
           const res = fetch("/api/tests/update/" + row.original.id, {
@@ -254,7 +256,12 @@ export function TestsDataTable() {
     if (res.ok) {
       setLoading(false);
       const data = await res.json();
-      setTestGroups(data.testGroups);
+
+      setTestGroups(
+        data.testGroups.sort((a: TestGroup, b: TestGroup) => {
+          return a.id - b.id;
+        }),
+      );
     } else {
       toast.error("Desila se greška prilikom učitavanja testova");
     }
