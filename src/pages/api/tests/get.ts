@@ -3,7 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { logger } from "~/lib/logger";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: ["query", "info", "warn", "error"], // Enable detailed logging
+});
 
 export default async function getAllTestGroups(
   req: NextApiRequest,
