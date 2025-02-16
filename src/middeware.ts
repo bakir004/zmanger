@@ -1,24 +1,22 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/api/tests(.*)",
+  "/dashboard(.*)", // Protect dashboard and subpages
+  "/api/tests(.*)", // Protect API routes
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId, redirectToSignIn } = await auth();
 
   if (!userId && isProtectedRoute(req)) {
-    console.log("REDIRECTED");
+    console.log("Unauthorized access, redirecting...");
     return redirectToSignIn();
   }
 });
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and static files
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
+    "/((?!_next|_static|_vercel|favicon.ico|.*\\.(png|jpg|jpeg|svg|css|js|json)).*)",
     "/(api|trpc)(.*)",
   ],
 };

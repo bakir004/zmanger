@@ -200,7 +200,7 @@ export const columns: ColumnDef<TestGroup>[] = [
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <DialogFooter className="sm:justify-end">
+            <DialogFooter className="flex justify-start gap-2 sm:justify-end">
               <Input
                 id="testgroup"
                 required
@@ -319,7 +319,7 @@ export function TestsDataTable() {
   });
 
   return (
-    <div className="mx-auto w-[720px]">
+    <div className="w-full">
       <div className="mt-4 rounded-md border border-slate-600">
         <Table>
           <TableHeader>
@@ -386,7 +386,7 @@ export function TestsDataTable() {
         >
           <RefreshCcw className="h-4 w-4"></RefreshCcw>
         </Button>
-        <Link href="/dashboard">
+        <Link href="/dashboard/tests/add">
           <Button variant={"secondary"}>Dodaj testove</Button>
         </Link>
         <AlertDialog>
