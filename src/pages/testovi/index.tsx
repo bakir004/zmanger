@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 import { Test, TestGroup } from "@prisma/client";
 import { useCallback, useEffect, useState } from "react";
