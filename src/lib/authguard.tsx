@@ -1,6 +1,5 @@
-import { useRouter } from "next/router";
+/* eslint-disable */
 import { SignInButton, useUser } from "@clerk/nextjs";
-import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 
 export function authGuard({
@@ -11,14 +10,7 @@ export function authGuard({
   props: any;
 }) {
   return function ProtectedComponent(props: any) {
-    const router = useRouter();
     const { isLoaded, isSignedIn } = useUser();
-
-    // useEffect(() => {
-    //   if (isLoaded && !isSignedIn) {
-    //     router.replace("/sign-in");
-    //   }
-    // }, [isLoaded, isSignedIn, router]);
 
     if (!isLoaded)
       return (
