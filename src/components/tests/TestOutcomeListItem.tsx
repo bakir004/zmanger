@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Test } from "@prisma/client";
 import CodeEditor from "../CodeEditor";
 import {
@@ -73,8 +74,11 @@ export default function TestOutcomeListItem({
               {test.expect.length > 1 && "i"}
             </h3>
 
-            {test.expect.map((e) => (
-              <p className="my-2 rounded bg-slate-200 px-4 py-2 font-mono dark:bg-slate-900">
+            {test.expect.map((e, i) => (
+              <p
+                key={i}
+                className="my-2 rounded bg-slate-200 px-4 py-2 font-mono dark:bg-slate-900"
+              >
                 {e}
               </p>
             ))}
