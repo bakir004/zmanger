@@ -255,9 +255,9 @@ export function TestsDataTable() {
 
   const getTests = async () => {
     setLoading(true);
-    console.log("Fetching tests");
+    // console.log("Fetching tests");
     const res = await fetch("/api/tests/get");
-    console.log("FETCHED tests");
+    // console.log("FETCHED tests");
 
     if (res.ok) {
       setLoading(false);
