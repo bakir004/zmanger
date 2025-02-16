@@ -10,7 +10,7 @@ export function authGuard({
   props: any;
 }) {
   return function ProtectedComponent(props: any) {
-    const { isLoaded, isSignedIn } = useUser();
+    const { isLoaded, user, isSignedIn } = useUser();
 
     if (!isLoaded)
       return (

@@ -5,6 +5,7 @@ import { testShapeChecker } from "~/lib/testShapeChecker";
 import { Tests } from "~/lib/types";
 import test from "node:test";
 import { delimiter } from "~/lib/utils";
+import { logger } from "~/lib/logger";
 
 const prisma = new PrismaClient();
 
@@ -21,8 +22,13 @@ export default async function create(
       testGroupName,
       testGroupSubject,
       testsObject,
-    }: { testGroupName: string; testGroupSubject: string; testsObject: Tests } =
-      req.body;
+      user,
+    }: {
+      testGroupName: string;
+      testGroupSubject: string;
+      testsObject: Tests;
+      user: string;
+    } = req.body;
 
     const tests = testsObject.tests;
 
@@ -32,12 +38,18 @@ export default async function create(
       !Array.isArray(tests) ||
       tests.length === 0
     ) {
+      logger.error("Invalid request body", req.body, {
+        user,
+      });
       return res.status(400).json({ message: "Invalid request body" });
     }
 
     try {
       testShapeChecker(JSON.stringify(testsObject));
     } catch (e: any) {
+      logger.error("Invalid tests shape", e.message, {
+        user,
+      });
       return res
         .status(400)
         .json({ message: "Invalid tests shape", error: e.message });
@@ -69,14 +81,18 @@ export default async function create(
               );
             }
 
+            if (!Array.isArray(test.expect) || test.expect.length === 0) {
+              throw new Error(
+                `Test with id ${test.id} has an invalid or empty "expect" array.`,
+              );
+            }
+
             return {
               number: test.id,
               aboveMain,
               main,
               topOfFile,
-              expect: Array.isArray(test.expect)
-                ? test.expect.join(delimiter)
-                : test.expect,
+              expect: test.expect,
               stdin: test.stdin ?? null,
             };
           }),
@@ -84,6 +100,12 @@ export default async function create(
       },
     });
 
+    logger.info("TestGroup created successfully", {
+      testGroupId: testGroup.id,
+      testGroupName,
+      testGroupSubject,
+      user: user,
+    });
     res.status(201).json({
       message:
         "TestGroup created successfully: " +
@@ -92,7 +114,7 @@ export default async function create(
         testGroupSubject,
     });
   } catch (error: any) {
-    console.error("Error creating test group:", error);
+    logger.error("Error creating test group", { error: error.message });
     res
       .status(500)
       .json({ message: "Error creating test group", error: error.message });

@@ -60,6 +60,21 @@ code {
 .cm-editor {
   background-color: var(--editor-bg-light);
 }
+.cm-line {
+  overflow: scroll !important;
+  text-wrap: wrap;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+.cm-activeLine {
+  overflow: scroll !important;
+  text-wrap: wrap;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+.cm-scroller {
+  overflow: scroll !important;
+  text-wrap: wrap;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
 
 .cm-gutter {
   background-color: var(--gutter-bg-light);

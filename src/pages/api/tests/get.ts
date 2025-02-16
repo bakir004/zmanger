@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { delimiter } from "~/lib/utils";
+import { logger } from "~/lib/logger";
 
 const prisma = new PrismaClient();
 
@@ -28,14 +28,14 @@ export default async function getAllTestGroups(
             { position: "above_main", code: test.aboveMain || "" },
             { position: "top_of_file", code: test.topOfFile || "" },
           ],
-          expect: [...test.expect.split(delimiter)],
+          expect: test.expect,
         })),
       },
     }));
 
     res.status(200).json({ testGroups: formattedTestGroups });
   } catch (error: any) {
-    console.error("Error retrieving test groups:", error);
+    logger.error("Error retrieving test groups:", error.message);
     res
       .status(500)
       .json({ message: "Error retrieving test groups", error: error.message });

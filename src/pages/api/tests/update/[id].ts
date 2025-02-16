@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { testShapeChecker } from "~/lib/testShapeChecker";
 import { Tests } from "~/lib/types";
+import { logger } from "~/lib/logger";
 
 const prisma = new PrismaClient();
 
@@ -20,15 +21,15 @@ export default async function update(
       testGroupName,
       testGroupSubject,
       testsObject,
+      user,
     }: {
       testGroupName: string;
       testGroupSubject: string;
       testsObject: Tests;
+      user: string;
     } = req.body;
 
     const tests = testsObject.tests;
-    console.log(testGroupId, testGroupName, testGroupSubject);
-    console.log(tests.length);
 
     if (
       !testGroupName ||
@@ -36,12 +37,14 @@ export default async function update(
       !Array.isArray(tests) ||
       tests.length === 0
     ) {
+      logger.error("Invalid request body", req.body, { user });
       return res.status(400).json({ message: "Invalid request body" });
     }
 
     try {
       testShapeChecker(JSON.stringify(testsObject));
     } catch (e: any) {
+      logger.error("Invalid tests shape", e.message, { user });
       return res
         .status(400)
         .json({ message: "Invalid tests shape", error: e.message });
@@ -54,6 +57,7 @@ export default async function update(
     });
 
     if (!existingTestGroup) {
+      logger.error("Test group not found", { user, testGroupId });
       return res.status(404).json({ message: "Test group not found" });
     }
 
@@ -101,6 +105,12 @@ export default async function update(
                 );
               }
 
+              if (!Array.isArray(test.expect) || test.expect.length === 0) {
+                throw new Error(
+                  `Test with id ${test.id} has an invalid or empty "expect" array.`,
+                );
+              }
+
               return {
                 where: { id: test.id },
                 create: {
@@ -108,18 +118,14 @@ export default async function update(
                   aboveMain,
                   main,
                   topOfFile,
-                  expect: Array.isArray(test.expect)
-                    ? test.expect.join(" ")
-                    : test.expect,
+                  expect: test.expect,
                   stdin: test.stdin ?? null,
                 },
                 update: {
                   aboveMain,
                   main,
                   topOfFile,
-                  expect: Array.isArray(test.expect)
-                    ? test.expect.join(" ")
-                    : test.expect,
+                  expect: test.expect,
                   stdin: test.stdin ?? null,
                 },
               };
@@ -129,12 +135,18 @@ export default async function update(
       });
     });
 
+    logger.info("TestGroup updated successfully", {
+      user,
+      testGroupId,
+      testGroupName,
+      testGroupSubject,
+    });
     res.status(200).json({
       message: `TestGroup updated successfully: ${testGroupName}, ${testGroupSubject}`,
       updatedTestGroup,
     });
   } catch (error: any) {
-    console.error("Error updating test group:", error);
+    logger.error("Error updating test group", { error: error.message });
     res
       .status(500)
       .json({ message: "Error updating test group", error: error.message });

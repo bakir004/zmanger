@@ -63,6 +63,7 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { useRouter } from "next/router";
+import { useUser } from "@clerk/nextjs";
 
 export type TestGroup = {
   id: number;
@@ -126,6 +127,7 @@ export const columns: ColumnDef<TestGroup>[] = [
     accessorKey: "actions",
     header: () => <div className="text-right">Ažuriranje</div>,
     cell: ({ row }) => {
+      const { user } = useUser();
       const [value, setValue] = React.useState(
         JSON.stringify(row.original.json, null, 2),
       );
@@ -157,6 +159,7 @@ export const columns: ColumnDef<TestGroup>[] = [
               testsObject: json,
               testGroupName,
               testGroupSubject,
+              user: user?.id,
             }),
           });
           toast.promise(res, {
@@ -238,6 +241,7 @@ export const columns: ColumnDef<TestGroup>[] = [
 ];
 
 export function TestsDataTable() {
+  const { user } = useUser();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -251,7 +255,9 @@ export function TestsDataTable() {
 
   const getTests = async () => {
     setLoading(true);
+    console.log("Fetching tests");
     const res = await fetch("/api/tests/get");
+    console.log("FETCHED tests");
 
     if (res.ok) {
       setLoading(false);
@@ -277,7 +283,7 @@ export function TestsDataTable() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ids: selectedIds }),
+        body: JSON.stringify({ ids: selectedIds, user: user?.id }),
       });
       toast.promise(res, {
         loading: "Testovi se brišu...",

@@ -26,6 +26,6 @@ model Test {
   aboveMain  String?
   main       String
   topOfFile  String?
-  expect     String
+  expect     String[]
   stdin      String?
 }

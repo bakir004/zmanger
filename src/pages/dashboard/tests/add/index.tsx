@@ -30,6 +30,7 @@ import { useRouter } from "next/router";
 import { useUser } from "@clerk/nextjs";
 import { authGuard } from "~/lib/authguard";
 import DashboardPageWrapper from "~/components/DashboardPageWrapper";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 function AddTestsPage() {
   const router = useRouter();
@@ -73,8 +74,10 @@ function AddTestsPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.id}`,
         },
         body: JSON.stringify({
+          user: user?.id,
           testsObject: json,
           testGroupName,
           testGroupSubject,
@@ -130,33 +133,33 @@ function AddTestsPage() {
             </span>
           </DialogTrigger>
           <DialogContent className="sm:max-w-4xl">
-            <DialogHeader>
+            <DialogHeader className="text-left">
               <DialogTitle>Pravilan oblik JSON objekta</DialogTitle>
               <DialogDescription>
                 Ne pridržavanje ovoga će rezultirati velikim problemima
               </DialogDescription>
-              <div>
-                Format JSON objekta u desnom (formatiranom) dijelu mora pratiti
-                sljedeći oblik:
-              </div>
-              <div className="w-full text-sm">
-                <CodeEditor
-                  language="json"
-                  value={formattedJsonTemplate}
-                  readonly
-                  width="100%"
-                />
-              </div>
-              <div>
-                Dakle, <code>tests</code> je niz objekata. Svaki objekt mora
-                imati svoj <code>id</code>, <code>patch</code>, i{" "}
-                <code>expect</code> (<code>stdin</code> je neobavezan).{" "}
-                <code>patch</code> je niz od maksimalno 3 elementa koji opisuje
-                strukturu testa. Samo je objekat sa poljem{" "}
-                <code>position: &quot;main&quot;</code> obavezan.{" "}
-                <code>expect</code> je niz stringova.
-              </div>
             </DialogHeader>
+            <div>
+              Format JSON objekta u desnom (formatiranom) dijelu mora pratiti
+              sljedeći oblik:
+            </div>
+            <div className="w-full max-w-full overflow-hidden text-sm">
+              <CodeEditor
+                width="100%"
+                height="350px"
+                language="json"
+                readonly
+                value={formattedJsonTemplate}
+              />
+            </div>
+            <div>
+              Dakle, <code>tests</code> je niz objekata. Svaki objekt mora imati
+              svoj <code>id</code>, <code>patch</code>, i <code>expect</code> (
+              <code>stdin</code> je neobavezan). <code>patch</code> je niz od
+              maksimalno 3 elementa koji opisuje strukturu testa. Samo je
+              objekat sa poljem <code>position: &quot;main&quot;</code>{" "}
+              obavezan. <code>expect</code> je niz stringova.
+            </div>
           </DialogContent>
         </Dialog>
         , popravite ga unutar desnog dijela. Nakon toga, dadnite ime skupu
