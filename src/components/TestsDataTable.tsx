@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, Edit, FileJson, Loader2, RefreshCcw } from "lucide-react";
+import { Edit, FileJson, RefreshCcw } from "lucide-react";
 
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
@@ -36,7 +36,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import CodeEditor from "./CodeEditor";
 import { testShapeChecker } from "~/lib/testShapeChecker";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
