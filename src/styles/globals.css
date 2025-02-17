@@ -54,40 +54,18 @@ body {
 code {
   color: magenta;
 }
-.cm-theme {
-  height: 100%;
+.dark .monaco-editor-background {
+  background-color: var(--editor-bg-dark) !important;
 }
-.cm-editor {
-  background-color: var(--editor-bg-light);
+.dark .margin {
+  background-color: var(--editor-bg-dark) !important;
 }
-.cm-line {
-  overflow: scroll !important;
-  text-wrap: wrap;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+.margin {
+  background-color: var(--editor-bg-light) !important;
 }
-.cm-activeLine {
-  overflow: scroll !important;
-  text-wrap: wrap;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+.monaco-editor-background {
+  background-color: var(--editor-bg-light) !important;
 }
-.cm-scroller {
-  overflow: scroll !important;
-  text-wrap: wrap;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
-}
-
-.cm-gutter {
-  background-color: var(--gutter-bg-light);
-}
-
-.dark .cm-editor {
-  background-color: var(--editor-bg-dark);
-}
-
-.dark .cm-gutter {
-  background-color: var(--gutter-bg-dark);
-}
-
 .loader {
   width: 48px;
   height: 48px;

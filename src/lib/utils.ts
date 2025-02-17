@@ -12,7 +12,7 @@ export const formattedJsonTemplate = `{
       "id": "<test_id>",  // redni broj testa
       "patch": [
         {
-          "position": "main",  // obavezno je imati kod u mainu
+          "position": "main",  // ako nema koda u mainu, koristi se korisnikov main
           "code": "<neki_kod>"  // kod koji se stavlja u main funkciju
         },
         {

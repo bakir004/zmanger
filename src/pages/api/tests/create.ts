@@ -4,7 +4,6 @@ import { PrismaClient } from "@prisma/client";
 import { testShapeChecker } from "~/lib/testShapeChecker";
 import { Tests } from "~/lib/types";
 import test from "node:test";
-import { delimiter } from "~/lib/utils";
 import { logger } from "~/lib/logger";
 
 const prisma = new PrismaClient();

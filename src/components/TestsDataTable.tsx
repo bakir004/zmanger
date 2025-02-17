@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, Edit, FileJson, RefreshCcw } from "lucide-react";
+import { ArrowUpDown, Edit, FileJson, Loader2, RefreshCcw } from "lucide-react";
 
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
@@ -64,6 +64,7 @@ import {
 } from "./ui/alert-dialog";
 import { useRouter } from "next/router";
 import { useUser } from "@clerk/nextjs";
+import MonacoCodeEditor from "./MonacoCodeEditor";
 
 export type TestGroup = {
   id: number;
@@ -138,7 +139,8 @@ export const columns: ColumnDef<TestGroup>[] = [
       const [testGroupSubject, setTestGroupSubject] = React.useState(
         row.original.subject,
       );
-      const onChange = React.useCallback((val: string) => {
+      const onChange = React.useCallback((val: string | undefined) => {
+        if (!val) return;
         setValue(val);
         setError("");
       }, []);
@@ -188,13 +190,23 @@ export const columns: ColumnDef<TestGroup>[] = [
               </DialogDescription>
             </DialogHeader>
             <div className="w-full max-w-full overflow-hidden text-sm">
-              <CodeEditor
-                width="100%"
+              <MonacoCodeEditor
                 height="400px"
-                language="json"
                 value={value}
                 onChange={onChange}
-              />
+                language="json"
+                options={{
+                  minimap: { enabled: false },
+                  lineNumbers: "off",
+                  lineDecorationsWidth: 0,
+                  folding: false,
+                  scrollBeyondLastLine: false,
+                  stickyScroll: {
+                    enabled: false,
+                  },
+                  fontSize: 13,
+                }}
+              ></MonacoCodeEditor>
             </div>
             {error && (
               <Alert variant={"destructive"} className="mt-4">
@@ -255,9 +267,7 @@ export function TestsDataTable() {
 
   const getTests = async () => {
     setLoading(true);
-    // console.log("Fetching tests");
     const res = await fetch("/api/tests/get");
-    // console.log("FETCHED tests");
 
     if (res.ok) {
       setLoading(false);
@@ -382,12 +392,13 @@ export function TestsDataTable() {
           {table.getFilteredSelectedRowModel().rows.length} od{" "}
           {table.getFilteredRowModel().rows.length} redova izabrano.
         </div>
-        {loading && <p className="text-sm italic">Učitavam...</p>}
+        {loading && <p className="flex gap-1 text-sm italic">Učitavam...</p>}
 
         <Button
           disabled={loading}
           variant={"outline"}
           size="icon"
+          className={`${loading ? "animate-spin" : ""}`}
           onClick={() => void getTests()}
         >
           <RefreshCcw className="h-4 w-4"></RefreshCcw>

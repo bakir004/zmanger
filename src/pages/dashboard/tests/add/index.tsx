@@ -15,7 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../../components/ui/dialog";
-import CodeEditor from "~/components/CodeEditor";
 import { decodeHtmlEntities, formattedJsonTemplate } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
 import {
@@ -30,7 +29,15 @@ import { useRouter } from "next/router";
 import { useUser } from "@clerk/nextjs";
 import { authGuard } from "~/lib/authguard";
 import DashboardPageWrapper from "~/components/DashboardPageWrapper";
-import { ScrollArea } from "~/components/ui/scroll-area";
+import MonacoCodeEditor from "~/components/MonacoCodeEditor";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "~/components/ui/breadcrumb";
 
 function AddTestsPage() {
   const router = useRouter();
@@ -40,11 +47,13 @@ function AddTestsPage() {
   const [testGroupName, setTestGroupName] = useState("");
   const [testGroupSubject, setTestGroupSubject] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const onChangeOriginal = useCallback((val: string) => {
+  const onChangeOriginal = useCallback((val: string | undefined) => {
+    if (!val) return;
     setValueOriginal(val);
     setError(null);
   }, []);
-  const onChangeFormatted = useCallback((val: string) => {
+  const onChangeFormatted = useCallback((val: string | undefined) => {
+    if (!val) return;
     setValueFormatted(val);
     setError(null);
   }, []);
@@ -99,29 +108,19 @@ function AddTestsPage() {
     }
   };
 
-  const editorRef = useRef<HTMLDivElement>(null);
-  const editorRef2 = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const updateWidth = () => {
-      if (editorRef.current) {
-        editorRef.current.style.width = `${editorRef.current.parentElement
-          ?.clientWidth!}px`;
-      }
-    };
-    if (editorRef2.current) {
-      editorRef2.current.style.width = `${editorRef2.current.parentElement
-        ?.clientWidth!}px`;
-    }
-
-    window.addEventListener("resize", updateWidth);
-    updateWidth();
-
-    return () => window.removeEventListener("resize", updateWidth);
-  }, []);
-
   return (
     <DashboardPageWrapper>
+      <Breadcrumb className="mb-2">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Dodaj testove</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h1 className="text-2xl font-bold">Dodavanje testova</h1>
       <p className="my-2">
         Pasteati originalni JSON sa Zamgera u lijevi dio, pa pritisnite dugme
@@ -143,22 +142,31 @@ function AddTestsPage() {
               Format JSON objekta u desnom (formatiranom) dijelu mora pratiti
               sljedeći oblik:
             </div>
-            <div className="w-full max-w-full overflow-hidden text-sm">
-              <CodeEditor
-                width="100%"
-                height="350px"
-                language="json"
-                readonly
+            <div className="w-full overflow-x-hidden">
+              <MonacoCodeEditor
+                height="400px"
                 value={formattedJsonTemplate}
-              />
+                language="json"
+                options={{
+                  readOnly: true,
+                  minimap: { enabled: false },
+                  lineNumbers: "off",
+                  lineDecorationsWidth: 0,
+                  folding: false,
+                  scrollBeyondLastLine: false,
+                  guides: {
+                    indentation: false,
+                  },
+                }}
+              ></MonacoCodeEditor>
             </div>
             <div>
               Dakle, <code>tests</code> je niz objekata. Svaki objekt mora imati
               svoj <code>id</code>, <code>patch</code>, i <code>expect</code> (
               <code>stdin</code> je neobavezan). <code>patch</code> je niz od
-              maksimalno 3 elementa koji opisuje strukturu testa. Samo je
-              objekat sa poljem <code>position: &quot;main&quot;</code>{" "}
-              obavezan. <code>expect</code> je niz stringova.
+              maksimalno 3 elementa koji opisuje strukturu testa. Ako ne postoji
+              kod na poziciji <code>main</code>, smatra se da se koristi
+              korisnikov main. <code>expect</code> je niz stringova.
             </div>
           </DialogContent>
         </Dialog>
@@ -166,30 +174,46 @@ function AddTestsPage() {
         testova i odaberite za koji predmet važe.
       </p>
       <section className="mb-4 flex w-full gap-4 overflow-x-hidden">
-        <div className="w-full max-w-full">
+        <div className="w-1/2 overflow-x-hidden">
           <h3 className="text-lg font-semibold">Originalni JSON</h3>
-          <div ref={editorRef} className="h-[400px] text-xs">
-            <CodeEditor
-              value={valueOriginal}
-              width="100%"
-              height="100%"
-              onChange={onChangeOriginal}
-              language="json"
-            />
-          </div>
+          <MonacoCodeEditor
+            height="400px"
+            value={valueOriginal}
+            onChange={onChangeOriginal}
+            language="json"
+            options={{
+              minimap: { enabled: false },
+              lineNumbers: "off",
+              lineDecorationsWidth: 0,
+              folding: false,
+              scrollBeyondLastLine: false,
+              stickyScroll: {
+                enabled: false,
+              },
+              fontSize: 13,
+            }}
+          ></MonacoCodeEditor>
         </div>
 
-        <div className="w-full max-w-full">
+        <div className="w-1/2 overflow-x-hidden">
           <h3 className="text-lg font-semibold">Formatirani JSON</h3>
-          <div ref={editorRef2} className="h-[400px] text-xs">
-            <CodeEditor
-              value={valueFormatted}
-              width="100%"
-              height="100%"
-              onChange={onChangeFormatted}
-              language="json"
-            />
-          </div>
+          <MonacoCodeEditor
+            height="400px"
+            value={valueFormatted}
+            onChange={onChangeFormatted}
+            language="json"
+            options={{
+              minimap: { enabled: false },
+              lineNumbers: "off",
+              lineDecorationsWidth: 0,
+              folding: false,
+              scrollBeyondLastLine: false,
+              stickyScroll: {
+                enabled: false,
+              },
+              fontSize: 13,
+            }}
+          ></MonacoCodeEditor>
         </div>
       </section>
       <div className="flex w-full flex-wrap items-center justify-between gap-4">

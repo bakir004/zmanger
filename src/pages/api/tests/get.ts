@@ -12,14 +12,12 @@ export default async function getAllTestGroups(
   res: NextApiResponse,
 ) {
   try {
-    console.log("WHAT THE FUCK");
     const testGroups = await prisma.testGroup.findMany({
       include: {
         tests: true,
       },
     });
 
-    console.log("PROSO");
     const formattedTestGroups = testGroups.map((testGroup) => ({
       id: testGroup.id,
       name: testGroup.name,
@@ -37,10 +35,8 @@ export default async function getAllTestGroups(
       },
     }));
 
-    console.log("OK");
     res.status(200).json({ testGroups: formattedTestGroups });
   } catch (error: any) {
-    console.log("AAAAAAAAAAAAAAAAAAA");
     logger.error("Error retrieving test groups:", error.message);
     res
       .status(500)
