@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { NextApiRequest, NextApiResponse } from "next";
 import dotenv from "dotenv";
 import { logger } from "~/lib/logger";

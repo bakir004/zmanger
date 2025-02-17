@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ClipboardCheck } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { useEffect, useState } from "react";

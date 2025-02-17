@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,7 +11,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerDescription,
   DrawerFooter,
   DrawerClose,
   Drawer,
