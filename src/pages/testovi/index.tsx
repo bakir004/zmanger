@@ -96,7 +96,7 @@ export default function TestsPage() {
     const testResult = data.submissionResult;
     testResult.id = test.number;
     setTestResults((prev) => [...prev, testResult]);
-    void fetch("/api/tests/report", {
+    void fetch("/api/tests/reportSingle", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -254,10 +254,10 @@ export default function TestsPage() {
           Otkaži
         </Button>
       </section>
-      <section className="mt-4 flex h-[calc(100dvh-300px)] gap-4">
+      <section className="mt-4 flex h-[calc(100dvh-400px)] gap-4">
         <div className="h-full w-3/4 md:w-5/6">
           <MonacoCodeEditor
-            height="700px"
+            height="100%"
             value={value}
             onChange={onChange}
             language="cpp"
@@ -275,17 +275,19 @@ export default function TestsPage() {
           ></MonacoCodeEditor>
         </div>
         <div className="h-full w-1/4 md:w-1/6">
-          <h3 className="h-6">
-            Prošlo{" "}
-            {
-              testResults.filter(
-                (result) =>
-                  result.status.description === "Accepted" ||
-                  result.status.description === "Core accepted",
-              ).length
-            }
-            /{testResults.length}
-          </h3>
+          {tests.length > 0 && (
+            <h3 className="h-6">
+              Prošlo{" "}
+              {
+                testResults.filter(
+                  (result) =>
+                    result.status.description === "Accepted" ||
+                    result.status.description === "Core accepted",
+                ).length
+              }
+              /{testResults.length}
+            </h3>
+          )}
           <ScrollArea className="flex h-[calc(100%-1.5rem)] w-full flex-col gap-2 text-sm">
             {tests.map((test: Test) => (
               <TestOutcomeListItem

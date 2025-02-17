@@ -16,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../ui/chart";
+import { useEffect } from "react";
 const chartData = [
   { date: "2024-04-01", tests: 222 },
   { date: "2024-04-02", tests: 97 },
@@ -121,6 +122,28 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function TestNumberChart() {
+  const [submissionsByDay, setSubmissionsByDay] = React.useState<
+    { date: string; tests: number }[]
+  >([]);
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        const res = await fetch("/api/getJudgeStatistics");
+        const data = await res.json();
+        const submissionsByDayArray: { date: string; tests: number }[] = [];
+        Object.keys(data.submissions.last_30_days).forEach((key) => {
+          submissionsByDayArray.push({
+            date: key,
+            tests: data.submissions.last_30_days[key],
+          });
+        });
+        setSubmissionsByDay([...submissionsByDayArray]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    void fetchChartData();
+  }, []);
   return (
     <Card className="w-2/3">
       <CardHeader className="flex flex-col items-stretch space-y-0 p-0 sm:flex-row">
@@ -138,7 +161,7 @@ export default function TestNumberChart() {
         >
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={submissionsByDay}
             margin={{
               left: 12,
               right: 12,
