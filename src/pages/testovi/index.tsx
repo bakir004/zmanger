@@ -3,6 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { Test, TestGroup } from "@prisma/client";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import MonacoCodeEditor from "~/components/MonacoCodeEditor";
 import TestOutcomeListItem from "~/components/tests/TestOutcomeListItem";
@@ -30,11 +31,12 @@ let intervalId: NodeJS.Timeout | null = null;
 
 function TestsPage() {
   const { user } = useUser();
+  const router = useRouter();
   const [value, setValue] = useState(
     '// Nemojte ovdje kodirati, vas kod nece biti spasen...\n#include <iostream>\nint main(){\n  std::cout << "Hello, World!" << std::endl;\n  return 0;\n}',
   );
   const [testGroups, setTestGroups] = useState<TestGroup[]>([]);
-  const [selectedSubject, setSelectedSubject] = useState<string>("TP");
+  const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [selectedTestGroup, setSelectedTestGroup] = useState<string>("");
   const [loadingTestGroups, setLoadingTestGroups] = useState(false);
   const [tests, setTests] = useState<Test[]>([]);
@@ -45,14 +47,24 @@ function TestsPage() {
   const [running, setRunning] = useState(false);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
+  useEffect(() => {
+    if (router.isReady && router.query.subject) {
+      setSelectedSubject(router.query.subject as string);
+      void fetchTestGroups(router.query.subject as string);
+    }
+    if (router.isReady && !router.query.subject) {
+      setSelectedSubject("TP");
+      void fetchTestGroups("TP");
+    }
+  }, [router.isReady, router.query]);
+
   const fetchTestGroups = async (subject: string) => {
+    console.log("Fetching test groups for subject", subject);
     try {
-      setLoadingTestGroups(true);
       const res = await fetch("/api/tests/subject/" + subject);
       const data = await res.json();
       data.sort((a: TestGroup, b: TestGroup) => (a.name > b.name ? 1 : -1));
       setTestGroups(data);
-      setLoadingTestGroups(false);
     } catch (error) {
       console.error(error);
     }
@@ -69,20 +81,18 @@ function TestsPage() {
 
   const handleTestGroupChange = async (value: string) => {
     try {
+      setLoadingTestGroups(true);
       const res = await fetch("/api/tests/" + value);
       const data = await res.json();
       data.sort((a: Test, b: Test) => a.id - b.id);
       setSelectedTestGroup(value);
       setTests(data);
       setTestResults([]);
+      setLoadingTestGroups(false);
     } catch (error) {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    void fetchTestGroups(selectedSubject);
-  }, []);
 
   const runOneTest = async (test: Test) => {
     const filtered = testResults.filter((result) => result.id !== test.number);
@@ -280,19 +290,25 @@ function TestsPage() {
           ></MonacoCodeEditor>
         </div>
         <div className="h-full w-1/4 md:w-1/6">
-          {tests.length > 0 && (
-            <h3 className="h-6">
-              {loadingTestGroups ? "Učitavam testove..." : "Prošlo "}
-              {
-                testResults.filter(
-                  (result) =>
-                    result.status.description === "Accepted" ||
-                    result.status.description === "Core accepted",
-                ).length
-              }
-              /{testResults.length}
-            </h3>
-          )}
+          {tests.length > 0 &&
+            (loadingTestGroups ? (
+              <h3 className="flex h-6 items-center gap-2">
+                Učitavam testove...
+                <Loader2 className="h-4 w-4 animate-spin"></Loader2>
+              </h3>
+            ) : (
+              <h3 className="h-6">
+                {loadingTestGroups ? "Učitavam testove..." : "Prošlo "}
+                {
+                  testResults.filter(
+                    (result) =>
+                      result.status.description === "Accepted" ||
+                      result.status.description === "Core accepted",
+                  ).length
+                }
+                /{testResults.length}
+              </h3>
+            ))}
           <ScrollArea className="flex h-[calc(100%-1.5rem)] w-full flex-col gap-2 text-sm">
             {tests.map((test: Test) => (
               <TestOutcomeListItem
