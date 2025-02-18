@@ -48,7 +48,6 @@ import {
 } from "./ui/select";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Tests } from "~/lib/types";
-import { get } from "http";
 import Link from "next/link";
 import {
   AlertDialog,
@@ -61,7 +60,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
-import { useRouter } from "next/router";
 import { useUser } from "@clerk/nextjs";
 import MonacoCodeEditor from "./MonacoCodeEditor";
 
@@ -330,6 +328,10 @@ export function TestsDataTable() {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: {
+        pageSize: 100,
+        pageIndex: 0,
+      },
     },
   });
 
@@ -397,10 +399,11 @@ export function TestsDataTable() {
           disabled={loading}
           variant={"outline"}
           size="icon"
-          className={`${loading ? "animate-spin" : ""}`}
           onClick={() => void getTests()}
         >
-          <RefreshCcw className="h-4 w-4"></RefreshCcw>
+          <RefreshCcw
+            className={`${loading ? "animate-spin" : ""} h-4 w-4`}
+          ></RefreshCcw>
         </Button>
         <Link href="/dashboard/tests/add">
           <Button variant={"secondary"}>Dodaj testove</Button>

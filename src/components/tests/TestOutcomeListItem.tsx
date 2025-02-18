@@ -24,14 +24,13 @@ export default function TestOutcomeListItem({
   testResult: TestResult | undefined;
   onRun: (test: Test) => void;
 }) {
-  const code = test.topOfFile
-    ? test.topOfFile + "\n\n"
-    : "" +
-      "// Vaš kod ide ovdje...\n\n" +
-      (test.aboveMain ? test.aboveMain + "\n\n" : "") +
-      "int main() {\n" +
-      test.main +
-      "\n}";
+  const code =
+    (test.topOfFile ? test.topOfFile + "\n\n" : "") +
+    "// Vaš kod ide ovdje...\n\n" +
+    (test.aboveMain ? test.aboveMain + "\n\n" : "") +
+    "int main() {\n" +
+    test.main +
+    "\n}";
 
   const leak = testResult?.stderr?.includes("detected memory leaks");
   const passed =
@@ -95,7 +94,6 @@ export default function TestOutcomeListItem({
             <MonacoCodeEditor
               width={"100%"}
               height={"300px"}
-              readonly
               value={code}
               language="cpp"
               options={{
@@ -108,6 +106,7 @@ export default function TestOutcomeListItem({
                   enabled: false,
                 },
                 fontSize: 13,
+                readOnly: true,
               }}
             ></MonacoCodeEditor>
           </div>

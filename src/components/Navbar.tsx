@@ -15,6 +15,7 @@ import {
   DrawerClose,
   Drawer,
 } from "./ui/drawer";
+import { Separator } from "./ui/separator";
 
 const Navbar: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
@@ -30,11 +31,15 @@ const Navbar: React.FC = () => {
         <Link href="/">Zmanger v1</Link>
         <div className="hidden items-center justify-between gap-4 text-sm sm:flex">
           <Link href="/testovi">Testovi</Link>
+          <Separator orientation="vertical" />
           <Link href="/about" className="text-nowrap">
             O Zmangeru
           </Link>
+          <Separator orientation="vertical" />
           <Link href="/dashboard">Dashboard</Link>
+          <Separator orientation="vertical" />
           <Link href="/pricing">Pricing</Link>
+          <Separator orientation="vertical" />
           <Button
             variant="outline"
             size="icon"
@@ -56,7 +61,7 @@ const Navbar: React.FC = () => {
             </SignInButton>
           </SignedOut>
         </div>
-        <div className="flex items-center justify-end gap-2 sm:hidden">
+        <div className="flex items-center justify-end gap-4 sm:hidden">
           <SignedIn>
             <UserButton />
           </SignedIn>

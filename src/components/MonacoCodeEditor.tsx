@@ -24,7 +24,7 @@ export default function MonacoCodeEditor({
       language={language}
       onChange={onChange}
       options={{
-        readOnly: true,
+        readOnly: readonly,
         minimap: { enabled: false },
         lineDecorationsWidth: 0,
         folding: false,

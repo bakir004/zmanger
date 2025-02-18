@@ -48,6 +48,7 @@ function TestsPage() {
     try {
       const res = await fetch("/api/tests/subject/" + subject);
       const data = await res.json();
+      data.sort((a: TestGroup, b: TestGroup) => (a.name > b.name ? 1 : -1));
       setTestGroups(data);
     } catch (error) {
       console.error(error);

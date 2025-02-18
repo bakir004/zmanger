@@ -15,6 +15,7 @@ import {
   CardDescription,
   CardContent,
 } from "~/components/ui/card";
+import { Separator } from "~/components/ui/separator";
 
 export default function PricingPage() {
   return (
@@ -45,6 +46,7 @@ export default function PricingPage() {
             <h1 className="bg-gradient-to-r from-[#e84e38] to-[#ba2cb8] bg-clip-text text-4xl font-extrabold text-transparent">
               4 KM
             </h1>
+            <Separator />
           </CardHeader>
           <CardContent className="mx-auto w-11/12 text-left text-sm">
             <ul>
@@ -70,6 +72,7 @@ export default function PricingPage() {
             <h1 className="bg-gradient-to-r from-[#00dbde] to-[#fc00ff] bg-clip-text text-4xl font-extrabold text-transparent">
               15 KM
             </h1>
+            <Separator />
           </CardHeader>
           <CardContent className="mx-auto w-11/12 text-left text-sm">
             <ul>
@@ -99,7 +102,7 @@ export default function PricingPage() {
       </section>
       <p className="mx-auto mt-8 w-[60ch] text-center">
         Plaćanje se vrši uživo i permisije za testiranje se daju na licu mjesta.
-        Kontaktirajte admina Zmangera za sastanak.
+        Kontaktirajte admina za sastanak.
       </p>
     </main>
   );

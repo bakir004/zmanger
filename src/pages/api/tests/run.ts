@@ -96,11 +96,13 @@ export default async function runTests(
     };
     if (submissionResult.status.description !== "Accepted") {
       test.expect.forEach((expect) => {
-        if (submissionResult.stdout.trim() === expect.trim()) {
-          submissionResult.status.description = "Accepted";
-        }
         if (compareStringsIgnoringWhitespace(submissionResult.stdout, expect)) {
           submissionResult.status.description = "Core accepted";
+        }
+      });
+      test.expect.forEach((expect) => {
+        if (submissionResult.stdout.trim() === expect.trim()) {
+          submissionResult.status.description = "Accepted";
         }
       });
     }
