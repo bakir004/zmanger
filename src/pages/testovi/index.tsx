@@ -23,11 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { authGuard } from "~/lib/authguard";
 import { TestResult } from "~/lib/types";
 
 let intervalId: NodeJS.Timeout | null = null;
 
-export default function TestsPage() {
+function TestsPage() {
   const { user } = useUser();
   const [value, setValue] = useState(
     '// Nemojte ovdje kodirati, vas kod nece biti spasen...\n#include <iostream>\nint main(){\n  std::cout << "Hello, World!" << std::endl;\n  return 0;\n}',
@@ -307,3 +308,14 @@ export default function TestsPage() {
     </main>
   );
 }
+
+function Page() {
+  return <div>lmao</div>;
+}
+
+export default authGuard({
+  Component: TestsPage,
+  props: {},
+  requiresTestingPermissions: true,
+  // FallbackComponent: <Page />,
+});

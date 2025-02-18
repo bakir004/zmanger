@@ -1,3 +1,4 @@
+/* eslint-disable */
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
@@ -8,6 +9,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { type AppProps } from "next/app";
 import Head from "next/head";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -36,6 +39,8 @@ export default function App({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
             </main>
           </div>
+          <Analytics />
+          <SpeedInsights />
           <Toaster />
         </ThemeProvider>
       </ClerkProvider>

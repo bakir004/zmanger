@@ -34,6 +34,7 @@ const Navbar: React.FC = () => {
             O Zmangeru
           </Link>
           <Link href="/dashboard">Dashboard</Link>
+          <Link href="/pricing">Pricing</Link>
           <Button
             variant="outline"
             size="icon"
@@ -81,6 +82,13 @@ const Navbar: React.FC = () => {
                   <Link href="/testovi">
                     <Button variant="outline" className="w-full">
                       Testovi
+                    </Button>
+                  </Link>
+                </DrawerClose>
+                <DrawerClose asChild>
+                  <Link href="/pricing">
+                    <Button variant="outline" className="w-full">
+                      Pricing
                     </Button>
                   </Link>
                 </DrawerClose>
