@@ -36,6 +36,7 @@ function TestsPage() {
   const [testGroups, setTestGroups] = useState<TestGroup[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>("TP");
   const [selectedTestGroup, setSelectedTestGroup] = useState<string>("");
+  const [loadingTestGroups, setLoadingTestGroups] = useState(false);
   const [tests, setTests] = useState<Test[]>([]);
   const onChange = useCallback((val: string | undefined) => {
     if (!val) return;
@@ -46,10 +47,12 @@ function TestsPage() {
 
   const fetchTestGroups = async (subject: string) => {
     try {
+      setLoadingTestGroups(true);
       const res = await fetch("/api/tests/subject/" + subject);
       const data = await res.json();
       data.sort((a: TestGroup, b: TestGroup) => (a.name > b.name ? 1 : -1));
       setTestGroups(data);
+      setLoadingTestGroups(false);
     } catch (error) {
       console.error(error);
     }
@@ -279,7 +282,7 @@ function TestsPage() {
         <div className="h-full w-1/4 md:w-1/6">
           {tests.length > 0 && (
             <h3 className="h-6">
-              Prošlo{" "}
+              {loadingTestGroups ? "Učitavam testove..." : "Prošlo "}
               {
                 testResults.filter(
                   (result) =>
