@@ -16,6 +16,7 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Button } from "~/components/ui/button";
+import { Progress } from "~/components/ui/progress";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import {
   Select,
@@ -226,7 +227,7 @@ function TestsPage() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1 className="mb-4 text-3xl font-bold">Testovi</h1>
-      <section className="flex gap-4">
+      <section className="flex items-center gap-4">
         <Select
           defaultValue="TP"
           value={selectedSubject}
@@ -268,6 +269,7 @@ function TestsPage() {
         >
           Otkaži
         </Button>
+        <Progress value={(testResults.length / tests.length) * 100} />
       </section>
       <section className="mt-4 flex h-[calc(100dvh-400px)] gap-4">
         <div className="h-full w-3/4 md:w-5/6">
