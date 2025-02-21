@@ -71,10 +71,12 @@ function TestsPage() {
     }
   };
 
-  const handleSubjectChange = (value: string) => {
+  const handleSubjectChange = async (value: string) => {
     try {
+      setLoadingTestGroups(true);
       setSelectedSubject(value);
-      void fetchTestGroups(value);
+      await fetchTestGroups(value);
+      setLoadingTestGroups(false);
     } catch (error) {
       console.error(error);
     }
@@ -308,7 +310,7 @@ function TestsPage() {
                 testResults.length}
             </h3>
           )}
-          <ScrollArea className="flex h-[calc(100%-1.5rem)] w-full flex-col gap-2 text-sm">
+          <ScrollArea className="flex h-[calc(100%-2.25rem)] w-full flex-col gap-2 text-sm">
             {tests.map((test: Test) => (
               <TestOutcomeListItem
                 key={test.id}
