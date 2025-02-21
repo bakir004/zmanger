@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Skeleton } from "~/components/ui/skeleton";
 import { authGuard } from "~/lib/authguard";
 import { TestResult } from "~/lib/types";
 
@@ -40,6 +41,7 @@ function TestsPage() {
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [selectedTestGroup, setSelectedTestGroup] = useState<string>("");
   const [loadingTestGroups, setLoadingTestGroups] = useState(false);
+  const [loadingSubject, setLoadingSubject] = useState(false);
   const [tests, setTests] = useState<Test[]>([]);
   const onChange = useCallback((val: string | undefined) => {
     if (!val) return;
@@ -60,12 +62,12 @@ function TestsPage() {
   }, [router.isReady, router.query]);
 
   const fetchTestGroups = async (subject: string) => {
-    console.log("Fetching test groups for subject", subject);
     try {
       const res = await fetch("/api/tests/subject/" + subject);
       const data = await res.json();
       data.sort((a: TestGroup, b: TestGroup) => (a.name > b.name ? 1 : -1));
       setTestGroups(data);
+      if (data.length > 0) handleTestGroupChange(data[0].id.toString());
     } catch (error) {
       console.error(error);
     }
@@ -73,10 +75,10 @@ function TestsPage() {
 
   const handleSubjectChange = async (value: string) => {
     try {
-      setLoadingTestGroups(true);
+      setLoadingSubject(true);
       setSelectedSubject(value);
       await fetchTestGroups(value);
-      setLoadingTestGroups(false);
+      setLoadingSubject(false);
     } catch (error) {
       console.error(error);
     }
@@ -88,6 +90,7 @@ function TestsPage() {
       const res = await fetch("/api/tests/" + value);
       const data = await res.json();
       data.sort((a: Test, b: Test) => a.id - b.id);
+      console.log("SET");
       setSelectedTestGroup(value);
       setTests(data);
       setTestResults([]);
@@ -229,7 +232,7 @@ function TestsPage() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1 className="mb-4 text-3xl font-bold">Testovi</h1>
-      <section className="flex items-center gap-4">
+      <section className="flex flex-wrap items-center gap-4">
         <Select
           defaultValue="TP"
           value={selectedSubject}
@@ -244,9 +247,13 @@ function TestsPage() {
             <SelectItem value="NA">NA</SelectItem>
           </SelectContent>
         </Select>
-        <Select onValueChange={handleTestGroupChange}>
+        <Select
+          value={selectedTestGroup}
+          onValueChange={handleTestGroupChange}
+          disabled={loadingSubject}
+        >
           <SelectTrigger className="w-[180px] focus:outline-none focus:ring-0">
-            <SelectValue placeholder="Zadatak" />
+            <SelectValue placeholder="Odaberi zadatak" />
           </SelectTrigger>
           <SelectContent>
             {testGroups.map((group) => (
@@ -258,7 +265,14 @@ function TestsPage() {
         </Select>
         <Button
           onClick={runTests}
-          disabled={running}
+          disabled={
+            running ||
+            loadingTestGroups ||
+            tests.length === 0 ||
+            loadingSubject ||
+            selectedSubject === "" ||
+            selectedTestGroup === ""
+          }
           className="flex items-center gap-1 bg-blue-500 hover:bg-blue-400 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500"
         >
           Pokreni
@@ -294,35 +308,41 @@ function TestsPage() {
           ></MonacoCodeEditor>
         </div>
         <div className="h-full w-1/4 md:w-1/6">
-          <Progress
-            className="mb-1 h-2"
-            value={(testResults.length / tests.length) * 100}
-          />
           {tests.length > 0 && (
-            <h3 className="h-6">
-              {"Prošlo " +
-                testResults.filter(
-                  (result) =>
-                    result.status.description === "Accepted" ||
-                    result.status.description === "Core accepted",
-                ).length +
-                "/" +
-                testResults.length}
-            </h3>
+            <>
+              <Progress
+                className="mb-1 h-2"
+                value={(testResults.length / tests.length) * 100}
+              />
+              <h3 className="h-6">
+                {"Prošlo " +
+                  testResults.filter(
+                    (result) =>
+                      result.status.description === "Accepted" ||
+                      result.status.description === "Core accepted",
+                  ).length +
+                  "/" +
+                  testResults.length}
+              </h3>
+            </>
           )}
           <ScrollArea className="flex h-[calc(100%-2.25rem)] w-full flex-col gap-2 text-sm">
-            {tests.map((test: Test) => (
-              <TestOutcomeListItem
-                key={test.id}
-                testResult={testResults.find(
-                  (testRes) => testRes.id === test.number,
-                )}
-                test={test}
-                onRun={(test: Test) => runTest(test)}
-              >
-                {`Test ${test.number + 1}`}
-              </TestOutcomeListItem>
-            ))}
+            {loadingTestGroups
+              ? Array.from({ length: 10 }).map((_, i) => (
+                  <Skeleton key={i} className="my-1 h-8 w-full"></Skeleton>
+                ))
+              : tests.map((test: Test) => (
+                  <TestOutcomeListItem
+                    key={test.id}
+                    testResult={testResults.find(
+                      (testRes) => testRes.id === test.number,
+                    )}
+                    test={test}
+                    onRun={(test: Test) => runTest(test)}
+                  >
+                    {`Test ${test.number + 1}`}
+                  </TestOutcomeListItem>
+                ))}
           </ScrollArea>
         </div>
       </section>

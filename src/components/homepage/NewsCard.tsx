@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export default function NewsCard({}) {
   return (
-    <Card className="w-1/3">
+    <Card className="w-full">
       <CardHeader className="relative">
         <CardTitle className="mb-2">Najnovije obavijesti</CardTitle>
         <Alert>

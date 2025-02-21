@@ -32,11 +32,11 @@ export default function PricingPage() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1 className="my-4 text-center text-3xl font-bold">Pricing</h1>
-      <p className="mx-auto w-[60ch] text-center">
+      <p className="mx-auto max-w-[60ch] text-center">
         Budući da server hosting košta, testove mogu pokretati samo oni koji se
         pretplate. Omogućene su dvije vrlo povoljne opcije:
       </p>
-      <section className="mx-auto mt-8 flex w-full items-stretch justify-center gap-4">
+      <section className="mx-auto mt-8 flex w-full flex-wrap items-stretch justify-center gap-4">
         <Card className="w-[400px] text-center shadow-lg">
           <CardHeader>
             <CardTitle>Po zadaći (TP)</CardTitle>
@@ -100,7 +100,7 @@ export default function PricingPage() {
           </CardContent>
         </Card>
       </section>
-      <p className="mx-auto mt-8 w-[60ch] text-center">
+      <p className="mx-auto mt-8 max-w-[60ch] text-center">
         Plaćanje se vrši uživo i permisije za testiranje se daju na licu mjesta.
         Kontaktirajte admina za sastanak.
       </p>

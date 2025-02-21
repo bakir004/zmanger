@@ -54,7 +54,7 @@ export default function TestNumberChart() {
     void fetchChartData();
   }, []);
   return (
-    <Card className="w-2/3">
+    <Card className="w-full md:col-span-2">
       <CardHeader className="flex flex-col items-stretch space-y-0 p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Broj pokrenutih testova</CardTitle>

@@ -393,7 +393,7 @@ export function TestsDataTable() {
           {table.getFilteredSelectedRowModel().rows.length} od{" "}
           {table.getFilteredRowModel().rows.length} redova izabrano.
         </div>
-        {loading && <p className="flex gap-1 text-sm italic">Učitavam...</p>}
+        {/* {loading && <p className="flex gap-1 text-sm italic">Učitavam...</p>} */}
 
         <Button
           disabled={loading}

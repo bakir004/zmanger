@@ -27,9 +27,9 @@ export default function UsersCard() {
     void getUsersCount();
   }, []);
   return (
-    <Card className="w-1/4">
+    <Card className="w-full">
       <CardHeader className="relative">
-        <Users className="absolute right-6 top-6 h-6 w-6 text-slate-400" />
+        <Users className="absolute right-6 top-6 hidden h-6 w-6 text-slate-400 lg:block" />
         <p className="text-sm">Ukupno korisnika</p>
         {totalUsers > 0 ? (
           <CardTitle className="font-extrabold text-yellow-500">

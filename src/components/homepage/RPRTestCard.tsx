@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function NATestCard({}) {
   return (
-    <Card className="relative aspect-[5/2] w-1/4 overflow-hidden rounded-2xl text-white shadow-lg">
+    <Card className="relative aspect-[5/2] w-full overflow-hidden rounded-2xl text-white shadow-lg">
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/../classroom4.jpg')" }}

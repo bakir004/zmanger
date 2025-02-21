@@ -1,3 +1,4 @@
+import Link from "next/link";
 import DashboardPageWrapper from "~/components/DashboardPageWrapper";
 import {
   Breadcrumb,
@@ -5,6 +6,7 @@ import {
   BreadcrumbItem,
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
+import { Button } from "~/components/ui/button";
 
 export default function DashboardPage() {
   return (
@@ -16,7 +18,18 @@ export default function DashboardPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      Dashboard
+      <div className="flex flex-col">
+        <Link href="/dashboard/tests">
+          <Button variant={"link"} className="underline">
+            Pregled testova
+          </Button>
+        </Link>
+        <Link href="/dashboard/add">
+          <Button variant={"link"} className="underline">
+            Dodaj testove
+          </Button>
+        </Link>
+      </div>
     </DashboardPageWrapper>
   );
 }

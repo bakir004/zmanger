@@ -19,9 +19,9 @@ export default function TestsCard() {
   }, []);
 
   return (
-    <Card className="w-1/4">
+    <Card className="w-full">
       <CardHeader className="relative">
-        <ClipboardCheck className="absolute right-6 top-6 h-6 w-6 text-slate-400" />
+        <ClipboardCheck className="absolute right-6 top-6 hidden h-6 w-6 text-slate-400 lg:block" />
         <p className="text-sm">Pokrenuto</p>
         <CardTitle className="font-extrabold text-purple-500">
           {testCount}

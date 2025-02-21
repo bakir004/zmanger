@@ -229,7 +229,7 @@ function AddTestsPage() {
             //   className="max-w-[300px]"
           ></Input>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           <Select onValueChange={(val) => setTestGroupSubject(val)}>
             <SelectTrigger className="w-[300px] focus:outline-none focus:ring-0">
               <SelectValue placeholder="Predmet" />

@@ -21,7 +21,7 @@ function DashboardTests() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Lista testova</BreadcrumbPage>
+            <BreadcrumbPage>Pregled testova</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

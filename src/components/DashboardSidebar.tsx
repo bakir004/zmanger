@@ -35,7 +35,7 @@ export default function DashboardSidebar() {
               variant="link"
               className="flex h-6 w-full items-center justify-between pl-3 text-left dark:text-slate-300"
             >
-              Lista testova
+              Pregled testova
             </Button>
           </Link>
           <Link href="/dashboard/tests/add">
