@@ -269,7 +269,7 @@ function TestsPage() {
         >
           Otkaži
         </Button>
-        <Progress value={(testResults.length / tests.length) * 100} />
+        {loadingTestGroups && <p>Učitavam...</p>}
       </section>
       <section className="mt-4 flex h-[calc(100dvh-400px)] gap-4">
         <div className="h-full w-3/4 md:w-5/6">
@@ -292,25 +292,22 @@ function TestsPage() {
           ></MonacoCodeEditor>
         </div>
         <div className="h-full w-1/4 md:w-1/6">
-          {tests.length > 0 &&
-            (loadingTestGroups ? (
-              <h3 className="flex h-6 items-center gap-2">
-                Učitavam testove...
-                <Loader2 className="h-4 w-4 animate-spin"></Loader2>
-              </h3>
-            ) : (
-              <h3 className="h-6">
-                {loadingTestGroups ? "Učitavam testove..." : "Prošlo "}
-                {
-                  testResults.filter(
-                    (result) =>
-                      result.status.description === "Accepted" ||
-                      result.status.description === "Core accepted",
-                  ).length
-                }
-                /{testResults.length}
-              </h3>
-            ))}
+          <Progress
+            className="mb-1 h-2"
+            value={(testResults.length / tests.length) * 100}
+          />
+          {tests.length > 0 && (
+            <h3 className="h-6">
+              {"Prošlo " +
+                testResults.filter(
+                  (result) =>
+                    result.status.description === "Accepted" ||
+                    result.status.description === "Core accepted",
+                ).length +
+                "/" +
+                testResults.length}
+            </h3>
+          )}
           <ScrollArea className="flex h-[calc(100%-1.5rem)] w-full flex-col gap-2 text-sm">
             {tests.map((test: Test) => (
               <TestOutcomeListItem

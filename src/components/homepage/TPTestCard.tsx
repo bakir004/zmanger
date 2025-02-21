@@ -13,7 +13,7 @@ export default function TPTestCard({}) {
       <div className="absolute inset-0 bg-black/40"></div>
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black to-transparent"></div>
 
-      <Link href="/tp">
+      <Link href="/testovi?subject=TP">
         <CardContent className="relative flex h-full flex-col justify-end gap-1 py-4">
           <p className="text-xs">C++</p>
           <h3 className="font-bold">TP Testovi</h3>
