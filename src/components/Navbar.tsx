@@ -61,17 +61,17 @@ const Navbar: React.FC = () => {
             </SignInButton>
           </SignedOut>
         </div>
-        <div className="flex items-center justify-end gap-4 sm:hidden">
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-          <SignedOut>
-            <SignInButton>
-              <Button className="h-8" variant={"outline"}>
-                Prijavi se
-              </Button>
-            </SignInButton>
-          </SignedOut>
+        <div className="flex items-center justify-end gap-2 sm:hidden">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-8"
+            onClick={toggleTheme}
+          >
+            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <span className="sr-only">Promijeni temu</span>
+          </Button>
           <Drawer>
             <DrawerTrigger asChild>
               <Button variant="outline" size="icon" className="h-8 w-8">
@@ -114,6 +114,16 @@ const Navbar: React.FC = () => {
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton>
+              <Button className="h-8" variant={"outline"}>
+                Prijavi se
+              </Button>
+            </SignInButton>
+          </SignedOut>
         </div>
       </div>
     </nav>
