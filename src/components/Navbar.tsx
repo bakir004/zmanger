@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
           <Drawer>
             <DrawerTrigger asChild>
               <Button variant="outline" size="icon" className="h-8 w-8">
-                <Menu className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <Menu className="absolute h-[1.2rem] w-[1.2rem]" />
               </Button>
             </DrawerTrigger>
             <DrawerContent>
