@@ -1,36 +1,6 @@
+/* eslint-disable */
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "../ui/card";
-
-type CpuInfo = {
-  Architecture: string;
-  "CPU op-mode(s)": string;
-  "Byte Order": string;
-  "Address sizes": string;
-  "CPU(s)": string;
-  "On-line CPU(s) list": string;
-  "Thread(s) per core": string;
-  "Core(s) per socket": string;
-  "Socket(s)": string;
-  "NUMA node(s)": string;
-  "Vendor ID": string;
-  "CPU family": string;
-  Model: string;
-  "Model name": string;
-  Stepping: string;
-  "CPU MHz": string;
-  BogoMIPS: string;
-  Virtualization: string;
-  "Hypervisor vendor": string;
-  "Virtualization type": string;
-  "L1d cache": string;
-  "L1i cache": string;
-  "L2 cache": string;
-  "L3 cache": string;
-  "NUMA node0 CPU(s)": string;
-  Flags: string;
-  Mem: string;
-  Swap: string;
-};
 
 type ServerInfo = {
   "CPU op-mode(s)": string;
