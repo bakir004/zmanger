@@ -45,6 +45,7 @@ export default function TestNumberChart() {
             tests: data.submissions.last_30_days[key],
           });
         });
+        submissionsByDayArray.reverse();
         setSubmissionsByDay([...submissionsByDayArray]);
       } catch (error) {
         console.error(error);
