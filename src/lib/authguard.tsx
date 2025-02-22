@@ -19,7 +19,7 @@ export function authGuard({
 
     if (!isLoaded) {
       return (
-        <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center">
+        <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
           <span className="loader"></span>
           <p className="italic">Učitavam...</p>
         </div>
@@ -28,7 +28,7 @@ export function authGuard({
 
     if (!isSignedIn) {
       const fallback = FallbackComponent || (
-        <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center">
+        <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
           <h3 className="text-xl font-bold">Niste prijavljeni :&#40;</h3>
           <p>Molimo prijavite se prije nego što pristupite ovoj ruti.</p>
           <SignInButton>
@@ -43,7 +43,7 @@ export function authGuard({
       console.log(user);
       if (!user.publicMetadata.canTest) {
         return (
-          <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center">
+          <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
             <h3 className="text-xl font-bold">
               Nažalost, niste pretplaćeni na Zmanger :&#40;
             </h3>
