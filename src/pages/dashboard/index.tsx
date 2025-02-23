@@ -24,7 +24,7 @@ export default function DashboardPage() {
             Pregled testova
           </Button>
         </Link>
-        <Link href="/dashboard/add">
+        <Link href="/dashboard/tests/add">
           <Button variant={"link"} className="underline">
             Dodaj testove
           </Button>

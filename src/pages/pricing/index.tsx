@@ -44,7 +44,7 @@ export default function PricingPage() {
               Pravo na testiranje se oduzima sa rokom zadaće
             </CardDescription>
             <h1 className="bg-gradient-to-r from-[#e84e38] to-[#ba2cb8] bg-clip-text text-4xl font-extrabold text-transparent">
-              4 KM
+              3 KM
             </h1>
             <Separator />
           </CardHeader>
@@ -70,7 +70,7 @@ export default function PricingPage() {
             <CardTitle>Semestralno</CardTitle>
             <CardDescription>Jednom platite za čitav semestar</CardDescription>
             <h1 className="bg-gradient-to-r from-[#00dbde] to-[#fc00ff] bg-clip-text text-4xl font-extrabold text-transparent">
-              15 KM
+              10 KM
             </h1>
             <Separator />
           </CardHeader>
