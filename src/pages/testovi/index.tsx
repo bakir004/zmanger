@@ -90,7 +90,6 @@ function TestsPage() {
       const res = await fetch("/api/tests/" + value);
       const data = await res.json();
       data.sort((a: Test, b: Test) => a.id - b.id);
-      console.log("SET");
       setSelectedTestGroup(value);
       setTests(data);
       setTestResults([]);

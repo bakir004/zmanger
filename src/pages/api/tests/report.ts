@@ -9,4 +9,5 @@ export default async function sendReport(
   const { user, report }: { user: string; report: any } = req.body;
   logger.info(report.user + " ran some tests", { user, report });
   res.json({ message: "Report sent" });
+  logger.flush();
 }
