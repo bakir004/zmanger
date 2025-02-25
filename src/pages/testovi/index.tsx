@@ -66,6 +66,7 @@ function TestsPage() {
       const res = await fetch("/api/tests/subject/" + subject);
       const data = await res.json();
       const testGroupResult = data.testGroups;
+      console.log(testGroupResult);
       testGroupResult.sort((a: TestGroup, b: TestGroup) => (a.name > b.name ? 1 : -1));
       setTestGroups(testGroupResult);
       if (data.length > 0) handleTestGroupChange(data[0].id.toString());
