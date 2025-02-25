@@ -22,5 +22,5 @@ export default async function getTestsGroupsBySubject(
     },
   });
 
-  return res.status(200).json(testGroups);
+  return res.status(200).json({testGroups});
 }

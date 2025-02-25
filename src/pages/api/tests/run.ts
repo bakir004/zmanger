@@ -84,7 +84,7 @@ export default async function runTests(
         }),
       },
     );
-    const submissionResultEncoded = await result.json();
+    const submissionResultEncoded = await result.clone().json();
     const submissionResult = {
       stdout: fromBase64(submissionResultEncoded.stdout),
       time: submissionResultEncoded.time,
