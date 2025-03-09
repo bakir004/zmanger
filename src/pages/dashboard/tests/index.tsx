@@ -31,4 +31,10 @@ function DashboardTests() {
   );
 }
 
-export default authGuard({ Component: DashboardTests, props: {} });
+export default authGuard({
+  Component: DashboardTests,
+  props: {},
+  needModerator: true,
+});
+
+

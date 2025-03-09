@@ -15,6 +15,7 @@ type ServerInfo = {
 export default function ServerInfoCard() {
   const [serverInfo, setServerInfo] = useState<ServerInfo | null>(null);
   const [online, setOnline] = useState(true);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function getServerInfo() {
       try {
@@ -25,7 +26,6 @@ export default function ServerInfoCard() {
         }
 
         const data = await response.json();
-        console.log(data);
         const cpuInfo: ServerInfo = {
           Architecture: data.Architecture,
           "CPU(s)": data["CPU(s)"],
@@ -37,13 +37,14 @@ export default function ServerInfoCard() {
         };
 
         setServerInfo(cpuInfo);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching server info:", error);
         setOnline(false);
+      } finally {
+        setLoading(false);
       }
     }
-
+    console.log(serverInfo);
     void getServerInfo();
   }, []);
   return (
@@ -51,7 +52,11 @@ export default function ServerInfoCard() {
       <CardHeader className="relative">
         <CardTitle className="mb-2 flex items-center gap-4">
           <p>Server</p>
-          {online ? (
+          {loading ? (
+            <span className="flex rounded bg-orange-500/30 px-1.5 text-sm text-orange-500">
+              • Loading
+            </span>
+          ) : online ? (
             <span className="flex rounded bg-green-500/30 px-1.5 text-sm text-green-500">
               • Online
             </span>
@@ -61,16 +66,14 @@ export default function ServerInfoCard() {
             </span>
           )}
         </CardTitle>
-        {serverInfo && (
-          <div className="flex flex-col items-center justify-center gap-1">
-            {Object.keys(serverInfo).map((key, i) => (
-              <div className="grid grid-cols-2 gap-2" key={i}>
-                <span className="text-right text-slate-400">{key}</span>
-                <span className="">{serverInfo[key as keyof ServerInfo]}</span>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="flex flex-col items-center justify-center gap-1">
+          {serverInfo ? Object.keys(serverInfo).map((key, i) => (
+            <div className="grid grid-cols-2 gap-2" key={i}>
+              <span className="text-right text-slate-400">{key}</span>
+              <span className="">{serverInfo[key as keyof ServerInfo]}</span>
+            </div>
+          )) : <div>Server nije dostupan ili se učitava...</div>}
+        </div>
       </CardHeader>
     </Card>
   );

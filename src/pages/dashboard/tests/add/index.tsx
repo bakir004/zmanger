@@ -226,7 +226,7 @@ function AddTestsPage() {
             required
             placeholder="Naziv skupa testova (npr. Zadaca1-Z1)"
             onChange={(e) => setTestGroupName(e.target.value)}
-            //   className="max-w-[300px]"
+          //   className="max-w-[300px]"
           ></Input>
         </div>
         <div className="flex flex-wrap gap-4">
@@ -264,4 +264,8 @@ function AddTestsPage() {
   );
 }
 
-export default authGuard({ Component: AddTestsPage, props: {} });
+export default authGuard({
+  Component: AddTestsPage,
+  props: {},
+  needModerator: true,
+});

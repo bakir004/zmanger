@@ -7,8 +7,9 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import { Button } from "~/components/ui/button";
+import { authGuard } from "~/lib/authguard";
 
-export default function DashboardPage() {
+function DashboardPage() {
   return (
     <DashboardPageWrapper>
       <Breadcrumb className="mb-2">
@@ -33,3 +34,10 @@ export default function DashboardPage() {
     </DashboardPageWrapper>
   );
 }
+
+export default authGuard({
+  Component: DashboardPage,
+  props: {},
+  needModerator: true,
+});
+

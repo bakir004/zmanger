@@ -330,20 +330,20 @@ function TestsPage() {
           <ScrollArea className="flex h-[calc(100%-2.25rem)] w-full flex-col gap-2 text-sm">
             {loadingTestGroups
               ? Array.from({ length: 10 }).map((_, i) => (
-                  <Skeleton key={i} className="my-1 h-8 w-full"></Skeleton>
-                ))
+                <Skeleton key={i} className="my-1 h-8 w-full"></Skeleton>
+              ))
               : tests.map((test: Test) => (
-                  <TestOutcomeListItem
-                    key={test.id}
-                    testResult={testResults.find(
-                      (testRes) => testRes.id === test.number,
-                    )}
-                    test={test}
-                    onRun={(test: Test) => runTest(test)}
-                  >
-                    {`Test ${test.number + 1}`}
-                  </TestOutcomeListItem>
-                ))}
+                <TestOutcomeListItem
+                  key={test.id}
+                  testResult={testResults.find(
+                    (testRes) => testRes.id === test.number,
+                  )}
+                  test={test}
+                  onRun={(test: Test) => runTest(test)}
+                >
+                  {`Test ${test.number + 1}`}
+                </TestOutcomeListItem>
+              ))}
           </ScrollArea>
         </div>
       </section>
@@ -351,13 +351,8 @@ function TestsPage() {
   );
 }
 
-function Page() {
-  return <div>lmao</div>;
-}
-
 export default authGuard({
   Component: TestsPage,
   props: {},
   requiresTestingPermissions: true,
-  // FallbackComponent: <Page />,
 });

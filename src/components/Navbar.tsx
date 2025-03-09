@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import {
   DrawerTrigger,
   DrawerContent,
@@ -18,6 +18,7 @@ import {
 import { Separator } from "./ui/separator";
 
 const Navbar: React.FC = () => {
+  const { user } = useUser();
   const [isDark, setIsDark] = useState(true);
   const { setTheme } = useTheme();
   const toggleTheme = () => {
@@ -30,16 +31,14 @@ const Navbar: React.FC = () => {
       <div className="content flex w-full max-w-screen-1280 items-center justify-between px-4">
         <Link href="/">Zmanger v1</Link>
         <div className="hidden items-center justify-between gap-4 text-sm sm:flex">
-          <Link href="/testovi">Testovi</Link>
-          <Separator orientation="vertical" />
-          <Link href="/about" className="text-nowrap">
+          <Link className="hover:underline" href="/testovi">Testovi</Link>
+          <Link href="/about" className="text-nowrap hover:underline">
             O Zmangeru
           </Link>
-          <Separator orientation="vertical" />
-          <Link href="/dashboard">Dashboard</Link>
-          <Separator orientation="vertical" />
-          <Link href="/pricing">Pricing</Link>
-          <Separator orientation="vertical" />
+          {(user?.publicMetadata as { moderator?: boolean })?.moderator && (
+            <Link className="hover:underline" href="/dashboard">Dashboard</Link>)}
+          <Link className="hover:underline" href="/pricing">Pretplata</Link>
+          <Link className="hover:underline" href="/groups">Grupomjenjač</Link>
           <Button
             variant="outline"
             size="icon"
@@ -91,9 +90,16 @@ const Navbar: React.FC = () => {
                   </Link>
                 </DrawerClose>
                 <DrawerClose asChild>
+                  <Link href="/groups">
+                    <Button variant="outline" className="w-full">
+                      Grupomjenjač
+                    </Button>
+                  </Link>
+                </DrawerClose>
+                <DrawerClose asChild>
                   <Link href="/pricing">
                     <Button variant="outline" className="w-full">
-                      Pricing
+                      Pretplata
                     </Button>
                   </Link>
                 </DrawerClose>
@@ -104,13 +110,15 @@ const Navbar: React.FC = () => {
                     </Button>
                   </Link>
                 </DrawerClose>
-                <DrawerClose asChild>
-                  <Link href="/dashboard">
-                    <Button variant="outline" className="w-full">
-                      Dashboard
-                    </Button>
-                  </Link>
-                </DrawerClose>
+                {(user?.publicMetadata as { moderator?: boolean })?.moderator && (
+                  <DrawerClose asChild>
+                    <Link href="/dashboard">
+                      <Button variant="outline" className="w-full">
+                        Dashboard
+                      </Button>
+                    </Link>
+                  </DrawerClose>
+                )}
               </DrawerFooter>
             </DrawerContent>
           </Drawer>

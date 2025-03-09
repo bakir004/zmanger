@@ -27,17 +27,17 @@ export default function PricingPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Pricing</BreadcrumbPage>
+            <BreadcrumbPage>Pretplata</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <h1 className="my-4 text-center text-3xl font-bold">Pricing</h1>
+      <h1 className="my-4 text-center text-3xl font-bold">Pretplata</h1>
       <p className="mx-auto max-w-[60ch] text-center">
         Budući da server hosting košta, testove mogu pokretati samo oni koji se
-        pretplate. Omogućene su dvije vrlo povoljne opcije:
+        pretplate. Zbog nedavne promjene bodova na (TP) zadaćama sa 20 na 10, omogućena je jedna vrlo povoljna opcija:
       </p>
       <section className="mx-auto mt-8 flex w-full flex-wrap items-stretch justify-center gap-4">
-        <Card className="w-[400px] text-center shadow-lg">
+        {/* <Card className="w-[400px] text-center shadow-lg">
           <CardHeader>
             <CardTitle>Po zadaći (TP)</CardTitle>
             <CardDescription>
@@ -64,7 +64,7 @@ export default function PricingPage() {
               </li>
             </ul>
           </CardContent>
-        </Card>
+        </Card> */}
         <Card className="w-[400px] text-center shadow-lg">
           <CardHeader>
             <CardTitle>Semestralno</CardTitle>
@@ -76,10 +76,6 @@ export default function PricingPage() {
           </CardHeader>
           <CardContent className="mx-auto w-11/12 text-left text-sm">
             <ul>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4"></Check>
-                <p>Uštedite do 33% u odnosu na prvi plan</p>
-              </li>
               <li className="flex items-center gap-2">
                 <Check className="h-4 w-4"></Check>
                 <p>Neograničen broj testiranja</p>
