@@ -46,6 +46,7 @@ function GroupsPage() {
   const [selectedYear, setSelectedYear] = useState("2");
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -58,6 +59,19 @@ function GroupsPage() {
     dayWant: "",
     year: selectedYear,
   });
+
+  const isFormValid = () => {
+    return (
+      formData.phoneNumber.trim() !== "" &&
+      formData.subjectGive !== "" &&
+      formData.timeGive !== "" &&
+      formData.dayGive !== "" &&
+      formData.subjectWant !== "" &&
+      formData.timeWant !== "" &&
+      formData.dayWant !== "" &&
+      formData.year !== ""
+    );
+  };
 
   const fetchOffers = async (year?: string) => {
     try {
@@ -76,8 +90,11 @@ function GroupsPage() {
   }, [selectedYear]);
 
   const handleCreateOffer = async () => {
-    try {
-      const response = await fetch("/api/offer/create", {
+    if (!isFormValid()) return;
+
+    setIsSubmitting(true);
+    const createPromise = new Promise<string>((resolve, reject) => {
+      fetch("/api/offer/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -88,53 +105,69 @@ function GroupsPage() {
           creatorName: user?.firstName || "Unknown User",
           year: Number(formData.year),
         }),
-      });
-
-      if (response.ok) {
-        // Refresh the offers list
-        fetchOffers(selectedYear);
-        // Reset form
-        setFormData({
-          phoneNumber: "",
-          subjectGive: "",
-          timeGive: "",
-          dayGive: "",
-          subjectWant: "",
-          timeWant: "",
-          dayWant: "",
-          year: selectedYear,
+      })
+        .then(async (response) => {
+          if (response.ok) {
+            await fetchOffers(selectedYear);
+            setFormData({
+              phoneNumber: "",
+              subjectGive: "",
+              timeGive: "",
+              dayGive: "",
+              subjectWant: "",
+              timeWant: "",
+              dayWant: "",
+              year: selectedYear,
+            });
+            setDialogOpen(false);
+            resolve("Ponuda uspješno kreirana!");
+          } else {
+            reject("Greška pri kreiranju ponude.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error creating offer:", error);
+          reject("Greška pri kreiranju ponude.");
+        })
+        .finally(() => {
+          setIsSubmitting(false);
         });
-        // Close dialog
-        setDialogOpen(false);
-        toast.success("Ponuda uspješno kreirana!");
-      } else {
-        toast.error("Greška pri kreiranju ponude.");
-      }
-    } catch (error) {
-      console.error("Error creating offer:", error);
-      toast.error("Greška pri kreiranju ponude.");
-    }
+    });
+
+    toast.promise(createPromise, {
+      loading: "Kreiranje ponude...",
+      success: (message) => message as string,
+      error: (message) => message as string,
+    });
   };
 
   const handleDeleteOffer = async (offerId: number) => {
-    try {
-      const response = await fetch(`/api/offer/delete?id=${offerId}`, {
+    const deletePromise = new Promise<string>((resolve, reject) => {
+      fetch(`/api/offer/delete?id=${offerId}`, {
         method: "DELETE",
         headers: {
           Authorization: user?.id || "",
         },
-      });
+      })
+        .then(async (response) => {
+          if (response.ok) {
+            await fetchOffers(selectedYear);
+            resolve("Ponuda uspješno obrisana!");
+          } else {
+            reject("Greška pri brisanju ponude.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting offer:", error);
+          reject("Greška pri brisanju ponude.");
+        });
+    });
 
-      if (response.ok) {
-        fetchOffers(selectedYear);
-        toast.success("Ponuda uspješno obrisana!");
-      } else {
-        toast.error("Greška pri brisanju ponude.");
-      }
-    } catch (error) {
-      console.error("Error deleting offer:", error);
-      toast.error("Greška pri brisanju ponude.");
-    }
+    toast.promise(deletePromise, {
+      loading: "Brisanje ponude...",
+      success: (message) => message as string,
+      error: (message) => message as string,
+    });
   };
 
   const toRoman = (num: string) => {
@@ -327,7 +360,12 @@ function GroupsPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleCreateOffer}>Objavi ponudu</Button>
+              <Button
+                onClick={handleCreateOffer}
+                disabled={!isFormValid() || isSubmitting}
+              >
+                {isSubmitting ? "Kreiranje..." : "Objavi ponudu"}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
