@@ -198,5 +198,5 @@ function PermissionsPage() {
 export default authGuard({
   Component: PermissionsPage,
   props: {},
-  needsETFemail: true,
+  adminOnly: true,
 });
