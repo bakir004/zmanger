@@ -39,6 +39,7 @@ const Navbar: React.FC = () => {
             <Link className="hover:underline" href="/dashboard">Dashboard</Link>
           )}
           <Link className="hover:underline" href="/about/subscribe">Pretplata</Link>
+          <Link className="hover:underline" href="/about/reviews">Recenzije</Link>
           <Link className="hover:underline" href="/groups">Grupomjenjač</Link>
           <Button
             variant="outline"
@@ -101,6 +102,13 @@ const Navbar: React.FC = () => {
                   <Link href="/about/subscribe">
                     <Button variant="outline" className="w-full">
                       Pretplata
+                    </Button>
+                  </Link>
+                </DrawerClose>
+                <DrawerClose asChild>
+                  <Link href="/about/reviews">
+                    <Button variant="outline" className="w-full">
+                      Recenzije
                     </Button>
                   </Link>
                 </DrawerClose>
