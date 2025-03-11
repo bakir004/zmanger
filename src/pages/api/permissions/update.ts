@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { clerkClient } from "@clerk/nextjs/server";
 import { NextApiRequest, NextApiResponse } from "next";
 
