@@ -108,11 +108,11 @@ function PermissionsPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Dozvole</BreadcrumbPage>
+            <BreadcrumbPage>Permisije</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <h1 className="my-4 text-3xl font-bold">Upravljanje dozvolama</h1>
+      <h1 className="my-4 text-3xl font-bold">Upravljanje permisijama</h1>
       <h3 className="mb-4 text-lg font-bold">Korisnika: {users.length}</h3>
 
       <div className="flex flex-col gap-4 mb-4">

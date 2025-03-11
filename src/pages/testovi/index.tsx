@@ -243,6 +243,7 @@ function TestsPage() {
             <SelectValue placeholder="Predmet" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="SOLO">Solo</SelectItem>
             <SelectItem value="TP">TP</SelectItem>
             <SelectItem value="ASP">ASP</SelectItem>
             <SelectItem value="NA">NA</SelectItem>
