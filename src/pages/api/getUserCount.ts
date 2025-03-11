@@ -4,9 +4,7 @@ dotenv.config();
 
 export default async function getUserCount(req: any, res: any) {
   const isProduction = process.env.NODE_ENV === "production";
-  const apiKey = isProduction
-    ? process.env.CLERK_SECRET_KEY
-    : process.env.CLERK_SECRET_PROD_KEY;
+  const apiKey = process.env.CLERK_SECRET_KEY;
   const apiUrl = "https://api.clerk.dev/v1/users/count";
 
   try {

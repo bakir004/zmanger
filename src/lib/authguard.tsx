@@ -9,7 +9,8 @@ export function authGuard({
   FallbackComponent,
   requiresTestingPermissions,
   needModerator,
-  needsETFemail
+  needsETFemail,
+  adminOnly
 }: {
   Component: React.ComponentType<any>;
   props: any;
@@ -17,6 +18,7 @@ export function authGuard({
   requiresTestingPermissions?: boolean;
   needModerator?: boolean;
   needsETFemail?: boolean;
+  adminOnly?: boolean;
 }) {
   return function ProtectedComponent(props: any) {
     const { isLoaded, user, isSignedIn } = useUser();
@@ -24,6 +26,8 @@ export function authGuard({
     if (user?.publicMetadata.admin) {
       return <Component {...props} />;
     }
+
+
 
     if (!isLoaded) {
       return (
@@ -47,7 +51,16 @@ export function authGuard({
       return fallback;
     }
 
-
+    if (adminOnly && !user?.publicMetadata.admin) {
+      return (
+        <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
+          <h3 className="text-xl font-bold text-center mb-4">Niste admin :&#40;</h3>
+          <Link href="/">
+            <Button variant={"secondary"}>Nazad na početnu</Button>
+          </Link>
+        </div>
+      );
+    }
 
     if (requiresTestingPermissions) {
       if (!user.publicMetadata.canTest) {
@@ -64,9 +77,6 @@ export function authGuard({
               <Link href="/pricing">
                 <Button variant={"secondary"}>Pogledaj cijene</Button>
               </Link>
-              {/* <Link href="/sandbox">
-                <Button>Otiđi na sandbox</Button>
-              </Link> */}
             </div>
           </div>
         );
