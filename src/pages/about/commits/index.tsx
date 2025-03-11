@@ -110,8 +110,4 @@ function CommitsPage() {
   );
 }
 
-export default authGuard({
-  Component: CommitsPage,
-  props: {},
-  needsETFemail: true,
-}); 
+export default CommitsPage
