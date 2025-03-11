@@ -46,3 +46,22 @@ model Offer {
 
   @@index([creatorId])
 }
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // User information (from Clerk)
+  userId      String
+  firstName   String
+  lastName    String
+  imageUrl    String?
+  
+  // Review content
+  title       String   @db.VarChar(100)
+  rating      Int      
+  description String   @db.Text
+
+  @@map("reviews")
+}

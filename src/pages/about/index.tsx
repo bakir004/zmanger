@@ -1,13 +1,17 @@
 /* eslint-disable */
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { SignInButton } from "@clerk/nextjs";
+import { GitCommit, Star, DollarSign } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import AboutPageWrapper from "~/components/AboutPageWrapper";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "~/components/ui/breadcrumb";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 
 export default function AboutPage() {
   return (
-    <main className="mx-auto w-full max-w-screen-1280 px-4 pt-8">
+    <AboutPageWrapper>
       <Breadcrumb className="mb-2">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -20,10 +24,24 @@ export default function AboutPage() {
         </BreadcrumbList>
       </Breadcrumb>
       <section className="max-w-[60ch] mx-auto text-justify">
-        <div className="flex items-center flex-col mb-6">
+        <div className="flex items-center flex-col mb-2">
           <Image src="/favicon.ico" width={70} height={70} alt="smijesna slika" />
           <h1 className="my-2 text-3xl font-bold">Zmanger</h1>
           <p className="italic">Pomoćna aplikacija za lakši život na ETF-u</p>
+        </div>
+        <div className="text-center mb-4 sm:hidden block">
+          <Link href="/about/commits">
+            <Button variant="link">
+              <GitCommit className="w-4 h-4" /> Commitovi</Button>
+          </Link>
+          <Link href="/about/reviews">
+            <Button variant="link">
+              <Star className="w-4 h-4" /> Recenzije</Button>
+          </Link>
+          <Link href="/about/subscribe">
+            <Button variant="link">
+              <DollarSign className="w-4 h-4" /> Pretplata</Button>
+          </Link>
         </div>
         <div className="flex flex-col gap-3">
           <h3 className="text-xl text-center font-bold">Šta je Zmanger?</h3>
@@ -82,6 +100,6 @@ export default function AboutPage() {
           <p>Kada moderatori dodaju testove, studenti će ih automatski vidjeti kao opciju, i moći će ih pokrenuti.</p>
         </div>
       </section>
-    </main>
+    </AboutPageWrapper>
   );
 }

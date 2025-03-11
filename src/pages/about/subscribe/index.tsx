@@ -1,25 +1,17 @@
 /* eslint-disable */
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignInButton } from "@clerk/nextjs";
+import { Separator } from "@radix-ui/react-separator";
 import { Check } from "lucide-react";
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
-} from "~/components/ui/breadcrumb";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "~/components/ui/card";
-import { Separator } from "~/components/ui/separator";
+import Image from "next/image";
+import Link from "next/link";
+import AboutPageWrapper from "~/components/AboutPageWrapper";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "~/components/ui/breadcrumb";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/components/ui/card";
 
-export default function PricingPage() {
+export default function AboutPage() {
   return (
-    <main className="mx-auto w-full max-w-screen-1280 px-4 pt-8">
+    <AboutPageWrapper>
       <Breadcrumb className="mb-2">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -27,10 +19,15 @@ export default function PricingPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
+            <BreadcrumbLink href="/about">O Zmangeru</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
             <BreadcrumbPage>Pretplata</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
       <h1 className="my-4 text-center text-3xl font-bold">Pretplata</h1>
       <p className="mx-auto max-w-[60ch] text-center">
         Budući da server hosting košta, testove mogu pokretati samo oni koji se
@@ -100,6 +97,6 @@ export default function PricingPage() {
         Plaćanje se vrši uživo i permisije za testiranje se daju na licu mjesta.
         Kontaktirajte admina za sastanak.
       </p>
-    </main>
+    </AboutPageWrapper>
   );
 }

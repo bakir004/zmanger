@@ -8,8 +8,10 @@ import {
 } from "~/components/ui/breadcrumb";
 import { Button } from "~/components/ui/button";
 import { authGuard } from "~/lib/authguard";
+import { useUser } from "@clerk/nextjs";
 
 function DashboardPage() {
+  const { user } = useUser();
   return (
     <DashboardPageWrapper>
       <Breadcrumb className="mb-2">
@@ -30,6 +32,13 @@ function DashboardPage() {
             Dodaj testove
           </Button>
         </Link>
+        {(user?.publicMetadata as { admin?: boolean })?.admin && (
+          <Link href="/dashboard/permissions">
+            <Button variant={"link"} className="underline">
+              Permisije
+            </Button>
+          </Link>
+        )}
       </div>
     </DashboardPageWrapper>
   );

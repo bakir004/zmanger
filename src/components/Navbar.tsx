@@ -36,12 +36,10 @@ const Navbar: React.FC = () => {
             O Zmangeru
           </Link>
           {(user?.publicMetadata as { moderator?: boolean })?.moderator && (
-            <Link className="hover:underline" href="/dashboard">Dashboard</Link>)}
-          <Link className="hover:underline" href="/pricing">Pretplata</Link>
-          <Link className="hover:underline" href="/groups">Grupomjenjač</Link>
-          {(user?.publicMetadata as { admin?: boolean })?.admin && (
-            <Link className="hover:underline" href="/permissions">Permisije</Link>
+            <Link className="hover:underline" href="/dashboard">Dashboard</Link>
           )}
+          <Link className="hover:underline" href="/about/subscribe">Pretplata</Link>
+          <Link className="hover:underline" href="/groups">Grupomjenjač</Link>
           <Button
             variant="outline"
             size="icon"
@@ -100,7 +98,7 @@ const Navbar: React.FC = () => {
                   </Link>
                 </DrawerClose>
                 <DrawerClose asChild>
-                  <Link href="/pricing">
+                  <Link href="/about/subscribe">
                     <Button variant="outline" className="w-full">
                       Pretplata
                     </Button>
@@ -118,15 +116,6 @@ const Navbar: React.FC = () => {
                     <Link href="/dashboard">
                       <Button variant="outline" className="w-full">
                         Dashboard
-                      </Button>
-                    </Link>
-                  </DrawerClose>
-                )}
-                {(user?.publicMetadata as { admin?: boolean })?.admin && (
-                  <DrawerClose asChild>
-                    <Link href="/permissions">
-                      <Button variant="outline" className="w-full">
-                        Permisije
                       </Button>
                     </Link>
                   </DrawerClose>

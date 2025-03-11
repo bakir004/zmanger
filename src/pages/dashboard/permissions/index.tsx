@@ -9,6 +9,7 @@ import { Input } from "~/components/ui/input";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
 import { authGuard } from "~/lib/authguard";
+import DashboardPageWrapper from "~/components/DashboardPageWrapper";
 
 type User = {
   id: string;
@@ -100,11 +101,11 @@ function PermissionsPage() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-screen-1280 px-4 pt-8">
+    <DashboardPageWrapper>
       <Breadcrumb className="mb-2">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -191,7 +192,8 @@ function PermissionsPage() {
           )}
         </TableBody>
       </Table>
-    </main>
+    </DashboardPageWrapper>
+
   );
 }
 
