@@ -236,72 +236,78 @@ function ReviewsPage() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {reviews.map((review) => (
-          <Card key={review.id} className="flex flex-col">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex gap-3">
-                  <img
-                    src={review.imageUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + review.firstName}
-                    alt={`${review.firstName}'s avatar`}
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <div>
-                    <CardTitle className="text-md -mt-0.5">{review.firstName} {review.lastName}</CardTitle>
-                    <div className="flex flex-wrap items-center text-sm text-muted-foreground">
-                      <span>{format(new Date(review.createdAt), "dd MMM yyyy")}</span>
-                      <span className="mx-1">•</span>
-                      <div className="flex gap-0.5">
-                        {Array.from({ length: review.rating }).map((_, i) => (
-                          <StarIcon key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        ))}
-                        {Array.from({ length: 5 - review.rating }).map((_, i) => (
-                          <Star key={i} className="w-4 h-4" />
-                        ))}
+      {reviews.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {reviews.map((review) => (
+            <Card key={review.id} className="flex flex-col">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex gap-3">
+                    <img
+                      src={review.imageUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + review.firstName}
+                      alt={`${review.firstName}'s avatar`}
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <div>
+                      <CardTitle className="text-md -mt-0.5">{review.firstName} {review.lastName}</CardTitle>
+                      <div className="flex flex-wrap items-center text-sm text-muted-foreground">
+                        <span>{format(new Date(review.createdAt), "dd MMM yyyy")}</span>
+                        <span className="mx-1">•</span>
+                        <div className="flex gap-0.5">
+                          {Array.from({ length: review.rating }).map((_, i) => (
+                            <StarIcon key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          ))}
+                          {Array.from({ length: 5 - review.rating }).map((_, i) => (
+                            <Star key={i} className="w-4 h-4" />
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                {user?.id === review.userId && (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Jeste li sigurni?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Ova akcija će trajno izbrisati vašu recenziju.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Odustani</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDeleteReview(review.id)}
-                          className="bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600/90 dark:text-white"
+                  {user?.id === review.userId && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900"
                         >
-                          Izbriši
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <h3 className="font-semibold mb-2 -mt-3">{review.title}</h3>
-              <p className="text-sm text-muted-foreground">{review.description}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Jeste li sigurni?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Ova akcija će trajno izbrisati vašu recenziju.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Odustani</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteReview(review.id)}
+                            className="bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600/90 dark:text-white"
+                          >
+                            Izbriši
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <h3 className="font-semibold mb-2 -mt-3">{review.title}</h3>
+                <p className="text-sm text-muted-foreground">{review.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <p className="text-muted-foreground">
+          Recenzije se učitavaju...
+        </p>
+      )}
     </AboutPageWrapper>
   );
 }

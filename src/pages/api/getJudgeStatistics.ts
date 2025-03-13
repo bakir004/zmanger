@@ -14,7 +14,7 @@ export default async function getJudgeStatistics(
 
     res.status(200).json(data);
   } catch (error: any) {
-    logger.error("Error in getSubmissionCount", { error: error.message });
+    // logger.error("Error in getSubmissionCount", { error: error.message });
     console.error(error);
     res.status(500).json({ error: error.message });
   }
