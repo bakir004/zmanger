@@ -156,7 +156,7 @@ function ReviewsPage() {
       </Breadcrumb>
 
       <div className="mb-4">
-        <h1 className="my-4 text-3xl font-bold">Recenzije</h1>
+        <h1 className="my-4 text-3xl font-bold">Recenzije (reviews.length())</h1>
 
         {user ? (
           <>
