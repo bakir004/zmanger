@@ -1,45 +1,50 @@
-/* eslint-disable */
-"use client";
-import { useEffect, useState } from "react";
+import { GetStaticProps } from "next";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "~/components/ui/breadcrumb";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
-import { Skeleton } from "~/components/ui/skeleton";
 import { format } from "date-fns";
-import { authGuard } from "~/lib/authguard";
 import AboutPageWrapper from "~/components/AboutPageWrapper";
 
 type Commit = {
   sha: string;
   commit: {
+    message: string;
     author: {
       name: string;
       date: string;
     };
-    message: string;
   };
   html_url: string;
 };
 
-function CommitsPage() {
-  const [commits, setCommits] = useState<Commit[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+type CommitsPageProps = {
+  commits: Commit[];
+};
 
-  useEffect(() => {
-    const fetchCommits = async () => {
-      try {
-        const response = await fetch('https://api.github.com/repos/bakir004/zmanger/commits?per_page=30');
-        const data = await response.json();
-        setCommits(data);
-      } catch (error) {
-        console.error('Error fetching commits:', error);
-      } finally {
-        setIsLoading(false);
-      }
+export const getStaticProps: GetStaticProps<CommitsPageProps> = async () => {
+  try {
+    const response = await fetch(
+      "https://api.github.com/repos/bakir004/zmanger/commits?per_page=30"
+    );
+    const commits = await response.json();
+
+    return {
+      props: {
+        commits,
+      },
+      revalidate: 3600,
     };
+  } catch (error) {
+    console.error("Error fetching commits:", error);
+    return {
+      props: {
+        commits: [],
+      },
+      revalidate: 3600,
+    };
+  }
+};
 
-    fetchCommits();
-  }, []);
-
+export default function CommitsPage({ commits }: CommitsPageProps) {
   return (
     <AboutPageWrapper>
       <Breadcrumb className="mb-2">
@@ -64,50 +69,33 @@ function CommitsPage() {
       </p>
 
       <div className="space-y-4">
-        {isLoading ? (
-          // Loading skeletons
-          Array.from({ length: 5 }).map((_, i) => (
-            <Card key={i}>
+        {commits.map((commit) => (
+          <a
+            key={commit.sha}
+            href={commit.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block transition-colors hover:bg-accent rounded-lg"
+          >
+            <Card>
               <CardHeader>
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[150px]" />
+                <CardTitle className="text-lg">
+                  {commit.commit.message}
+                </CardTitle>
+                <CardDescription>
+                  by {commit.commit.author.name} on{" "}
+                  {format(new Date(commit.commit.author.date), "dd MMM yyyy 'at' HH:mm")}
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-4 w-[350px]" />
+                <p className="text-sm text-muted-foreground font-mono">
+                  {commit.sha.substring(0, 7)}
+                </p>
               </CardContent>
             </Card>
-          ))
-        ) : (
-          commits.map((commit) => (
-            <a
-              key={commit.sha}
-              href={commit.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block transition-colors hover:bg-accent rounded-lg"
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">
-                    {commit.commit.message}
-                  </CardTitle>
-                  <CardDescription>
-                    by {commit.commit.author.name} on{" "}
-                    {format(new Date(commit.commit.author.date), "dd MMM yyyy 'at' HH:mm")}
-                  </CardDescription>
-                </CardHeader>
-                {/* <CardContent>
-                  <p className="text-sm text-muted-foreground font-mono">
-                    {commit.sha.substring(0, 7)}
-                  </p>
-                </CardContent> */}
-              </Card>
-            </a>
-          ))
-        )}
+          </a>
+        ))}
       </div>
     </AboutPageWrapper>
   );
 }
-
-export default CommitsPage

@@ -86,10 +86,6 @@ export default function AboutPage() {
                 <p>Pristup svim mogućnostima Zmangera</p>
               </li>
             </ul>
-            <p className="mt-3">
-              Cijena za semestralnu pretplatu opada za <strong>2KM</strong> za
-              svaku zadaću iz TP čiji rok istekne.
-            </p>
           </CardContent>
         </Card>
       </section>

@@ -17,7 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>Zmanger ETF</title>
-        <meta name="description" content="Pomoćna ETF aplikacija za studente" />
+        <meta name="description" content="Pomoćna aplikacija za lakši život na ETF-u" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ClerkProvider
