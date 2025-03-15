@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest } from "next/server";
-import { logger } from "~/lib/logger";
+import { flush, logger } from "~/lib/logger";
 
 export default function handler(req: NextRequest, res: NextApiResponse) {
   const authHeader = req.headers.get("authorization");
@@ -11,5 +11,6 @@ export default function handler(req: NextRequest, res: NextApiResponse) {
     });
   }
   logger.warn("Cron job started", { message: "Cron job started" });
+  flush();
   res.status(200).end("Hello Cron!");
 }

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { logger } from "~/lib/logger";
+import { flush, logger } from "~/lib/logger";
 
 const prisma = new PrismaClient();
 
@@ -30,6 +30,7 @@ export default async function getOffers(
       count: offers.length,
       yearFilter: year || "none",
     });
+    flush();
 
     res.status(200).json({
       message: "Offers retrieved successfully",

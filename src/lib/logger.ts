@@ -11,6 +11,10 @@ const logtail = new Logtail(process.env.BETTERSTACK_SOURCE_TOKEN, {
   endpoint: "https://" + process.env.BETTERSTACK_INGESTING_HOST,
 });
 
+export async function flush() {
+  await logtail.flush();
+}
+
 export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
   format: combine(timestamp(), errors({ stack: true }), json()),
