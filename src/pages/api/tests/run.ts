@@ -40,8 +40,11 @@ export default async function runTests(
   res: NextApiResponse,
 ) {
   try {
-    const { code, test }: { code: string; test: Test } = req.body;
-
+    const {
+      code,
+      test,
+      stdin,
+    }: { code: string; test: Test; stdin: string | undefined } = req.body;
     if (!code) {
       logger.error("Code not in request body");
       throw new Error("Code not in request body");
@@ -79,7 +82,10 @@ export default async function runTests(
         body: JSON.stringify({
           source_code: toBase64(finalCode),
           language_id: "2",
-          stdin: toBase64(test.stdin ?? "") ?? "",
+          stdin:
+            stdin !== undefined
+              ? toBase64(stdin)
+              : (toBase64(test.stdin ?? "") ?? ""),
           expected_output: toBase64(test.expect[0]),
         }),
       },

@@ -37,6 +37,7 @@ function TestsPage() {
   const [value, setValue] = useState(
     '// Nemojte ovdje kodirati, vas kod nece biti spasen...\n#include <iostream>\nint main(){\n  std::cout << "Hello, World!" << std::endl;\n  return 0;\n}',
   );
+  const [stdinValue, setStdinValue] = useState("");
   const [testGroups, setTestGroups] = useState<TestGroup[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [selectedTestGroup, setSelectedTestGroup] = useState<string>("");
@@ -49,6 +50,11 @@ function TestsPage() {
   }, []);
   const [running, setRunning] = useState(false);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
+
+  const onStdinChange = useCallback((val: string | undefined) => {
+    if (!val) return;
+    setStdinValue(val);
+  }, []);
 
   useEffect(() => {
     if (router.isReady && router.query.subject) {
@@ -112,6 +118,7 @@ function TestsPage() {
       body: JSON.stringify({
         code: value,
         test: test,
+        stdin: selectedSubject === "SOLO" ? stdinValue : undefined,
       }),
     });
     const data = await res.json();
@@ -175,6 +182,7 @@ function TestsPage() {
       }
       console.log(`Running test ${testCounter + 1}...`);
       const test = tests[testCounter];
+      console.log(selectedSubject === "SOLO" ? stdinValue : undefined);
       try {
         testCounter++;
         const res = await fetch("/api/tests/run", {
@@ -185,6 +193,7 @@ function TestsPage() {
           body: JSON.stringify({
             code: value,
             test: test,
+            stdin: selectedSubject === "SOLO" ? stdinValue : undefined,
           }),
         });
         if (!res.ok) {
@@ -289,10 +298,12 @@ function TestsPage() {
         </Button>
         {loadingTestGroups && <p>Učitavam...</p>}
       </section>
-      <section className="mt-4 flex h-[calc(100dvh-400px)] gap-4">
-        <div className="h-full w-3/4 md:w-5/6">
+      {selectedSubject === "SOLO" && <p className="mt-2 italic text-sm">
+        Kada testirate svoj main, dodajte <code>return 0;</code> na kraj, inače ćete dobivati error &quot;Illegal instruction&quot;.</p>}
+      <section className="mt-4 flex gap-4">
+        <div className="h-[calc(100dvh-400px)] w-3/4 md:w-5/6">
           <MonacoCodeEditor
-            height="100%"
+            height="75%"
             value={value}
             onChange={onChange}
             language="cpp"
@@ -308,6 +319,28 @@ function TestsPage() {
               fontSize: 14,
             }}
           ></MonacoCodeEditor>
+
+          {selectedSubject === "SOLO" && (
+            <>
+              <p className="px-4 py-2 text-sm text-muted-foreground">
+                Standard Input (stdin)
+              </p>
+              <MonacoCodeEditor
+                height="25%"
+                language="cpp"
+                value={stdinValue}
+                onChange={onStdinChange}
+                options={{
+                  minimap: { enabled: false },
+                  lineNumbers: "off",
+                  glyphMargin: false,
+                  folding: false,
+                  lineDecorationsWidth: 0,
+                  lineNumbersMinChars: 0,
+                }}
+              />
+            </>
+          )}
         </div>
         <div className="h-full w-1/4 md:w-1/6">
           {tests.length > 0 && (
