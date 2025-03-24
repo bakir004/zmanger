@@ -70,8 +70,19 @@ export default async function runTests(
     finalCode += test.aboveMain ? "\n\n" : "";
     finalCode += "int main() {\n";
     finalCode += test.main ?? "";
-    finalCode += "\n}";
+    finalCode += "return 0;\n}";
 
+    const bodyObject = {
+      source_code: toBase64(finalCode.trim()),
+      language_id: "2",
+      stdin:
+        stdin !== undefined
+          ? toBase64(stdin.trim())
+          : test.stdin
+            ? toBase64(test.stdin.trim())
+            : "",
+      expected_output: test.expect[0] ? toBase64(test.expect[0].trim()) : "",
+    };
     const result = await fetch(
       process.env.CODERUNNER_URL + "/submissions?base64_encoded=true&wait=true",
       {
@@ -79,18 +90,15 @@ export default async function runTests(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          source_code: toBase64(finalCode),
-          language_id: "2",
-          stdin:
-            stdin !== undefined
-              ? toBase64(stdin)
-              : (toBase64(test.stdin ?? "") ?? ""),
-          expected_output: toBase64(test.expect[0]),
-        }),
+        body: JSON.stringify(bodyObject),
       },
     );
-    const submissionResultEncoded = await result.clone().json();
+
+    if (!result.ok) {
+      throw new Error(`HTTP error! status: ${result.status}`);
+    }
+
+    const submissionResultEncoded = await result.json();
     const submissionResult = {
       stdout: fromBase64(submissionResultEncoded.stdout),
       time: submissionResultEncoded.time,
