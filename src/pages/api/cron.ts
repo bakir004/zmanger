@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest } from "next/server";
-import { flush, logger } from "~/lib/logger";
+import { logger } from "~/lib/logger";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const authHeader = req.headers["authorization"];
