@@ -9,6 +9,5 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   logger.warn("Cron job started", { message: "Cron job started" });
-  flush();
   res.status(200).end("Hello Cron!");
 }
