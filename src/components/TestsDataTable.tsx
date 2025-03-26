@@ -62,6 +62,7 @@ import {
 } from "./ui/alert-dialog";
 import { useUser } from "@clerk/nextjs";
 import MonacoCodeEditor from "./MonacoCodeEditor";
+import { Switch } from "./ui/switch";
 
 export type TestGroup = {
   id: number;
@@ -124,7 +125,7 @@ export const columns: ColumnDef<TestGroup>[] = [
   },
   {
     accessorKey: "phase",
-    header: () => <div className="text-right">Faza</div>,
+    header: () => <div className="text-right">U produkciji</div>,
     cell: ({ row }) => {
       const phase = (row.getValue("phase") ?? "testing") as string;
       const { user } = useUser();
@@ -143,7 +144,7 @@ export const columns: ColumnDef<TestGroup>[] = [
             }),
           });
           if (res.ok) {
-            toast.success(`Faza promijenjena u ${newPhase}`);
+            toast.success(`Faza promijenjena u ${newPhase}, refreshujte da vidite promjene`);
           } else {
             toast.error("Greška pri promjeni faze");
           }
@@ -154,13 +155,10 @@ export const columns: ColumnDef<TestGroup>[] = [
 
       return (
         <div className="flex items-center justify-end gap-2">
-          <Button
-            variant={phase === "production" ? "default" : "outline"}
-            size="sm"
-            onClick={togglePhase}
-          >
-            {phase === "production" ? "Produkcija" : "Testiranje"}
-          </Button>
+          <Switch
+            checked={phase === "production"}
+            onCheckedChange={togglePhase}
+          />
         </div>
       );
     },

@@ -11,6 +11,8 @@ export const testJsonFormatter = (json: any) => {
 
     const tests = testJson.tests;
     tests.forEach((item: any, i: number) => {
+      console.log(item);
+      if (item.options?.includes("hidden")) return;
       const newTest: Test = {
         id: 0,
         patch: [],
