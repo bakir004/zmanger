@@ -67,6 +67,7 @@ export type TestGroup = {
   id: number;
   name: string;
   subject: string;
+  phase: string;
   json: Tests;
 };
 
@@ -118,6 +119,49 @@ export const columns: ColumnDef<TestGroup>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-right font-medium">{row.getValue("subject")}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "phase",
+    header: () => <div className="text-right">Faza</div>,
+    cell: ({ row }) => {
+      const phase = (row.getValue("phase") ?? "testing") as string;
+      const { user } = useUser();
+
+      const togglePhase = async () => {
+        const newPhase = phase === "testing" ? "production" : "testing";
+        try {
+          const res = await fetch("/api/tests/phase/" + row.original.id, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              phase: newPhase,
+              user: user?.id,
+            }),
+          });
+          if (res.ok) {
+            toast.success(`Faza promijenjena u ${newPhase}`);
+          } else {
+            toast.error("Greška pri promjeni faze");
+          }
+        } catch (error) {
+          toast.error("Greška pri promjeni faze");
+        }
+      };
+
+      return (
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            variant={phase === "production" ? "default" : "outline"}
+            size="sm"
+            onClick={togglePhase}
+          >
+            {phase === "production" ? "Produkcija" : "Testiranje"}
+          </Button>
+        </div>
       );
     },
   },
@@ -264,17 +308,24 @@ export function TestsDataTable() {
 
   const getTests = async () => {
     setLoading(true);
-    const res = await fetch("/api/tests/get");
+    const res = await fetch("/api/tests/get", {
+      headers: {
+        "x-user-id": user?.id ?? "",
+      },
+    });
 
     if (res.ok) {
       setLoading(false);
       const data = await res.json();
-
-      setTestGroups(
-        data.testGroups.sort((a: TestGroup, b: TestGroup) => {
+      console.log(data.testGroups);
+      setTestGroups([
+        ...data.testGroups.map((group: TestGroup) => ({
+          ...group,
+          phase: group.phase ?? "testing", // Ensure phase has a default value
+        })).sort((a: TestGroup, b: TestGroup) => {
           return a.id - b.id;
         }),
-      );
+      ]);
     } else {
       toast.error("Desila se greška prilikom učitavanja testova");
     }
@@ -348,9 +399,9 @@ export function TestsDataTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   );
                 })}

@@ -1,22 +1,18 @@
 /* eslint-disable */
 const winston = require("winston");
-const { Logtail } = require("@logtail/node");
-const { LogtailTransport } = require("@logtail/winston");
-import dotenv from "dotenv";
-dotenv.config();
+const winstonTcp = require("winston-tcp");
 
-const { combine, timestamp, errors, json } = winston.format;
-
-const logtail = new Logtail(process.env.BETTERSTACK_SOURCE_TOKEN, {
-  endpoint: "https://" + process.env.BETTERSTACK_INGESTING_HOST,
-});
-
-export async function flush() {
-  await logtail.flush();
-}
+const logstashHost = "64.226.106.170";
+const logstashPort = 50000;
 
 export const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || "info",
-  format: combine(timestamp(), errors({ stack: true }), json()),
-  transports: [new LogtailTransport(logtail)],
+  level: "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winstonTcp({
+      host: logstashHost,
+      port: logstashPort,
+    }),
+  ],
 });

@@ -69,15 +69,29 @@ function TestsPage() {
 
   const fetchTestGroups = async (subject: string) => {
     try {
-      const res = await fetch("/api/tests/subject/" + subject);
+      const res = await fetch("/api/tests/subject/" + subject, {
+        headers: {
+          "x-user-id": user?.id ?? "",
+          "x-user-role": user?.publicMetadata?.admin ? "admin" : user?.publicMetadata?.moderator ? "moderator" : "user",
+        },
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       const data = await res.json();
+      if (!data.testGroups) {
+        console.error("No test groups in response:", data);
+        return;
+      }
       const testGroupResult = data.testGroups;
       console.log(testGroupResult);
+      // Sort test groups by name
       testGroupResult.sort((a: TestGroup, b: TestGroup) => (a.name > b.name ? 1 : -1));
       setTestGroups(testGroupResult);
-      if (data.length > 0) handleTestGroupChange(data[0].id.toString());
+      if (testGroupResult.length > 0) handleTestGroupChange(testGroupResult[0].id.toString());
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching test groups:", error);
+      setTestGroups([]);
     }
   };
 

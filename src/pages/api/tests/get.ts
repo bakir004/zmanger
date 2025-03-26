@@ -22,6 +22,7 @@ export default async function getAllTestGroups(
       id: testGroup.id,
       name: testGroup.name,
       subject: testGroup.subject,
+      phase: testGroup.phase ?? "testing",
       json: {
         tests: testGroup.tests.map((test) => ({
           id: test.id,
