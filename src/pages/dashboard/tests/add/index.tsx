@@ -61,6 +61,7 @@ function AddTestsPage() {
   const autoformatJSON = () => {
     try {
       const formattedJsonString = decodeHtmlEntities(valueOriginal);
+      console.log(formattedJsonString)
       const parsed = JSON.parse(formattedJsonString);
       const formattedJson = testJsonFormatter(parsed);
       setValueFormatted(JSON.stringify(formattedJson, null, 2));

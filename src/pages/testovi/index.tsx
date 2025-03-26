@@ -30,6 +30,7 @@ import { authGuard } from "~/lib/authguard";
 import { TestResult } from "~/lib/types";
 
 let intervalId: NodeJS.Timeout | null = null;
+const DELAY_IN_MILLIS = 200;
 
 function TestsPage() {
   const { user } = useUser();
@@ -196,7 +197,6 @@ function TestsPage() {
       }
       console.log(`Running test ${testCounter + 1}...`);
       const test = tests[testCounter];
-      console.log(selectedSubject === "SOLO" ? stdinValue : undefined);
       try {
         testCounter++;
         const res = await fetch("/api/tests/run", {
@@ -226,7 +226,6 @@ function TestsPage() {
     };
 
     await runIndividualTest();
-    const DELAY_IN_MILLIS = 400;
 
     intervalId = setInterval(runIndividualTest, DELAY_IN_MILLIS);
   };
