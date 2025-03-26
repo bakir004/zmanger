@@ -1,8 +1,10 @@
+/* eslint-disable */
 import ASPTestCard from "~/components/homepage/ASPTestCard";
 import CostCard from "~/components/homepage/CostCard";
 import NATestCard from "~/components/homepage/NATestCard";
 import RPRTestCard from "~/components/homepage/RPRTestCard";
 import ServerInfoCard from "~/components/homepage/ServerInfoCard";
+import TestGroupsCard from "~/components/homepage/TestGroupsCard";
 import TestNumberChart from "~/components/homepage/TestNumberChart";
 import TestsCard from "~/components/homepage/TestsCard";
 import TPTestCard from "~/components/homepage/TPTestCard";
@@ -18,6 +20,9 @@ export default function HomePage() {
         <TestsCard />
         <VaktijaCard />
         <UsersCard />
+      </section>
+      <section className="mt-4">
+        <TestGroupsCard />
       </section>
       <section className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         <TestNumberChart />
