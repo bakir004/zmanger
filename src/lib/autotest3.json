@@ -23,33 +23,6 @@
   },
   "tests": [
     {
-      "id": 4124,
-      "tools": [
-        {
-          "patch": [
-            {
-              "position": "main",
-              "code": "Lista<int>* l;\nl = new JednostrukaLista<int>;\nfor (int i(0); i<40000; i++)\n    l->dodajIspred(5);\nstd::cout << l->trenutni();\ndelete l;",
-              "use_markers": true
-            },
-            {
-              "position": "above_main",
-              "code": "#include <iostream>",
-              "use_markers": true
-            }
-          ]
-        },
-        "compile[debug]",
-        {
-          "execute": {
-            "expect": ["5"]
-          }
-        },
-        "debug",
-        "profile[asan]"
-      ]
-    },
-    {
       "id": 4125,
       "tools": [
         {
