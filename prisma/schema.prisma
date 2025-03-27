@@ -11,8 +11,8 @@ model TestGroup {
   id      Int    @id @default(autoincrement())
   name    String
   subject String
+  phase   String @default("testing")
   tests   Test[]
-  phase   String  @default("testing")
 }
 
 model Test {
