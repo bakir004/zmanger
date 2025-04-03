@@ -36,10 +36,14 @@ export const testJsonFormatter = (json: any) => {
       newTest.patch = newPatchArray;
       if (item.tools[2].execute.environment)
         newTest.stdin = item.tools[2].execute.environment.stdin;
+      console.log(newTest);
       formattedTestJson.tests.push(newTest);
     });
     return formattedTestJson;
   } catch (e) {
     console.error("An error occurred:", e);
+    throw new Error(
+      "Failed to format JSON, probably a wrong format in the original JSON",
+    );
   }
 };

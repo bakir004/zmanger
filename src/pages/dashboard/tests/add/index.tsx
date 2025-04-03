@@ -61,7 +61,9 @@ function AddTestsPage() {
   const autoformatJSON = () => {
     try {
       const formattedJsonString = decodeHtmlEntities(valueOriginal);
-      console.log(formattedJsonString)
+      console.log(formattedJsonString);
+      const decodedJson = JSON.parse(formattedJsonString);
+      setValueOriginal(JSON.stringify(decodedJson, null, 2));
       const parsed = JSON.parse(formattedJsonString);
       const formattedJson = testJsonFormatter(parsed);
       setValueFormatted(JSON.stringify(formattedJson, null, 2));
@@ -72,7 +74,6 @@ function AddTestsPage() {
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      console.log("asd");
       router.push("/sign-in");
     }
   }, [isLoaded, isSignedIn]);
@@ -80,6 +81,7 @@ function AddTestsPage() {
   const submit = async () => {
     try {
       const json = testShapeChecker(valueFormatted);
+      console.log(json);
       const res = fetch("/api/tests/create", {
         method: "POST",
         headers: {
@@ -227,7 +229,7 @@ function AddTestsPage() {
             required
             placeholder="Naziv skupa testova (npr. Zadaca1-Z1)"
             onChange={(e) => setTestGroupName(e.target.value)}
-          //   className="max-w-[300px]"
+            //   className="max-w-[300px]"
           ></Input>
         </div>
         <div className="flex flex-wrap gap-4">

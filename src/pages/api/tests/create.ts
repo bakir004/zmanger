@@ -15,6 +15,7 @@ export default async function create(
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Only POST requests allowed" });
   }
+  console.log("ADDING TESTTS");
 
   try {
     const {
@@ -43,6 +44,7 @@ export default async function create(
       return res.status(400).json({ message: "Invalid request body" });
     }
 
+    console.log("NIGGGGGGGGGAS2");
     try {
       testShapeChecker(JSON.stringify(testsObject));
     } catch (e: any) {
@@ -53,6 +55,8 @@ export default async function create(
         .status(400)
         .json({ message: "Invalid tests shape", error: e.message });
     }
+    console.log("NIGGGGGGGGGAS");
+    console.log(tests);
     const testGroup = await prisma.testGroup.create({
       data: {
         name: testGroupName,
@@ -85,8 +89,7 @@ export default async function create(
                 `Test with id ${test.id} has an invalid or empty "expect" array.`,
               );
             }
-
-            return {
+            const returnObject = {
               number: test.id,
               aboveMain,
               main,
@@ -94,6 +97,9 @@ export default async function create(
               expect: test.expect,
               stdin: test.stdin ?? null,
             };
+            console.log("RETURN OBJECT");
+            console.log(returnObject);
+            return returnObject;
           }),
         },
       },

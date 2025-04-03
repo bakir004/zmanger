@@ -16,7 +16,18 @@ export default async function getTestsByGroupId(
       where: {
         testGroupId: Number(testGroupId),
       },
+      select: {
+        id: true,
+        number: true,
+        main: true,
+        aboveMain: true,
+        topOfFile: true,
+        expect: true,
+        stdin: true,
+      },
     });
+
+    console.log(tests);
 
     return res.status(200).json(tests);
   } catch (error: any) {
