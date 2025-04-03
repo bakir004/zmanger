@@ -125,7 +125,7 @@ export const columns: ColumnDef<TestGroup>[] = [
   },
   {
     accessorKey: "phase",
-    header: () => <div className="text-right">U produkciji</div>,
+    header: () => <div className="text-right">Vidljivi svima</div>,
     cell: ({ row }) => {
       const phase = (row.getValue("phase") ?? "testing") as string;
       const { user } = useUser();

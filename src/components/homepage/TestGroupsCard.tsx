@@ -59,13 +59,11 @@ export default function TestGroupsCard() {
           <p className="text-sm text-muted-foreground">Nema dostupnih testova</p>
         ) : (
           testGroups.map((group) => (
+            group.phase === "production" &&
             <Link key={group.id} href={`/testovi?subject=TP`}>
               <Badge
                 variant="secondary"
-                className={`cursor-pointer ${group.phase === "testing"
-                  ? "bg-orange-600  dark:hover:bg-orange-500 text-white"
-                  : "bg-green-600  dark:hover:bg-green-500 text-white"
-                  }`}
+                className={`cursor-pointer bg-green-600  dark:hover:bg-green-500 text-white`}
               >
                 {group.name}
               </Badge>

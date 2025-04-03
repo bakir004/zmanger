@@ -318,6 +318,7 @@ function TestsPage() {
         </Button>
         {loadingTestGroups && <p>Učitavam...</p>}
       </section>
+      <p className="mt-2 text-red-400 italic font-bold text-sm">Za bilo kakve bugove ili nepoklapanja sa Zamgerom javite se na bakir.cinjarevic@gmail.com.</p>
       {selectedSubject === "SOLO" && <p className="mt-2 italic text-sm">
         Kada testirate svoj main, dodajte <code>return 0;</code> na kraj, inače ćete dobivati error &quot;Illegal instruction&quot;.</p>}
       <section className="mt-4 flex gap-4">
