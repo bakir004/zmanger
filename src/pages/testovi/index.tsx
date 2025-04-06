@@ -380,16 +380,17 @@ function TestsPage() {
               ? Array.from({ length: 10 }).map((_, i) => (
                 <Skeleton key={i} className="my-1 h-8 w-full"></Skeleton>
               ))
-              : tests.map((test: Test) => (
+              : tests.map((test: Test, i: number) => (
                 <TestOutcomeListItem
-                  key={test.id}
+                  index={i}
+                  key={i}
                   testResult={testResults.find(
                     (testRes) => testRes.id === test.number,
                   )}
                   test={test}
                   onRun={(test: Test) => runTest(test)}
                 >
-                  {`Test ${test.number + 1}`}
+                  {`Test ${i + 1}`}
                 </TestOutcomeListItem>
               ))}
           </ScrollArea>

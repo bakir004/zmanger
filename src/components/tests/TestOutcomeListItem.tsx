@@ -18,11 +18,13 @@ export default function TestOutcomeListItem({
   test,
   testResult,
   onRun,
+  index
 }: {
   children: React.ReactNode;
   test: Test;
   testResult: TestResult | undefined;
   onRun: (test: Test) => void;
+  index: number
 }) {
   const code =
     (test.topOfFile ? test.topOfFile + "\n\n" : "") +
@@ -73,7 +75,7 @@ export default function TestOutcomeListItem({
       <DialogContent className="max-h-[calc(100vh-200px)] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>
-            Nalaz testa {test.number + 1} -{" "}
+            Nalaz testa {index + 1} -{" "}
             {leak ? "Detected memory leaks" : testResult?.status.description}
           </DialogTitle>
           <DialogDescription>
