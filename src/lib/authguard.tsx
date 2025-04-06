@@ -10,7 +10,7 @@ export function authGuard({
   requiresTestingPermissions,
   needModerator,
   needsETFemail,
-  adminOnly
+  adminOnly,
 }: {
   Component: React.ComponentType<any>;
   props: any;
@@ -27,8 +27,6 @@ export function authGuard({
       return <Component {...props} />;
     }
 
-
-
     if (!isLoaded) {
       return (
         <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
@@ -41,8 +39,12 @@ export function authGuard({
     if (!isSignedIn) {
       const fallback = FallbackComponent || (
         <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
-          <h3 className="text-xl font-bold text-center">Niste prijavljeni :&#40;</h3>
-          <p className="text-center">Molimo prijavite se prije nego što pristupite ovoj ruti.</p>
+          <h3 className="text-center text-xl font-bold">
+            Niste prijavljeni :&#40;
+          </h3>
+          <p className="text-center">
+            Molimo prijavite se prije nego što pristupite ovoj ruti.
+          </p>
           <SignInButton>
             <Button className="mt-2 h-8">Prijavi se</Button>
           </SignInButton>
@@ -54,7 +56,9 @@ export function authGuard({
     if (adminOnly && !user?.publicMetadata.admin) {
       return (
         <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
-          <h3 className="text-xl font-bold text-center mb-4">Niste admin :&#40;</h3>
+          <h3 className="mb-4 text-center text-xl font-bold">
+            Niste admin :&#40;
+          </h3>
           <Link href="/">
             <Button variant={"secondary"}>Nazad na početnu</Button>
           </Link>
@@ -66,7 +70,7 @@ export function authGuard({
       if (!user.publicMetadata.canTest) {
         return (
           <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
-            <h3 className="text-xl font-bold text-center">
+            <h3 className="text-center text-xl font-bold">
               Nažalost, niste pretplaćeni na Zmanger :&#40;
             </h3>
             <p className="mb-4 text-center">
@@ -87,7 +91,7 @@ export function authGuard({
       if (!user.publicMetadata.moderator) {
         return (
           <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
-            <h3 className="text-xl font-bold text-center">
+            <h3 className="text-center text-xl font-bold">
               Nažalost, niste moderator :&#40;
             </h3>
             <p className="mb-4 text-center">
@@ -97,11 +101,19 @@ export function authGuard({
         );
       }
     } else if (needsETFemail) {
-      if (!user.emailAddresses.some((email) => email.emailAddress.endsWith("@etf.unsa.ba"))) {
+      if (
+        !user.emailAddresses.some((email) =>
+          email.emailAddress.endsWith("@etf.unsa.ba"),
+        )
+      ) {
         return (
           <div className="flex h-[calc(100dvh-200px)] w-full flex-col items-center justify-center px-4">
-            <h3 className="text-xl font-bold text-center">Niste prijavljeni sa ETF emailom :&#40;</h3>
-            <p className="text-center">Molimo da koristite email koji završava sa @etf.unsa.ba</p>
+            <h3 className="text-center text-xl font-bold">
+              Niste prijavljeni sa ETF emailom :&#40;
+            </h3>
+            <p className="text-center">
+              Molimo da koristite email koji završava sa @etf.unsa.ba
+            </p>
           </div>
         );
       }

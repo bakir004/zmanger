@@ -36,5 +36,3 @@ export default authGuard({
   props: {},
   needModerator: true,
 });
-
-

@@ -112,11 +112,18 @@ function TestsPage() {
       setLoadingTestGroups(true);
       const res = await fetch("/api/tests/" + value);
       const data = await res.json();
+      // Ensure each test has the stdin field
+      data.forEach((test: Test) => {
+        if (!test.stdin) {
+          test.stdin = null;
+        }
+      });
       data.sort((a: Test, b: Test) => a.id - b.id);
       setSelectedTestGroup(value);
       setTests(data);
       setTestResults([]);
       setLoadingTestGroups(false);
+      console.log(data);
     } catch (error) {
       console.error(error);
     }

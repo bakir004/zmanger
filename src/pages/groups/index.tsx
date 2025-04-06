@@ -2,10 +2,39 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ArrowLeftRight, Plus, Trash2 } from "lucide-react";
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "~/components/ui/breadcrumb";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "~/components/ui/breadcrumb";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -75,7 +104,9 @@ function GroupsPage() {
 
   const fetchOffers = async (year?: string) => {
     try {
-      const response = await fetch(`/api/offer/get${year ? `?year=${year}` : ""}`);
+      const response = await fetch(
+        `/api/offer/get${year ? `?year=${year}` : ""}`,
+      );
       const data = await response.json();
       setOffers(data.offers);
     } catch (error) {
@@ -189,7 +220,7 @@ function GroupsPage() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1 className="my-4 text-3xl font-bold">Grupomjenjač</h1>
-      <section className="flex items-center gap-2 mb-4">
+      <section className="mb-4 flex items-center gap-2">
         <Select defaultValue={selectedYear} onValueChange={setSelectedYear}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Odaberi godinu" />
@@ -206,7 +237,7 @@ function GroupsPage() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="w-4 h-4" />
+              <Plus className="h-4 w-4" />
               Nova ponuda
             </Button>
           </DialogTrigger>
@@ -223,7 +254,9 @@ function GroupsPage() {
                 <Input
                   id="phone"
                   value={formData.phoneNumber}
-                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phoneNumber: e.target.value })
+                  }
                   placeholder="06X XXX XXX"
                 />
               </div>
@@ -231,7 +264,9 @@ function GroupsPage() {
                 <Label htmlFor="year">Godina</Label>
                 <Select
                   value={formData.year}
-                  onValueChange={(value) => setFormData({ ...formData, year: value })}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, year: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Odaberi godinu" />
@@ -251,7 +286,9 @@ function GroupsPage() {
                   <Label htmlFor="subjectGive">Predmet (dajem)</Label>
                   <Select
                     value={formData.subjectGive}
-                    onValueChange={(value) => setFormData({ ...formData, subjectGive: value })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, subjectGive: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Odaberi predmet" />
@@ -269,7 +306,9 @@ function GroupsPage() {
                   <Label htmlFor="dayGive">Dan</Label>
                   <Select
                     value={formData.dayGive}
-                    onValueChange={(value) => setFormData({ ...formData, dayGive: value })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, dayGive: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Odaberi dan" />
@@ -287,7 +326,9 @@ function GroupsPage() {
                   <Label htmlFor="timeGive">Vrijeme</Label>
                   <Select
                     value={formData.timeGive}
-                    onValueChange={(value) => setFormData({ ...formData, timeGive: value })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, timeGive: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Odaberi vrijeme" />
@@ -307,7 +348,9 @@ function GroupsPage() {
                   <Label htmlFor="subjectWant">Predmet (tražim)</Label>
                   <Select
                     value={formData.subjectWant}
-                    onValueChange={(value) => setFormData({ ...formData, subjectWant: value })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, subjectWant: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Odaberi predmet" />
@@ -325,7 +368,9 @@ function GroupsPage() {
                   <Label htmlFor="dayWant">Dan</Label>
                   <Select
                     value={formData.dayWant}
-                    onValueChange={(value) => setFormData({ ...formData, dayWant: value })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, dayWant: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Odaberi dan" />
@@ -343,7 +388,9 @@ function GroupsPage() {
                   <Label htmlFor="timeWant">Vrijeme</Label>
                   <Select
                     value={formData.timeWant}
-                    onValueChange={(value) => setFormData({ ...formData, timeWant: value })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, timeWant: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Odaberi vrijeme" />
@@ -371,11 +418,24 @@ function GroupsPage() {
         </Dialog>
       </section>
       <Table>
-        <TableCaption className="italic">Napomena: na vama je javiti se osobi i dogovoriti se za izmjenu 1-za-1.</TableCaption>
+        <TableCaption className="italic">
+          Napomena: na vama je javiti se osobi i dogovoriti se za izmjenu
+          1-za-1.
+        </TableCaption>
         <TableHeader>
           <TableRow className="border-slate-600">
             <TableHead>Ime i godina</TableHead>
-            <TableHead>Ponuda (<span className="dark:text-green-400 text-green-500 font-bold">nudi</span> - <span className="dark:text-red-400 text-red-500 font-bold">traži</span>)</TableHead>
+            <TableHead>
+              Ponuda (
+              <span className="font-bold text-green-500 dark:text-green-400">
+                nudi
+              </span>{" "}
+              -{" "}
+              <span className="font-bold text-red-500 dark:text-red-400">
+                traži
+              </span>
+              )
+            </TableHead>
             <TableHead>Telefon</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
@@ -383,26 +443,36 @@ function GroupsPage() {
         <TableBody>
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center">Učitavanje...</TableCell>
+              <TableCell colSpan={4} className="text-center">
+                Učitavanje...
+              </TableCell>
             </TableRow>
           ) : offers.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center">Nema ponuda za odabranu godinu.</TableCell>
+              <TableCell colSpan={4} className="text-center">
+                Nema ponuda za odabranu godinu.
+              </TableCell>
             </TableRow>
           ) : (
             offers.map((offer) => (
               <TableRow className="border-slate-600" key={offer.id}>
-                <TableCell>{offer.creatorName}, {toRoman(offer.year.toString())}</TableCell>
-                <TableCell className="flex gap-4 flex-wrap">
-                  <div className="dark:bg-green-600 bg-green-300 px-1.5 py-0.5 w-fit text-xs rounded">
+                <TableCell>
+                  {offer.creatorName}, {toRoman(offer.year.toString())}
+                </TableCell>
+                <TableCell className="flex flex-wrap gap-4">
+                  <div className="w-fit rounded bg-green-300 px-1.5 py-0.5 text-xs dark:bg-green-600">
                     {offer.subjectGive}
                   </div>
-                  <p className="dark:text-green-400 text-green-500 font-bold">{offer.dayGive}, {offer.timeGive}</p>
-                  <ArrowLeftRight className="w-4 h-4 mt-0.5" />
-                  <div className="dark:bg-red-600 bg-red-300 px-1 py-0.5 w-fit text-xs rounded">
+                  <p className="font-bold text-green-500 dark:text-green-400">
+                    {offer.dayGive}, {offer.timeGive}
+                  </p>
+                  <ArrowLeftRight className="mt-0.5 h-4 w-4" />
+                  <div className="w-fit rounded bg-red-300 px-1 py-0.5 text-xs dark:bg-red-600">
                     {offer.subjectWant}
                   </div>
-                  <p className="dark:text-red-400 text-red-500 font-bold">{offer.dayWant}, {offer.timeWant}</p>
+                  <p className="font-bold text-red-500 dark:text-red-400">
+                    {offer.dayWant}, {offer.timeWant}
+                  </p>
                 </TableCell>
                 <TableCell>{offer.phoneNumber}</TableCell>
                 <TableCell>
@@ -412,7 +482,7 @@ function GroupsPage() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900"
+                          className="h-8 w-8 text-red-500 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -421,14 +491,15 @@ function GroupsPage() {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Jeste li sigurni?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Ova akcija će trajno izbrisati vašu ponudu za razmjenu.
+                            Ova akcija će trajno izbrisati vašu ponudu za
+                            razmjenu.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Odustani</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => handleDeleteOffer(offer.id)}
-                            className="bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600/90 dark:text-white"
+                            className="bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:text-white dark:hover:bg-red-600/90"
                           >
                             Izbriši
                           </AlertDialogAction>
@@ -451,4 +522,3 @@ export default authGuard({
   props: {},
   needsETFemail: true,
 });
-

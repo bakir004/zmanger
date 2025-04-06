@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest } from "next/server";
 import { logger } from "~/lib/logger";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {

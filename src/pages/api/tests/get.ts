@@ -32,6 +32,7 @@ export default async function getAllTestGroups(
             { position: "top_of_file", code: test.topOfFile || "" },
           ],
           expect: test.expect,
+          stdin: test.stdin || "",
         })),
       },
     }));
