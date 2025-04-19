@@ -10,7 +10,7 @@ import {
 } from "../ui/dialog";
 import MonacoCodeEditor from "../MonacoCodeEditor";
 import { TestResult } from "~/lib/types";
-import { Check, CircleHelp, Clock, Loader2, Play, X } from "lucide-react";
+import { Check, CircleHelp, Clock, Loader2, Play, X, ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function TestOutcomeListItem({
@@ -44,9 +44,16 @@ export default function TestOutcomeListItem({
     !testResult?.stderr &&
     !leak;
   const [isRunning, setIsRunning] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   useEffect(() => {
     if (testResult) setIsRunning(false);
   }, [testResult]);
+
+  const outputCutoff = 3000;
+  const output = testResult?.stdout || "";
+  const isLongOutput = output.length > outputCutoff;
+  const displayOutput = isLongOutput && !isExpanded ? output.slice(0, outputCutoff) + "..." : output;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -90,66 +97,82 @@ export default function TestOutcomeListItem({
             testovi najčešće prolaze na Zamgeru.
           </p>
         )}
-        <section>
-          <div className="w-full">
-            <h3 className="font-semibold">Kod testa</h3>
-            <MonacoCodeEditor
-              width={"100%"}
-              height={"300px"}
-              value={code}
-              language="cpp"
-              options={{
-                minimap: { enabled: false },
-                lineNumbers: "off",
-                lineDecorationsWidth: 0,
-                folding: false,
-                scrollBeyondLastLine: false,
-                stickyScroll: {
-                  enabled: false,
-                },
-                fontSize: 13,
-                readOnly: true,
-              }}
-            ></MonacoCodeEditor>
-          </div>
-          <div>
-            <h3 className="my-2 font-semibold">
-              Standardni ulaz (<code>stdin</code>){" "}
-              {!test.stdin && "- ovaj test ne koristi standardni ulaz"}
-            </h3>
-            {test.stdin ? (
-              <p className="whitespace-pre-wrap rounded bg-slate-200 px-4 py-2 font-mono dark:bg-slate-900">
-                {test.stdin}
-              </p>
-            ) : null}
-          </div>
-          <div>
-            <h3 className="my-2 font-semibold">
-              Očekivani izlaz
-              {test.expect.length > 1 && "i"}
-            </h3>
+        <div className="w-full">
+          <h3 className="font-semibold">Kod testa</h3>
+          <MonacoCodeEditor
+            width={"100%"}
+            height={"300px"}
+            value={code}
+            language="cpp"
+            options={{
+              minimap: { enabled: false },
+              lineNumbers: "off",
+              lineDecorationsWidth: 0,
+              folding: false,
+              scrollBeyondLastLine: false,
+              stickyScroll: {
+                enabled: false,
+              },
+              fontSize: 13,
+              readOnly: true,
+            }}
+          ></MonacoCodeEditor>
+        </div>
+        <div>
+          <h3 className="my-2 font-semibold">
+            Standardni ulaz (<code>stdin</code>){" "}
+            {!test.stdin && "- ovaj test ne koristi standardni ulaz"}
+          </h3>
+          {test.stdin ? (
+            <p className="whitespace-pre-wrap rounded bg-slate-200 px-4 py-2 font-mono dark:bg-slate-900">
+              {test.stdin}
+            </p>
+          ) : null}
+        </div>
+        <div>
+          <h3 className="my-2 font-semibold">
+            Očekivani izlaz
+            {test.expect.length > 1 && "i"}
+          </h3>
 
-            {test.expect.map((e, i) => (
-              <p
-                key={i}
-                className="my-2 whitespace-pre-wrap rounded bg-slate-200 px-4 py-2 font-mono dark:bg-slate-900"
+          {test.expect.map((e, i) => (
+            <p
+              key={i}
+              className="my-2 whitespace-pre-wrap rounded bg-slate-200 px-4 py-2 font-mono dark:bg-slate-900"
+            >
+              {e}
+            </p>
+          ))}
+        </div>
+        <div>
+          <h3 className="my-2 font-semibold">Vaš izlaz</h3>
+          <div className="whitespace-pre-wrap rounded bg-slate-200 px-4 py-2 font-mono dark:bg-slate-900">
+            {displayOutput}
+            {isLongOutput && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="mt-2 flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
               >
-                {e}
-              </p>
-            ))}
+                {isExpanded ? (
+                  <>
+                    <ChevronUp className="h-4 w-4" />
+                    Prikaži manje
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4" />
+                    Prikaži više
+                  </>
+                )}
+              </button>
+            )}
+            <p className="text-xs text-red-500 dark:text-red-400">
+              {testResult?.stderr
+                ? testResult?.stderr
+                : testResult?.compile_output}
+            </p>
           </div>
-          <div>
-            <h3 className="my-2 font-semibold">Vaš izlaz</h3>
-            <div className="whitespace-pre-wrap rounded bg-slate-200 px-4 py-2 font-mono dark:bg-slate-900">
-              {testResult?.stdout}
-              <p className="text-xs text-red-500 dark:text-red-400">
-                {testResult?.stderr
-                  ? testResult?.stderr
-                  : testResult?.compile_output}
-              </p>
-            </div>
-          </div>
-        </section>
+        </div>
       </DialogContent>
     </Dialog>
   );

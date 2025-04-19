@@ -95,10 +95,8 @@ export default async function create(
               main,
               topOfFile,
               expect: test.expect,
-              stdin: test.stdin ?? null,
+              stdin: test.stdin ? test.stdin + "\n" : null,
             };
-            console.log("RETURN OBJECT");
-            console.log(returnObject);
             return returnObject;
           }),
         },

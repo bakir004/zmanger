@@ -77,12 +77,13 @@ export default async function runTests(
       language_id: "2",
       stdin:
         stdin !== undefined
-          ? toBase64(stdin.trim())
+          ? toBase64(stdin)
           : test.stdin
-            ? toBase64(test.stdin.trim())
+            ? toBase64(test.stdin)
             : "",
       expected_output: test.expect[0] ? toBase64(test.expect[0].trim()) : "",
     };
+    // console.log(bodyObject);
     const result = await fetch(
       process.env.CODERUNNER_URL + "/submissions?base64_encoded=true&wait=true",
       {
