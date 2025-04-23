@@ -319,6 +319,10 @@ function TestsPage() {
         {loadingTestGroups && <p>Učitavam...</p>}
       </section>
       <p className="mt-2 text-red-400 italic font-bold text-sm">Za bilo kakve bugove ili nepoklapanja sa Zamgerom javite se na bakir.cinjarevic@gmail.com.</p>
+      <p className="mt-2 text-purple-400 italic font-bold text-sm">Neki testovi vam mogu proći ovdje, ali ne na Zamgeru,
+        i to što nekada u Zamger testovima se koriste biblioteke koje vi niste direktno includeali. Vi ih ne biste svakako u svojim kodovima trebali includeati
+        - to je Zamgerova odgovornost, ali je takva situacija. Vidjećete na Zamgeru kada vam izbaci grešku koje biblioteke trebaju, a ako želite odmah da vidite
+        šta vam treba, pogledajte koje se biblioteke koriste u testovima pa njih includeajte sebi u kod, iako one vama ne trebaju za svrhe samo vašeg koda.</p>
       {selectedSubject === "SOLO" && <p className="mt-2 italic text-sm">
         Kada testirate svoj main, dodajte <code>return 0;</code> na kraj, inače ćete dobivati error &quot;Illegal instruction&quot;.</p>}
       <section className="mt-4 flex gap-4">
