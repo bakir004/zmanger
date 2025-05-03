@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { Menu, Moon, Sun } from "lucide-react";
+import { KeyRoundIcon, Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import {
@@ -52,7 +52,21 @@ const Navbar: React.FC = () => {
             <span className="sr-only">Promijeni temu</span>
           </Button>
           <SignedIn>
-            <UserButton />
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action label="Keys" labelIcon={<KeyRoundIcon className="w-4 h-4" />} open="keys" />
+              </UserButton.MenuItems>
+
+              <UserButton.UserProfilePage label="Keys" labelIcon={<KeyRoundIcon className="w-4 h-4" />} url="keys">
+                <div className="">
+                  <h1 className="mb-2 font-bold border-b border-neutral-700/60 pb-4">Your keys</h1>
+                  <div className="flex items-center justify-between pt-3 text-[13px]">
+                    <p className="font-semibold">Your Zmanger CLI key</p>
+                    <p className="text-neutral-300">cmVndWxhci1zdW5iaXJkLTY2L</p>
+                  </div>
+                </div>
+              </UserButton.UserProfilePage>
+            </UserButton>
           </SignedIn>
           <SignedOut>
             <SignInButton>
