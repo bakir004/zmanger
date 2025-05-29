@@ -15,7 +15,6 @@ import {
   DrawerClose,
   Drawer,
 } from "./ui/drawer";
-import { Separator } from "./ui/separator";
 
 const Navbar: React.FC = () => {
   const { user } = useUser();

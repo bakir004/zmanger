@@ -1,10 +1,6 @@
 /* eslint-disable */
-import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { SignInButton } from "@clerk/nextjs";
 import { Separator } from "@radix-ui/react-separator";
 import { Check } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import AboutPageWrapper from "~/components/AboutPageWrapper";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "~/components/ui/breadcrumb";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/components/ui/card";
@@ -34,34 +30,6 @@ export default function AboutPage() {
         pretplate. Zbog nedavne promjene bodova na (TP) zadaćama sa 20 na 10, omogućena je jedna vrlo povoljna opcija:
       </p>
       <section className="mx-auto mt-8 flex w-full flex-wrap items-stretch justify-center gap-4">
-        {/* <Card className="w-[400px] text-center shadow-lg">
-          <CardHeader>
-            <CardTitle>Po zadaći (TP)</CardTitle>
-            <CardDescription>
-              Pravo na testiranje se oduzima sa rokom zadaće
-            </CardDescription>
-            <h1 className="bg-gradient-to-r from-[#e84e38] to-[#ba2cb8] bg-clip-text text-4xl font-extrabold text-transparent">
-              3 KM
-            </h1>
-            <Separator />
-          </CardHeader>
-          <CardContent className="mx-auto w-11/12 text-left text-sm">
-            <ul>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4"></Check>
-                <p>Ispadne 5 KM skuplje od semestralnog</p>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4"></Check>
-                <p>Neograničen broj testiranja</p>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4"></Check>
-                <p>Address sanitizer za detekciju svih grešaka</p>
-              </li>
-            </ul>
-          </CardContent>
-        </Card> */}
         <Card className="w-[400px] text-center shadow-lg">
           <CardHeader>
             <CardTitle>Semestralno</CardTitle>
