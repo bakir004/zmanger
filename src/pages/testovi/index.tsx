@@ -248,7 +248,7 @@ function TestsPage() {
     }
   };
 
-  cancel();
+  // cancel();
 
   return (
     <main className="mx-auto w-full max-w-screen-1280 px-4 pt-8">
