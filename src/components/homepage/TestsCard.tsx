@@ -24,7 +24,7 @@ export default function TestsCard() {
         <ClipboardCheck className="absolute right-6 top-6 hidden h-6 w-6 text-slate-400 lg:block" />
         <p className="text-sm">Pokrenuto</p>
         <CardTitle className="font-extrabold text-purple-500">
-          {testCount + 2358}
+          {211358}
         </CardTitle>
         <CardDescription>individualnih testova.</CardDescription>
       </CardHeader>
