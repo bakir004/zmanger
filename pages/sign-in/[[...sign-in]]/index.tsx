@@ -5,7 +5,7 @@ export default function SignInPage() {
 	return (
 		<div className="flex min-h-screen items-center bg-black justify-center">
 			asd
-			<SignInButton />
+			<SignIn />
 		</div>
 	);
 }

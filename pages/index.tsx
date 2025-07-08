@@ -15,6 +15,7 @@ import {
 } from "./_components/ui/navigation-menu";
 
 import { Box, Dot, MoveRight } from "lucide-react";
+import { SignedIn, SignedOut, SignOutButton, UserProfile } from "@clerk/nextjs";
 
 function GradientIcon() {
 	return (
@@ -120,21 +121,35 @@ export default function Home() {
 						</svg>
 						<p className="text-gray-300 font-light tracking-wider">Github</p>
 					</Button>
-					<Link
-						href={"/login"}
-						className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}
-					>
-						<div className="bg-gray-950 group:hover:bg-gray-900 rounded-full text-nowrap flex items-center px-4 w-[calc(100%-2px)] h-[calc(100%-2px)]">
-							Prijavi se
-						</div>
-					</Link>
-					<div
+					<SignedOut>
+						<Link
+							href={"/sign-in"}
+							className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}
+						>
+							<div className="bg-gray-950 group:hover:bg-gray-900 rounded-full text-nowrap flex items-center px-4 w-[calc(100%-2px)] h-[calc(100%-2px)]">
+								Prijavi se
+							</div>
+						</Link>
+					</SignedOut>
+					<SignedIn>
+						<SignOutButton>
+							<div
+								className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}
+							>
+								<div className="bg-gray-950 group:hover:bg-gray-900 rounded-full text-nowrap flex items-center px-4 w-[calc(100%-2px)] h-[calc(100%-2px)]">
+									Odjavi se
+								</div>
+							</div>
+						</SignOutButton>
+						<User />
+					</SignedIn>
+					{/* <div
 						className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}
 					>
 						<div className="bg-gray-950 group:hover:bg-gray-900 rounded-full text-nowrap flex items-center px-4 w-[calc(100%-2px)] h-[calc(100%-2px)]">
 							Get started
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</nav>
 			<section className="relative w-[640px] sm:w-full aspect-[1.135] overflow-hidden">
