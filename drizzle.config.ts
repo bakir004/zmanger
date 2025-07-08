@@ -1,9 +1,9 @@
 import type { Config } from "drizzle-kit";
 
-import { env } from "app/env";
+import { env } from "pages/env";
 
 export default {
-	schema: "./src/server/db/schema.ts",
+	schema: "./drizzle/schema.ts",
 	dialect: "postgresql",
 	dbCredentials: {
 		url: env.DATABASE_URL,
