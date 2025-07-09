@@ -6,26 +6,18 @@
 		"useIgnoreFile": true
 	},
 	"files": { "ignoreUnknown": false, "ignore": [] },
-	"formatter": {
-		"enabled": true,
-		"formatWithErrors": true
-	},
+	"formatter": { "enabled": true },
 	"organizeImports": { "enabled": true },
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"nursery": {
-				// "useSortedClasses": {
-				// 	"level": "none",
-				// 	"fix": "safe",
-				// 	"options": {
-				// 		"functions": ["clsx", "cva", "cn"]
-				// 	}
-				// }
-			},
-			"suspicious": {
-				"noArrayIndexKey": {
-					"level": "off"
+				"useSortedClasses": {
+					"level": "warn",
+					"fix": "safe",
+					"options": {
+						"functions": ["clsx", "cva", "cn"]
+					}
 				}
 			},
 			"recommended": true
