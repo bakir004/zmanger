@@ -1,8 +1,8 @@
 import type { AppType } from "next/app";
 import "./globals.css";
-import { ThemeProvider } from "./_components/theme-provider";
+import { ThemeProvider } from "../_components/theme-provider";
 
-import { geist, lexend, geistMono } from "./(fonts)/fonts";
+import { geist, lexend, geistMono } from "../fonts/fonts";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 

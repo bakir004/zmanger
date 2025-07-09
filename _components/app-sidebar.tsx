@@ -12,10 +12,10 @@ import {
 	SquareTerminal,
 } from "lucide-react";
 
-import { NavMain } from "pages/_components/nav-main";
-import { NavProjects } from "pages/_components/nav-projects";
-import { NavUser } from "pages/_components/nav-user";
-import { TeamSwitcher } from "pages/_components/team-switcher";
+import { NavMain } from "_components/nav-main";
+import { NavProjects } from "_components/nav-projects";
+import { NavUser } from "_components/nav-user";
+import { TeamSwitcher } from "_components/team-switcher";
 import {
 	Sidebar,
 	SidebarContent,
@@ -24,7 +24,7 @@ import {
 	SidebarMenu,
 	SidebarMenuItem,
 	SidebarRail,
-} from "pages/_components/ui/sidebar";
+} from "_components/ui/sidebar";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 import Link from "next/link";

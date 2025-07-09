@@ -4,7 +4,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-} from "pages/_components/ui/sidebar";
+} from "_components/ui/sidebar";
 import Link from "next/link";
 
 export function TeamSwitcher() {

@@ -1,8 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 
-import { Button } from "./_components/ui/button";
-import { inter, lexend } from "./(fonts)/fonts";
+import { Button } from "../_components/ui/button";
+import { inter, lexend } from "../fonts/fonts";
 
 import {
 	NavigationMenu,
@@ -11,7 +11,7 @@ import {
 	NavigationMenuLink,
 	NavigationMenuList,
 	NavigationMenuTrigger,
-} from "./_components/ui/navigation-menu";
+} from "../_components/ui/navigation-menu";
 
 import { Box, Dot, ExternalLink, MoveRight } from "lucide-react";
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";

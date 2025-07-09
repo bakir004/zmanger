@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FileSidebar } from "../_components/file-sidebar";
+import { FileSidebar } from "../../_components/file-sidebar";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -7,22 +7,22 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from "../_components/ui/breadcrumb";
-import { Separator } from "../_components/ui/separator";
+} from "../../_components/ui/breadcrumb";
+import { Separator } from "../../_components/ui/separator";
 import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-} from "../_components/ui/sidebar";
+} from "../../_components/ui/sidebar";
 
 import Editor from "@monaco-editor/react";
 import { LoaderCircle, Play, X } from "lucide-react";
-import code from "pages/(fonts)/code";
+import code from "fonts/code";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
-} from "pages/_components/ui/resizable";
+} from "_components/ui/resizable";
 import {
 	Select,
 	SelectLabel,
@@ -31,8 +31,8 @@ import {
 	SelectTrigger,
 	SelectItem,
 	SelectValue,
-} from "pages/_components/ui/select";
-import { geistMono } from "pages/(fonts)/fonts";
+} from "_components/ui/select";
+import { geistMono } from "fonts/fonts";
 
 export default function Page() {
 	return (
