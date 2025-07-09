@@ -12,6 +12,21 @@
 /* #ff8964 */
 /* #5683da */
 /* #52e8ff to #468beb */
+/* to-[#5C87FF] from-[#003CFF] */
+
+.monaco-editor-background,
+.monaco-scrollable-element,
+.minimap-decorations-layer,
+.margin-view-overlays,
+.decorationsOverviewRuler {
+	/* background: url("/public/form-bg.png") !important; */
+	background: #18181b !important;
+}
+
+.filetree .peer\/menu-button {
+	/* padding: 0 !important; */
+	height: 24px;
+}
 
 @theme inline {
 	--radius-sm: calc(var(--radius) - 4px);

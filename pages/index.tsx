@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
 
-import { useTheme } from "next-themes";
 import { Button } from "./_components/ui/button";
 import { inter, lexend } from "./(fonts)/fonts";
 
@@ -14,8 +13,8 @@ import {
 	NavigationMenuTrigger,
 } from "./_components/ui/navigation-menu";
 
-import { Box, Dot, MoveRight } from "lucide-react";
-import { SignedIn, SignedOut, SignOutButton, UserProfile } from "@clerk/nextjs";
+import { Box, Dot, ExternalLink, MoveRight } from "lucide-react";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 
 function GradientIcon() {
 	return (
@@ -33,8 +32,6 @@ function GradientIcon() {
 }
 
 export default function Home() {
-	const { setTheme } = useTheme();
-
 	return (
 		<main className="overflow-x-hidden">
 			<Head>
@@ -123,7 +120,7 @@ export default function Home() {
 					</Button>
 					<SignedOut>
 						<Link
-							href={"/sign-in"}
+							href={"/dashboard"}
 							className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}
 						>
 							<div className="bg-gray-950 group:hover:bg-gray-900 rounded-full text-nowrap flex items-center px-4 w-[calc(100%-2px)] h-[calc(100%-2px)]">
@@ -132,16 +129,13 @@ export default function Home() {
 						</Link>
 					</SignedOut>
 					<SignedIn>
-						<SignOutButton>
-							<div
-								className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}
-							>
-								<div className="bg-gray-950 group:hover:bg-gray-900 rounded-full text-nowrap flex items-center px-4 w-[calc(100%-2px)] h-[calc(100%-2px)]">
-									Odjavi se
-								</div>
-							</div>
-						</SignOutButton>
-						<User />
+						<Link href="/dashboard">
+							<Button className="mr-2 flex cursor-pointer items-center gap-2 bg-gradient-to-br to-[#e38b6c] from-[#e7b771]">
+								Dashboard
+								<ExternalLink className="-mt-0.5" />
+							</Button>
+						</Link>
+						<UserButton />
 					</SignedIn>
 					{/* <div
 						className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}

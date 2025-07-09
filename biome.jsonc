@@ -23,6 +23,11 @@
 				// 	}
 				// }
 			},
+			"suspicious": {
+				"noArrayIndexKey": {
+					"level": "off"
+				}
+			},
 			"recommended": true
 		}
 	}
