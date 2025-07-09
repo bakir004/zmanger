@@ -13,11 +13,16 @@
 		"rules": {
 			"nursery": {
 				"useSortedClasses": {
-					"level": "warn",
+					"level": "off",
 					"fix": "safe",
 					"options": {
 						"functions": ["clsx", "cva", "cn"]
 					}
+				}
+			},
+			"suspicious": {
+				"noArrayIndexKey": {
+					"level": "off"
 				}
 			},
 			"recommended": true
