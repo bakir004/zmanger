@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { FileSidebar } from "app/_components/file-sidebar";
 import {
 	Breadcrumb,
@@ -18,7 +17,7 @@ import {
 } from "app/_components/ui/sidebar";
 
 import Editor from "@monaco-editor/react";
-import { LoaderCircle, Play, X } from "lucide-react";
+import { Check, LoaderCircle, Play, X } from "lucide-react";
 import code from "app/_fonts/code";
 import {
 	ResizableHandle,
@@ -35,33 +34,78 @@ import {
 	SelectValue,
 } from "app/_components/ui/select";
 import { geistMono } from "app/_fonts/fonts";
+import { useState } from "react";
+import { Button } from "app/_components/ui/button";
+import { runTests } from "./actions";
 
 export default function Page() {
+	const [code, setCode] = useState(
+		'#include<iostream>\nint main() { std::cout << "niggas"; return 0; }',
+	);
+	const [stdin, setStdin] = useState("");
+	const [stdout, setStdout] = useState("");
+	const [language, setLanguage] = useState<"cpp" | "c">("cpp");
+	const [pingSuccess, setPingSuccess] = useState(false);
+	const [pingFail, setPingFail] = useState(false);
+	const [outputMessage, setOutputMessage] = useState("");
+
+	const [loading, setLoading] = useState(false);
+
+	const run = async () => {
+		setLoading(true);
+		setOutputMessage("");
+		const results = await runTests({ code, stdin, stdout, language });
+		if (results.compile_output) {
+			setStdout(results.compile_output);
+			setOutputMessage(results.description);
+			setPingFail(true);
+			setTimeout(() => {
+				setPingFail(false);
+			}, 900);
+		} else if (results.stderr) {
+			setStdout(results.stderr);
+			setOutputMessage(results.description);
+			setPingFail(true);
+			setTimeout(() => {
+				setPingFail(false);
+			}, 900);
+		} else {
+			setStdout(results.stdout);
+			setPingSuccess(true);
+			setTimeout(() => {
+				setPingSuccess(false);
+			}, 900);
+		}
+		setLoading(false);
+	};
+
 	return (
 		<SidebarProvider>
 			<FileSidebar />
 			<SidebarInset>
-				<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+				<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-transparent">
 					<SidebarTrigger className="-ml-1" />
 					<Separator
 						orientation="vertical"
 						className="mr-2 data-[orientation=vertical]:h-4"
 					/>
-					<Breadcrumb>
-						<BreadcrumbList>
-							<BreadcrumbItem className="hidden md:block">
-								<BreadcrumbLink href="#">components</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator className="hidden md:block" />
-							<BreadcrumbItem className="hidden md:block">
-								<BreadcrumbLink href="#">ui</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator className="hidden md:block" />
-							<BreadcrumbItem>
-								<BreadcrumbPage>button.tsx</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
+					<Button
+						onClick={run}
+						disabled={loading}
+						className="flex bg-gradient-to-br items-center gap-2 cursor-pointer to-[#e38b6c] from-[#e7b771]"
+					>
+						{loading ? (
+							<>
+								<LoaderCircle className="animate-spin" />
+								Pokrećem
+							</>
+						) : (
+							<>
+								<Play />
+								Pokreni
+							</>
+						)}
+					</Button>
 				</header>
 
 				<ResizablePanelGroup direction="horizontal">
@@ -71,7 +115,7 @@ export default function Page() {
 							className="h-[calc(100vh-96px)]"
 						>
 							<ResizablePanel>
-								<div className="h-8 w-full flex items-center">
+								<div className="h-8 w-full flex items-center ">
 									<div className="flex h-full items-center gap-1 px-2 cursor-pointer text-xs border-r">
 										<img
 											className="w-3 h-3"
@@ -81,7 +125,7 @@ export default function Page() {
 										main.cpp
 										{/* <X className="w-3 h-3 mt-0.5" /> */}
 									</div>
-									<div className="flex h-full items-center gap-1 px-2 bg-[#18181b] cursor-pointer text-xs">
+									<div className="flex h-full items-center gap-1 px-2 bg-[#020205] cursor-pointer text-xs">
 										<img
 											className="w-3 h-3"
 											alt="c"
@@ -91,12 +135,14 @@ export default function Page() {
 										<X className="w-3 h-3 mt-0.5 hover:text-red-400" />
 									</div>
 								</div>
-								<div className="h-full">
+								<div className={`h-full ${geistMono.className}`}>
 									<Editor
 										value={code}
+										onChange={(s) => setCode(s ?? "")}
 										theme="vs-dark"
 										language="cpp"
 										options={{
+											fontFamily: "Geist Mono",
 											minimap: { enabled: false },
 										}}
 									/>
@@ -107,32 +153,51 @@ export default function Page() {
 								<ResizablePanelGroup direction="horizontal" className="flex">
 									<ResizablePanel>
 										<div
-											className={`text-sm py-1 px-2 bg-[#18181b] font-mono  ${geistMono.className}`}
+											className={`text-sm py-1 px-2 bg-transparent font-mono  ${geistMono.className}`}
 										>
 											stdin
 										</div>
 										<Editor
-											value={"input"}
+											value={stdin}
 											theme="vs-dark"
+											onChange={(s) => setStdin(s ?? "")}
 											options={{
 												lineNumbers: "off",
 												minimap: { enabled: false },
+												fontFamily: "Geist Mono",
 											}}
 										/>
 									</ResizablePanel>
 									<ResizableHandle />
 									<ResizablePanel>
 										<div
-											className={`text-sm py-1 px-2 bg-[#18181b] ${geistMono.className}`}
+											className={`text-sm py-1 px-2 bg-transparent flex items-center gap-2 ${geistMono.className}`}
 										>
 											stdout
+											{loading && (
+												<LoaderCircle className={"w-4 h-4 animate-spin"} />
+											)}
+											<div className="relative w-4 h-4">
+												{pingSuccess && (
+													<Check className="absolute inset-0 w-4 h-4 animate-ping text-green-300" />
+												)}
+												{pingFail && (
+													<X className="absolute inset-0 w-4 h-4 animate-ping text-red-400" />
+												)}
+												{!loading && (
+													<Check className="absolute inset-0 w-4 h-4 text-green-400" />
+												)}
+											</div>
+											- <p className={"text-red-400"}>{outputMessage}</p>
 										</div>
 										<Editor
-											value={"input"}
+											value={stdout}
 											theme="vs-dark"
 											options={{
 												lineNumbers: "off",
 												minimap: { enabled: false },
+												readOnly: true,
+												fontFamily: "Geist Mono",
 											}}
 										/>
 									</ResizablePanel>
@@ -144,7 +209,7 @@ export default function Page() {
 					<ResizablePanel
 						maxSize={25}
 						minSize={20}
-						className="bg-[#18181b] p-2"
+						className="bg-transparent p-2"
 						defaultSize={20}
 					>
 						<Select>
@@ -187,7 +252,7 @@ export default function Page() {
 							{[...Array(5)].map((item, i) => (
 								<div
 									key={i}
-									className="bg-[#222226] border-l-3 border-neutral-400 flex items-center justify-between cursor-pointer text-sm px-3 py-1 rounded"
+									className="bg-[#16101d] border-l-3 border-neutral-400 flex items-center justify-between cursor-pointer text-sm px-3 py-1 rounded"
 								>
 									Test {i + 1}
 									<div>

@@ -1,4 +1,5 @@
 import type * as React from "react";
+import Image from "next/image";
 
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import Link from "next/link";
@@ -16,7 +17,7 @@ export function TeamSwitcher() {
 						className="data-[state=open]:bg-sidebar-accent flex gap-3 data-[state=open]:text-sidebar-accent-foreground"
 					>
 						<div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-							<img src="logo.png" alt="logo" />
+							<Image width={40} height={40} src="/logo-white.png" alt="logo" />
 						</div>
 						<div className="grid flex-1 text-left text-sm leading-tight">
 							<span className="truncate font-medium">Zmanger</span>

@@ -16,3 +16,17 @@ export const config = {
 		"/(api|trpc)(.*)",
 	],
 };
+
+// export default clerkMiddleware(async (auth, req) => {
+// 	if (!isPublicRoute(req)) {
+// 	  const { userId, sessionClaims } = await auth.protect();
+
+// 	  // Example: Check for a custom role claim
+// 	  const userRole = sessionClaims?.role; // or sessionClaims?.publicMetadata?.role
+
+// 	  if (userRole !== "admin") {
+// 		// Optionally, you can redirect or throw an error
+// 		return Response.redirect("/unauthorized");
+// 	  }
+// 	}
+//   });

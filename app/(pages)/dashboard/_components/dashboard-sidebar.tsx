@@ -4,45 +4,52 @@ import type * as React from "react";
 import {
 	BookOpen,
 	Bot,
+	Command,
 	ExternalLink,
+	FileCode2,
 	Frame,
+	LayoutTemplate,
 	PieChart,
 	Settings2,
 	SquareTerminal,
 } from "lucide-react";
 
-import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
-import { NavUser } from "./nav-user";
-import { TeamSwitcher } from "./team-switcher";
+import { NavMain } from "../../../_components/nav-main";
+import { NavProjects } from "../../../_components/nav-projects";
+import { NavUser } from "../../../_components/nav-user";
+import { TeamSwitcher } from "../../../_components/team-switcher";
 import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
 	SidebarHeader,
 	SidebarMenu,
+	SidebarMenuButton,
 	SidebarMenuItem,
+	SidebarMenuSub,
+	SidebarMenuSubButton,
+	SidebarMenuSubItem,
 	SidebarRail,
-} from "./ui/sidebar";
+} from "../../../_components/ui/sidebar";
 import { useUser } from "@clerk/nextjs";
-import { Button } from "./ui/button";
+import { Button } from "../../../_components/ui/button";
 import Link from "next/link";
 
 const data = {
 	navMain: [
 		{
-			title: "Playground",
-			url: "#",
-			icon: SquareTerminal,
+			title: "Testovi",
+			url: "/testovi",
+			icon: FileCode2,
 			isActive: true,
 			items: [
 				{
-					title: "History",
-					url: "#",
+					title: "Pregled testova",
+					url: "/dashboard/testovi",
 				},
 				{
-					title: "Starred",
-					url: "#",
+					title: "Dodaj testove",
+					url: "/dashboard/testovi/dodaj",
 				},
 				{
 					title: "Settings",
@@ -138,18 +145,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		avatar: user?.imageUrl ?? "",
 	};
 	return (
-		<Sidebar collapsible="icon" {...props}>
+		<Sidebar collapsible="icon" {...props} className="bg-transparent">
 			<SidebarHeader>
 				<TeamSwitcher />
 			</SidebarHeader>
-			<SidebarContent>
+			<SidebarContent className="bg-transparent">
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<Link href="/c10" className="flex mx-4 items-center gap-2">
-							<Button className="w-full group-data-[state=collapsed]:hidden cursor-pointer bg-gradient-to-br from-[#5C87FF] to-[#003CFF] text-white">
+							<Button className="w-full group-data-[state=collapsed]:hidden cursor-pointer bg-primary-gradient">
 								Otvori c10
 								<ExternalLink className="-mt-0.5" />
 							</Button>
+						</Link>
+					</SidebarMenuItem>
+					<SidebarMenuItem className="px-2 mt-4">
+						<Link href="/dashboard">
+							<SidebarMenuButton className="cursor-pointer" tooltip={"ok"}>
+								<LayoutTemplate />
+								Dashboard
+							</SidebarMenuButton>
 						</Link>
 					</SidebarMenuItem>
 				</SidebarMenu>

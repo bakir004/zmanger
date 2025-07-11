@@ -29,6 +29,10 @@ export default function RootLayout({
 		>
 			<html lang="en">
 				<body className={`${geist.variable}`}>
+					<div
+						className="fixed -z-10 inset-0 bg-cover bg-no-repeat bg-center"
+						style={{ backgroundImage: "url('/bg-blurred-darker.png')" }}
+					/>
 					<Provider>{children}</Provider>
 				</body>
 			</html>

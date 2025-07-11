@@ -21,7 +21,7 @@ export default function HomePage() {
 						<img className="w-8" src="/logo-white.png" alt="logo" />
 						<p className={`text-lg scale-y-105 ${lexend.className}`}>Zmanger</p>
 					</div>
-					<NavigationMenu className="mt-1">
+					<NavigationMenu className="mt-1 hidden md:block">
 						<NavigationMenuList>
 							<NavigationMenuItem>
 								<NavigationMenuTrigger className="!bg-transparent font-light tracking-wider cursor-pointer hover:!bg-transparent focus:!bg-transparent active:!bg-transparent !shadow-none !ring-0">
@@ -67,7 +67,7 @@ export default function HomePage() {
 						</NavigationMenuList>
 					</NavigationMenu>
 				</div>
-				<div className="flex items-center gap-2">
+				<div className="items-center gap-2 hidden md:flex">
 					<Button variant={"link"} className="cursor-pointer">
 						<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
 							<title>github</title>
@@ -158,7 +158,7 @@ export default function HomePage() {
 				</div>
 				<div className="absolute bottom-0 left-0 h-[100px] w-full bg-gradient-to-b from-transparent to-[#090a0c] to-80% lg:h-[250px] md:h-44 sm:left-0 sm:h-[170px] sm:w-[107%]" />
 			</section>
-			<section className="text-white bg-[#090a0c] lg:px-16 md:px-12 sm:px-8 px-4 mb-20">
+			<section className="text-white bg-[#090a0c] lg:px-16 md:px-12 sm:px-8 px-4 pb-16">
 				<h4 className="font-light text-gray-400 text-sm">
 					Sve što vam treba za produktivan rad na{" "}
 					<span className="font-bold bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">

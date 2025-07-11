@@ -75,7 +75,7 @@ export function FileSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar {...props} className="filetree">
-			<SidebarContent>
+			<SidebarContent className="">
 				<SidebarGroup>
 					<SidebarGroupLabel>Changes</SidebarGroupLabel>
 					<SidebarGroupContent>
