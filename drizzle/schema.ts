@@ -31,3 +31,29 @@ export const reviews = createTable(
 	}),
 	(t) => [index("user_id_idx").on(t.userId)],
 );
+
+export const testBatches = createTable(
+	"test_batch",
+	(d) => ({
+		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+		name: d.varchar({ length: 256 }).notNull(),
+		subject: d.varchar({ length: 256 }).notNull(),
+		language: d.varchar({ length: 50 }).notNull(),
+	}),
+	(t) => [index("name_idx").on(t.name)],
+);
+
+export const tests = createTable(
+	"test",
+	(d) => ({
+		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+		topOfFile: d.text(),
+		aboveMain: d.text(),
+		main: d.text().notNull(),
+		stdin: d.text(),
+		expectedOutput: d.text().array(),
+		hidden: d.boolean().default(false),
+		testBatchId: d.integer().references(() => testBatches.id),
+	}),
+	(t) => [index("test_batch_id_idx").on(t.testBatchId)],
+);

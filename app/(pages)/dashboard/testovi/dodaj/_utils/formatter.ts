@@ -67,26 +67,37 @@ export type Test = {
 
 export type Tests = {
 	name: string;
-	languages: string[];
+	language: string;
+	subject: string;
 	tests: Test[];
 };
 type ZamgerTests = z.infer<typeof ZamgerTestsSchema>;
 type ZamgerTest = z.infer<typeof TestSchema>;
 
 export const testJsonFormatter = (json: string): Tests => {
+	let jsonToParse = json;
+	if (json.includes('<input type="hidden"')) {
+		const startIndex = json.indexOf("{");
+		const endIndex = json.lastIndexOf("}") + 1;
+		if (startIndex !== -1 && endIndex !== -1) {
+			jsonToParse = json.substring(startIndex, endIndex);
+		}
+	}
+
 	const formattedTestJson: Tests = {
 		name: "",
+		subject: "",
 		tests: [],
-		languages: [],
+		language: "",
 	};
-	const decodedHTML = decodeHtmlEntities(json);
+	const decodedHTML = decodeHtmlEntities(jsonToParse);
 
 	try {
 		const testJson: ZamgerTests = JSON.parse(decodedHTML);
 		const parsedJson = ZamgerTestsSchema.parse(testJson);
 		const tests = parsedJson.tests;
 		formattedTestJson.name = parsedJson.name;
-		formattedTestJson.languages.push(...testJson.languages);
+		formattedTestJson.language = parsedJson.languages[0] ?? "cpp";
 
 		for (const item of tests) {
 			const newTest: Test = {

@@ -92,7 +92,7 @@ export default function ImportTestsDialog({
 						</Button>
 						<input
 							type="file"
-							accept=".json"
+							accept=".json,.txt"
 							ref={fileInputRef}
 							style={{ display: "none" }}
 							onChange={handleFileChange}
