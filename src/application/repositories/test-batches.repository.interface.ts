@@ -6,7 +6,6 @@ import type {
 export interface ITestBatchesRepository {
 	createTestBatch(
 		testBatch: TestBatchInsert,
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		tx?: any,
 	): Promise<Omit<TestBatch, "tests">>;
 	// getTestBatch(id: number): Promise<TestBatch | undefined>;

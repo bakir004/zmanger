@@ -23,11 +23,17 @@
 			"suspicious": {
 				"noArrayIndexKey": {
 					"level": "off"
+				},
+				"noExplicitAny": {
+					"level": "off"
 				}
 			},
 			"recommended": true,
 			"style": {
 				"noNonNullAssertion": "off"
+			},
+			"complexity": {
+				"noUselessConstructor": "off"
 			}
 		}
 	}

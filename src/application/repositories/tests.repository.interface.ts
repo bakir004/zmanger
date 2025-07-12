@@ -1,11 +1,7 @@
 import type { Test, TestInsert } from "src/entities/models/test";
 
 export interface ITestsRepository {
-	createTest(
-		test: TestInsert,
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		tx?: any,
-	): Promise<Test>;
+	createTest(test: TestInsert, tx?: any): Promise<Test>;
 	// getTestBatch(id: number): Promise<TestBatch | undefined>;
 	// getTestBatchesForUser(userId: string): Promise<TestBatch[]>;
 	// updateTestBatch(

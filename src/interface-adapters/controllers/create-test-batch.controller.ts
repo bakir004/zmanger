@@ -6,7 +6,6 @@ import type { ITransactionManagerService } from "~/application/services/transact
 import type { ICreateTestBatchUseCase } from "~/application/use-cases/create-test-batch.use-case";
 import type { ICreateTestUseCase } from "~/application/use-cases/create-test.use-case";
 import type { Transaction } from "drizzle";
-import type { ITransaction } from "~/entities/models/transaction.interface";
 
 const inputSchema = z.object({
 	name: z.string(),

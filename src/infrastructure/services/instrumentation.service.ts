@@ -4,7 +4,6 @@ import type { IInstrumentationService } from "src/application/services/instrumen
 
 export class InstrumentationService implements IInstrumentationService {
 	startSpan<T>(
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		options: { name: string; op?: string; attributes?: Record<string, any> },
 		callback: () => T,
 	): T {
@@ -13,7 +12,6 @@ export class InstrumentationService implements IInstrumentationService {
 
 	instrumentServerAction<T>(
 		name: string,
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		options: Record<string, any>,
 		callback: () => T,
 	): Promise<T> {
