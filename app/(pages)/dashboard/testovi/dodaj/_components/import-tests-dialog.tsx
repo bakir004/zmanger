@@ -1,6 +1,6 @@
 "use client";
 
-import { Editor } from "@monaco-editor/react";
+import dynamic from "next/dynamic";
 import { Button } from "app/_components/ui/button";
 import {
 	Dialog,
@@ -14,12 +14,20 @@ import {
 import { Separator } from "app/_components/ui/separator";
 import { LoaderCircle, Upload } from "lucide-react";
 import { useRef, useState } from "react";
+import { testJsonFormatter, type Tests } from "../_utils/formatter";
 
-export default function ImportTestsDialog() {
+const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
+	ssr: false,
+});
+
+export default function ImportTestsDialog({
+	sendTests,
+}: { sendTests: (tests: Tests) => void }) {
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [fileText, setFileText] = useState<string | null>(null);
+	const [fileText, setFileText] = useState<string>("");
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [monacoPreloaded, setMonacoPreloaded] = useState(false);
 
 	const handleButtonClick = () => {
 		fileInputRef.current?.click();
@@ -36,82 +44,101 @@ export default function ImportTestsDialog() {
 	};
 
 	const handleAddTests = () => {
-		setLoading(true);
-		setTimeout(() => {
-			setOpen(false);
-			setLoading(false);
-		}, 1000);
+		sendTests(testJsonFormatter(fileText));
+	};
+
+	const handleDialogOpen = (isOpen: boolean) => {
+		setOpen(isOpen);
+		if (isOpen && !monacoPreloaded) {
+			setMonacoPreloaded(true);
+		}
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger asChild>
-				<Button
-					onClick={() => setOpen(true)}
-					className="flex items-center gap-2 cursor-pointer bg-secondary-gradient"
-				>
-					Import Zamger testova
-					<Upload className="w-4 h-4" />
-				</Button>
-			</DialogTrigger>
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>Import Zamger testova</DialogTitle>
-					<DialogDescription>
-						Uploadajte JSON datoteku sa Zamgera koja sadrži vaše testove
-					</DialogDescription>
+		<>
+			{/* Preloading Monaco editor so the dialog doesn't lag on first open */}
+			{monacoPreloaded && (
+				<div className="hidden">
+					<MonacoEditor
+						value=""
+						language="cpp"
+						theme="vs-dark"
+						options={{ minimap: { enabled: false } }}
+					/>
+				</div>
+			)}
+			<Dialog open={open} onOpenChange={handleDialogOpen}>
+				<DialogTrigger asChild>
 					<Button
-						className="w-fit cursor-pointer bg-secondary-gradient"
-						onClick={handleButtonClick}
+						className="flex items-center gap-2 cursor-pointer bg-secondary-gradient"
+						onClick={() => setOpen(true)}
 					>
-						Upload JSON
+						Import Zamger testova
 						<Upload className="w-4 h-4" />
 					</Button>
-					<input
-						type="file"
-						accept=".json"
-						ref={fileInputRef}
-						style={{ display: "none" }}
-						onChange={handleFileChange}
-					/>
-					<div className="flex items-center gap-4">
-						<Separator className="flex-1" />
-						<span className="text-muted-foreground">ili</span>
-						<Separator className="flex-1" />
-					</div>
-					<DialogDescription>
-						Zalijepite JSON kod testova sa Zamgera
-					</DialogDescription>
-					<div className="h-screen max-h-[300px]">
-						<Editor
-							value={fileText ?? ""}
-							theme="vs-dark"
-							language="cpp"
-							options={{
-								fontFamily: "Geist Mono",
-								minimap: { enabled: false },
-							}}
-						/>
-					</div>
-					<div className="flex gap-2 justify-end">
-						<DialogClose asChild>
-							<Button variant={"ghost"} className="cursor-pointer">
-								Zatvori
-							</Button>
-						</DialogClose>
+				</DialogTrigger>
+				<DialogContent forceMount>
+					<DialogHeader>
+						<DialogTitle>Import Zamger testova</DialogTitle>
+						<DialogDescription>
+							Uploadajte JSON datoteku sa Zamgera koja sadrži vaše testove
+						</DialogDescription>
 						<Button
-							disabled={loading}
-							onClick={handleAddTests}
-							className="cursor-pointer flex items-center gap-2 bg-primary-gradient"
+							className="w-fit cursor-pointer bg-secondary-gradient"
+							onClick={handleButtonClick}
 						>
-							<LoaderCircle
-								className={`w-4 h-4 animate-spin ${!loading ? "hidden" : ""}`}
-							/>
-							Dodaj testove
+							Upload JSON
+							<Upload className="w-4 h-4" />
 						</Button>
-					</div>
-				</DialogHeader>
-			</DialogContent>
-		</Dialog>
+						<input
+							type="file"
+							accept=".json"
+							ref={fileInputRef}
+							style={{ display: "none" }}
+							onChange={handleFileChange}
+						/>
+						<div className="flex items-center gap-4">
+							<Separator className="flex-1" />
+							<span className="text-muted-foreground">ili</span>
+							<Separator className="flex-1" />
+						</div>
+						<DialogDescription>
+							Zalijepite JSON kod testova sa Zamgera
+						</DialogDescription>
+						<div className="h-screen max-h-[300px]">
+							<MonacoEditor
+								value={fileText ?? ""}
+								onChange={(s) => setFileText(s ?? "")}
+								theme="vs-dark"
+								language="json"
+								options={{
+									fontFamily: "Geist Mono",
+									minimap: { enabled: false },
+								}}
+							/>
+						</div>
+						<div className="flex gap-2 justify-end">
+							<DialogClose asChild>
+								<Button variant={"ghost"} className="cursor-pointer">
+									Zatvori
+								</Button>
+							</DialogClose>
+							<DialogClose asChild>
+								<Button
+									disabled={loading}
+									className="cursor-pointer flex items-center gap-2 bg-primary-gradient"
+									onClick={handleAddTests}
+								>
+									<LoaderCircle
+										className={`w-4 h-4 animate-spin ${!loading ? "hidden" : ""}`}
+									/>
+									Dodaj testove
+								</Button>
+							</DialogClose>
+						</div>
+					</DialogHeader>
+				</DialogContent>
+			</Dialog>
+		</>
 	);
 }

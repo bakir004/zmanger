@@ -25,7 +25,10 @@
 					"level": "off"
 				}
 			},
-			"recommended": true
+			"recommended": true,
+			"style": {
+				"noNonNullAssertion": "off"
+			}
 		}
 	}
 }

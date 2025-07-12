@@ -1,14 +1,6 @@
 "use client";
 
 import { FileSidebar } from "app/_components/file-sidebar";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "app/_components/ui/breadcrumb";
 import { Separator } from "app/_components/ui/separator";
 import {
 	SidebarInset,
@@ -135,7 +127,7 @@ export default function Page() {
 										<X className="w-3 h-3 mt-0.5 hover:text-red-400" />
 									</div>
 								</div>
-								<div className={`h-full ${geistMono.className}`}>
+								<div className={"h-full"}>
 									<Editor
 										value={code}
 										onChange={(s) => setCode(s ?? "")}
