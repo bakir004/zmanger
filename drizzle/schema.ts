@@ -47,13 +47,16 @@ export const tests = createTable(
 	"test",
 	(d) => ({
 		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-		topOfFile: d.text(),
-		aboveMain: d.text(),
+		topOfFile: d.text().notNull(),
+		aboveMain: d.text().notNull(),
 		main: d.text().notNull(),
-		stdin: d.text(),
-		expectedOutput: d.text().array(),
-		hidden: d.boolean().default(false),
-		testBatchId: d.integer().references(() => testBatches.id),
+		stdin: d.text().notNull(),
+		expectedOutput: d.text().array().notNull(),
+		hidden: d.boolean().notNull().default(false),
+		testBatchId: d
+			.integer()
+			.references(() => testBatches.id)
+			.notNull(),
 	}),
 	(t) => [index("test_batch_id_idx").on(t.testBatchId)],
 );

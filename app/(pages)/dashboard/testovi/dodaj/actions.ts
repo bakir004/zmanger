@@ -17,9 +17,7 @@ export async function createTestBatch(testBatch: Tests) {
 				const createTestBatchController = getInjection(
 					"ICreateTestBatchController",
 				);
-				console.log("action before controller");
 				await createTestBatchController(userIdString, testBatch);
-				console.log("action after controller");
 			} catch (error) {
 				console.error(error);
 			}

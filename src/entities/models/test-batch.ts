@@ -9,7 +9,7 @@ export const selectTestBatchSchema = z.object({
 	tests: z.array(selectTestSchema),
 });
 
-export type SelectTestBatch = z.infer<typeof selectTestBatchSchema>;
+export type TestBatch = z.infer<typeof selectTestBatchSchema>;
 
 export const insertTestBatchSchema = z.object({
 	name: z.string(),
@@ -17,4 +17,4 @@ export const insertTestBatchSchema = z.object({
 	language: z.string(),
 });
 
-export type InsertTestBatch = z.infer<typeof insertTestBatchSchema>;
+export type TestBatchInsert = z.infer<typeof insertTestBatchSchema>;
