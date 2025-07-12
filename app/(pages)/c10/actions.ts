@@ -1,5 +1,7 @@
 "use server";
 
+import { getInjection } from "di/container";
+
 interface Submission {
 	code: string;
 	stdin: string;
@@ -14,6 +16,25 @@ export interface ExecutionResult {
 	runtime_status: number;
 	submission_status: number;
 	description: string;
+}
+
+export async function getTestBatches() {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"getTestBatches",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const getTestBatchesController = getInjection(
+					"IGetTestBatchesController",
+				);
+				return await getTestBatchesController();
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
 }
 
 export async function runTests(

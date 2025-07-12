@@ -1,4 +1,5 @@
 import type { Test, TestInsert } from "src/entities/models/test";
+import type { TestBatchWithoutTests } from "~/entities/models/test-batch";
 
 export interface ITestsRepository {
 	createTest(test: TestInsert, tx?: any): Promise<Test>;

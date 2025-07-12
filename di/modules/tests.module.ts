@@ -8,11 +8,12 @@ import { TestBatchesRepository } from "~/infrastructure/repositories/test-batche
 import { createTestBatchUseCase } from "~/application/use-cases/create-test-batch.use-case";
 import { TestsRepository } from "~/infrastructure/repositories/tests.repository";
 import { createTestUseCase } from "~/application/use-cases/create-test.use-case";
+import { getTestBatchesController } from "~/interface-adapters/controllers/get-test-batches.controller";
+import { getTestBatchesUseCase } from "~/application/use-cases/get-test-batches.use-case";
 
 export function createTestsModule() {
 	const testsModule = createModule();
 
-	// BINDANJE KONTROLERA I USE CASEOVA
 	testsModule
 		.bind(DI_SYMBOLS.ITestBatchesRepository)
 		.toClass(TestBatchesRepository, [
@@ -48,6 +49,20 @@ export function createTestsModule() {
 		.toHigherOrderFunction(createTestUseCase, [
 			DI_SYMBOLS.IInstrumentationService,
 			DI_SYMBOLS.ITestsRepository,
+		]);
+
+	testsModule
+		.bind(DI_SYMBOLS.IGetTestBatchesController)
+		.toHigherOrderFunction(getTestBatchesController, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.IGetTestBatchesUseCase,
+		]);
+
+	testsModule
+		.bind(DI_SYMBOLS.IGetTestBatchesUseCase)
+		.toHigherOrderFunction(getTestBatchesUseCase, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.ITestBatchesRepository,
 		]);
 
 	return testsModule;

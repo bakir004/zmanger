@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import Provider from "./_components/theme-provider";
+import { QueryProvider } from "./providers/query-provider";
 
 export const metadata: Metadata = {
 	title: "Zmanger",
@@ -33,7 +34,9 @@ export default function RootLayout({
 						className="fixed -z-10 inset-0 bg-cover bg-no-repeat bg-center"
 						style={{ backgroundImage: "url('/bg-blurred-darker.png')" }}
 					/>
-					<Provider>{children}</Provider>
+					<Provider>
+						<QueryProvider>{children}</QueryProvider>
+					</Provider>
 				</body>
 			</html>
 		</ClerkProvider>

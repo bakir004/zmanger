@@ -6,6 +6,8 @@ import type { ITestBatchesRepository } from "~/application/repositories/test-bat
 import type { ICreateTestBatchUseCase } from "~/application/use-cases/create-test-batch.use-case";
 import type { ITestsRepository } from "~/application/repositories/tests.repository.interface";
 import type { ICreateTestUseCase } from "~/application/use-cases/create-test.use-case";
+import type { IGetTestBatchesController } from "~/interface-adapters/controllers/get-test-batches.controller";
+import type { IGetTestBatchesUseCase } from "~/application/use-cases/get-test-batches.use-case";
 
 export const DI_SYMBOLS = {
 	// Services
@@ -15,6 +17,7 @@ export const DI_SYMBOLS = {
 
 	// Controllers
 	ICreateTestBatchController: Symbol.for("ICreateTestBatchController"),
+	IGetTestBatchesController: Symbol.for("IGetTestBatchesController"),
 
 	// Repositories
 	ITestBatchesRepository: Symbol.for("ITestBatchesRepository"),
@@ -23,6 +26,7 @@ export const DI_SYMBOLS = {
 	// Use Cases
 	ICreateTestBatchUseCase: Symbol.for("ICreateTestBatchUseCase"),
 	ICreateTestUseCase: Symbol.for("ICreateTestUseCase"),
+	IGetTestBatchesUseCase: Symbol.for("IGetTestBatchesUseCase"),
 };
 export interface DI_RETURN_TYPES {
 	// Services
@@ -32,6 +36,7 @@ export interface DI_RETURN_TYPES {
 
 	// Controllers
 	ICreateTestBatchController: ICreateTestBatchController;
+	IGetTestBatchesController: IGetTestBatchesController;
 
 	// Repositories
 	ITestBatchesRepository: ITestBatchesRepository;
@@ -40,4 +45,5 @@ export interface DI_RETURN_TYPES {
 	// Use Cases
 	ICreateTestBatchUseCase: ICreateTestBatchUseCase;
 	ICreateTestUseCase: ICreateTestUseCase;
+	IGetTestBatchesUseCase: IGetTestBatchesUseCase;
 }

@@ -1,6 +1,8 @@
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
-import { InputParseError } from "~/entities/errors/common";
-import type { TestBatch, TestBatchInsert } from "~/entities/models/test-batch";
+import type {
+	TestBatchInsert,
+	TestBatchWithoutTests,
+} from "~/entities/models/test-batch";
 import type { ITestBatchesRepository } from "../repositories/test-batches.repository.interface";
 import type { Transaction } from "drizzle";
 
@@ -16,7 +18,7 @@ export const createTestBatchUseCase =
 			testBatch: TestBatchInsert;
 		},
 		tx?: Transaction,
-	): Promise<TestBatch> => {
+	): Promise<TestBatchWithoutTests> => {
 		return instrumentationService.startSpan(
 			{ name: "createTestBatchUseCase", op: "function" },
 			async () => {
@@ -32,7 +34,6 @@ export const createTestBatchUseCase =
 					name: createdTestBatch.name,
 					subject: createdTestBatch.subject,
 					language: createdTestBatch.language,
-					tests: [],
 				};
 			},
 		);

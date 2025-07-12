@@ -10,6 +10,7 @@ export const selectTestBatchSchema = z.object({
 });
 
 export type TestBatch = z.infer<typeof selectTestBatchSchema>;
+export type TestBatchWithoutTests = Omit<TestBatch, "tests">;
 
 export const insertTestBatchSchema = z.object({
 	name: z.string(),

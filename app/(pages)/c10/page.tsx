@@ -10,7 +10,6 @@ import {
 
 import Editor from "@monaco-editor/react";
 import { Check, LoaderCircle, Play, X } from "lucide-react";
-import code from "app/_fonts/code";
 import {
 	ResizableHandle,
 	ResizablePanel,
@@ -28,7 +27,8 @@ import {
 import { geistMono } from "app/_fonts/fonts";
 import { useState } from "react";
 import { Button } from "app/_components/ui/button";
-import { runTests } from "./actions";
+import { getTestBatches, runTests } from "./actions";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Page() {
 	const [code, setCode] = useState(
@@ -42,6 +42,13 @@ export default function Page() {
 	const [outputMessage, setOutputMessage] = useState("");
 
 	const [loading, setLoading] = useState(false);
+
+	const { data: testBatches, isLoading: testBatchesLoading } = useQuery({
+		queryKey: ["testBatches"],
+		queryFn: getTestBatches,
+	});
+
+	console.log(testBatches);
 
 	const run = async () => {
 		setLoading(true);
@@ -204,27 +211,25 @@ export default function Page() {
 						className="bg-transparent p-2"
 						defaultSize={20}
 					>
-						<Select>
+						<Select disabled={testBatchesLoading}>
 							<SelectTrigger className="w-full">
-								<SelectValue placeholder="Izaberite testove" />
+								<SelectValue
+									placeholder={
+										testBatchesLoading ? "Učitavam..." : "Izaberite testove"
+									}
+								/>
 							</SelectTrigger>
 							<SelectContent className="-mr-1">
 								<SelectGroup>
 									<SelectLabel>TP Zadaca 1</SelectLabel>
-									<SelectItem value="apple">Zadatak 1.1</SelectItem>
-									<SelectItem value="banana">Zadatak 1.2</SelectItem>
-									<SelectItem value="blueberry">Zadatak 1.3</SelectItem>
-									<SelectItem value="grapes">Zadatak 1.4</SelectItem>
-								</SelectGroup>
-								<SelectGroup>
-									<SelectLabel>TP Zadaca 2</SelectLabel>
-									<SelectItem value="apple1">Zadatak 2.1</SelectItem>
-									<SelectItem value="b1anana">Zadatak 2.2</SelectItem>
-									<SelectItem value="bl1ueberry">Zadatak 2.3</SelectItem>
-									<SelectItem value="gra1pes">Zadatak 2.4</SelectItem>
-									<SelectItem value="pine1apple">Zadatak 2.5</SelectItem>
-									<SelectLabel>ASP</SelectLabel>
-									<SelectItem value="asdas">PZ1</SelectItem>
+									{testBatches?.map((testBatch) => (
+										<SelectItem
+											key={testBatch.id}
+											value={testBatch.id.toString()}
+										>
+											{testBatch.name}
+										</SelectItem>
+									))}
 								</SelectGroup>
 							</SelectContent>
 						</Select>
