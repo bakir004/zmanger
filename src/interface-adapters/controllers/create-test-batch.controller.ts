@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
 
 const inputSchema = z.object({
 	name: z.string(),
@@ -19,6 +20,7 @@ const inputSchema = z.object({
 });
 
 function presenter() {
+	console.log("ended with presenter");
 	return {
 		success: true,
 		message: "Test batch created successfully",
@@ -30,10 +32,18 @@ export type ICreateTestBatchController = ReturnType<
 >;
 
 export const createTestBatchController =
-	() =>
+	(instrumentationService: IInstrumentationService) =>
 	async (
 		userId: string | undefined,
 		input: Partial<z.infer<typeof inputSchema>>,
 	): Promise<ReturnType<typeof presenter>> => {
-		return presenter();
+		console.log("controller before instrumentation");
+		return await instrumentationService.startSpan(
+			{
+				name: "createTestBatch Controller",
+			},
+			async () => {
+				return presenter();
+			},
+		);
 	};

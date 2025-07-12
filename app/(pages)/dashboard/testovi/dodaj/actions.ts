@@ -1,15 +1,28 @@
 "use server";
 
-import { db } from "drizzle";
-import { testBatches, tests } from "drizzle/schema";
 import type { Tests } from "./_utils/formatter";
 import { auth } from "@clerk/nextjs/server";
+import { getInjection } from "di/container";
 
 export async function createTestBatch(testBatch: Tests) {
-	try {
-		const { userId = undefined } = await auth();
-		await createTestBatchController(userId, testBatch);
-	} catch (error) {
-		console.error(error);
-	}
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"createTestBatch",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const { userId } = await auth();
+				const userIdString = userId ?? undefined;
+				const createTestBatchController = getInjection(
+					"ICreateTestBatchController",
+				);
+				console.log("action before controller");
+				await createTestBatchController(userIdString, testBatch);
+				console.log("action after controller");
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
 }
