@@ -1,7 +1,3 @@
-// This file configures the initialization of Sentry on the server.
-// The config you add here will be used whenever the server handles a request.
-// https://docs.sentry.io/platforms/javascript/guides/nextjs/
-
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
@@ -9,6 +5,10 @@ Sentry.init({
 
 	// Performance Monitoring
 	tracesSampleRate: 1.0,
+
+	// Session Replay
+	replaysSessionSampleRate: 0.1,
+	replaysOnErrorSampleRate: 1.0,
 
 	// Environment
 	environment: process.env.NODE_ENV,
@@ -20,9 +20,4 @@ Sentry.init({
 	_experiments: {
 		enableLogs: true,
 	},
-
-	// Server-specific settings
-	integrations: [
-		// Add any server-specific integrations here
-	],
 });

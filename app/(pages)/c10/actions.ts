@@ -1,22 +1,7 @@
 "use server";
 
 import { getInjection } from "di/container";
-
-interface Submission {
-	code: string;
-	stdin: string;
-	stdout: string;
-	language: "cpp" | "c";
-}
-export interface ExecutionResult {
-	compile_output: string;
-	stdout: string;
-	stderr: string;
-	time: number;
-	runtime_status: number;
-	submission_status: number;
-	description: string;
-}
+import type { Test, TestWithUserCodeAndLanguage } from "~/entities/models/test";
 
 export async function getTestBatches() {
 	const instrumentationService = getInjection("IInstrumentationService");
@@ -37,31 +22,58 @@ export async function getTestBatches() {
 	);
 }
 
-export async function runTests(
-	submission: Submission,
-): Promise<ExecutionResult> {
-	const codeRunnerUrl = process.env.CODE_RUNNER_URL;
-	if (!codeRunnerUrl) throw new Error("CODE_RUNNER_URL is not set");
+export async function getTestsByBatchId(testBatchId: number) {
+	const instrumentationService = getInjection("IInstrumentationService");
 
-	const submissionFormattedForServer = {
-		code: submission.code,
-		stdin: submission.stdin,
-		expected_output: [""],
-		language_id: submission.language === "cpp" ? 1 : 2,
-	};
-
-	const res = await fetch(`${codeRunnerUrl}/submissions`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
+	return await instrumentationService.instrumentServerAction(
+		"getTestsByBatchId",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const getTestsByBatchIdController = getInjection(
+					"IGetTestsByBatchIdController",
+				);
+				return await getTestsByBatchIdController(testBatchId);
+			} catch (error) {
+				console.error(error);
+			}
 		},
-		body: JSON.stringify(submissionFormattedForServer),
-	});
-	const contentType = res.headers.get("content-type");
-	let result: ExecutionResult;
-	if (contentType?.includes("application/json")) result = await res.json();
-	else throw new Error(await res.text());
+	);
+}
 
-	console.log(result);
-	return result;
+export async function runSingleTest({
+	code,
+	language,
+	test,
+}: {
+	code: string;
+	language: string;
+	test: Test;
+}) {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"runSingleTest",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const runSingleTestController = getInjection(
+					"IRunSingleTestController",
+				);
+
+				const testWithUserCodeAndLanguage: TestWithUserCodeAndLanguage = {
+					test: test,
+					userCode: code,
+					language,
+				};
+
+				return await runSingleTestController(
+					"asd",
+					testWithUserCodeAndLanguage,
+				);
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
 }

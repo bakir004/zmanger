@@ -6,7 +6,9 @@ import "./app/env.js";
 import { withSentryConfig } from "@sentry/nextjs";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+	turbopack: {},
+};
 
 const sentryConfig = withSentryConfig(config, {
 	// For all available options, see:

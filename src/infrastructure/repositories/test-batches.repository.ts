@@ -34,7 +34,7 @@ export class TestBatchesRepository implements ITestBatchesRepository {
 						{
 							name: query.toSQL().sql,
 							op: "db.query",
-							attributes: { "db.system": "sqlite" },
+							attributes: { "db.system": "postgres" },
 						},
 						() => query.execute(),
 					);
@@ -61,7 +61,7 @@ export class TestBatchesRepository implements ITestBatchesRepository {
 						{
 							name: query.toSQL().sql,
 							op: "db.query",
-							attributes: { "db.system": "sqlite" },
+							attributes: { "db.system": "postgres" },
 						},
 						() => query.execute(),
 					);

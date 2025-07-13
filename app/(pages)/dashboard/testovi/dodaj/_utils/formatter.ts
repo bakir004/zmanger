@@ -72,7 +72,6 @@ export type Tests = {
 	tests: Test[];
 };
 type ZamgerTests = z.infer<typeof ZamgerTestsSchema>;
-type ZamgerTest = z.infer<typeof TestSchema>;
 
 export const testJsonFormatter = (json: string): Tests => {
 	let jsonToParse = json;
@@ -118,7 +117,6 @@ export const testJsonFormatter = (json: string): Tests => {
 			}
 			const executeObject = item.tools[2];
 			if (typeof executeObject === "string" || !executeObject.execute) {
-				// console.error(`Expected output bad for test ${item.id}`);
 				formattedTestJson.tests.push(newTest);
 				continue;
 			}
@@ -127,7 +125,6 @@ export const testJsonFormatter = (json: string): Tests => {
 
 			const expectedOutputs = executeObject.execute.expect;
 			if (!expectedOutputs || expectedOutputs.length < 1) {
-				// console.error(`Expected output bad for test ${item.id}`);
 				formattedTestJson.tests.push(newTest);
 				continue;
 			}

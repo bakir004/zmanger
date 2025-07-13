@@ -5,6 +5,7 @@ import { type DI_RETURN_TYPES, DI_SYMBOLS } from "di/types";
 import { createTestsModule } from "./modules/tests.module";
 import { createMonitoringModule } from "./modules/monitoring.module";
 import { createTransactionManagerModule } from "./modules/database.module";
+import { createExternalServicesModule } from "./modules/external-services.module";
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
 
 const ApplicationContainer = createContainer();
@@ -14,6 +15,10 @@ ApplicationContainer.load(Symbol("MonitoringModule"), createMonitoringModule());
 ApplicationContainer.load(
 	Symbol("TransactionManagerModule"),
 	createTransactionManagerModule(),
+);
+ApplicationContainer.load(
+	Symbol("ExternalServicesModule"),
+	createExternalServicesModule(),
 );
 
 export function getInjection<K extends keyof typeof DI_SYMBOLS>(

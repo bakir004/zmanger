@@ -32,6 +32,9 @@
 .bg-secondary-gradient {
 	@apply bg-gradient-to-br to-[#e38b6c] from-[#e7b771]
 }
+.bg-purple-gradient {
+	@apply bg-gradient-to-br to-[#663399] from-[#9966CC] text-white
+}
 
 @theme inline {
 	--radius-sm: calc(var(--radius) - 4px);

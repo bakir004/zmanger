@@ -25,14 +25,6 @@ const inputSchema = z.object({
 	),
 });
 
-function presenter() {
-	console.log("presenter");
-	return {
-		success: true,
-		message: "Test batch created successfully",
-	};
-}
-
 export type ICreateTestBatchController = ReturnType<
 	typeof createTestBatchController
 >;
@@ -47,7 +39,7 @@ export const createTestBatchController =
 	async (
 		userId: string | undefined,
 		input: Partial<z.infer<typeof inputSchema>>,
-	): Promise<ReturnType<typeof presenter>> => {
+	): Promise<void> => {
 		return await instrumentationService.startSpan(
 			{
 				name: "createTestBatchController",
@@ -106,8 +98,6 @@ export const createTestBatchController =
 						);
 					},
 				);
-
-				return presenter();
 			},
 		);
 	};

@@ -3,18 +3,14 @@ import type { ICrashReporterService } from "~/application/services/crash-reporte
 import { db, type Transaction } from "drizzle";
 import { DatabaseOperationError } from "~/entities/errors/common";
 import type { ITestsRepository } from "~/application/repositories/tests.repository.interface";
-import type { Test, TestInsert } from "~/entities/models/test";
+import type {
+	FlatTest,
+	FlatTestInsert,
+	Test,
+	TestInsert,
+} from "~/entities/models/test";
 import { tests } from "drizzle/schema";
-
-type FlatTest = {
-	topOfFile: string;
-	aboveMain: string;
-	main: string;
-	stdin: string;
-	expectedOutput: string[];
-	hidden: boolean;
-	testBatchId: number;
-};
+import { eq } from "drizzle-orm";
 
 export class TestsRepository implements ITestsRepository {
 	constructor(
@@ -29,7 +25,7 @@ export class TestsRepository implements ITestsRepository {
 			{ name: "TestsRepository > createTest" },
 			async () => {
 				try {
-					const flatTest: FlatTest = {
+					const flatTest: FlatTestInsert = {
 						topOfFile: test.code.topOfFile,
 						aboveMain: test.code.aboveMain,
 						main: test.code.main,
@@ -44,7 +40,7 @@ export class TestsRepository implements ITestsRepository {
 						{
 							name: query.toSQL().sql,
 							op: "db.query",
-							attributes: { "db.system": "sqlite" },
+							attributes: { "db.system": "postgres" },
 						},
 						() => query.execute(),
 					);
@@ -69,6 +65,33 @@ export class TestsRepository implements ITestsRepository {
 				} catch (err) {
 					this.crashReporterService.report(err);
 					throw err; // TODO: convert to Entities error
+				}
+			},
+		);
+	}
+
+	async getTestsByTestBatchId(testBatchId: number): Promise<FlatTest[]> {
+		return await this.instrumentationService.startSpan(
+			{ name: "TestsRepository > getTestsByTestBatchId" },
+			async () => {
+				try {
+					const query = db.query.tests.findMany({
+						where: eq(tests.testBatchId, testBatchId),
+					});
+
+					const testsOfBatch = await this.instrumentationService.startSpan(
+						{
+							name: query.toSQL().sql,
+							op: "db.query",
+							attributes: { "db.system": "postgres" },
+						},
+						() => query.execute(),
+					);
+
+					return testsOfBatch ?? [];
+				} catch (error) {
+					this.crashReporterService.report(error);
+					throw error; // TODO: convert to Entities error
 				}
 			},
 		);
