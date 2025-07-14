@@ -7,6 +7,7 @@ import { createMonitoringModule } from "./modules/monitoring.module";
 import { createTransactionManagerModule } from "./modules/database.module";
 import { createExternalServicesModule } from "./modules/external-services.module";
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
+import { createFilesModule } from "./modules/files.module";
 
 const ApplicationContainer = createContainer();
 
@@ -20,6 +21,7 @@ ApplicationContainer.load(
 	Symbol("ExternalServicesModule"),
 	createExternalServicesModule(),
 );
+ApplicationContainer.load(Symbol("FilesModule"), createFilesModule());
 
 export function getInjection<K extends keyof typeof DI_SYMBOLS>(
 	symbol: K,

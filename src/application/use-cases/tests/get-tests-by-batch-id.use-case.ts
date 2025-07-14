@@ -1,5 +1,5 @@
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
-import type { ITestsRepository } from "../repositories/tests.repository.interface";
+import type { ITestsRepository } from "../../repositories/tests.repository.interface";
 import type { FlatTest } from "~/entities/models/test";
 
 export type IGetTestsByBatchIdUseCase = ReturnType<

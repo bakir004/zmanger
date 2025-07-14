@@ -2,7 +2,7 @@ import { createModule } from "@evyweb/ioctopus";
 import { LanguageMapperService } from "src/infrastructure/services/language-mapper.service";
 import { DI_SYMBOLS } from "di/types";
 import { CodeJudgeService } from "~/infrastructure/services/code-judge.service";
-import { runSingleTestController } from "~/interface-adapters/controllers/run-single-test.controller";
+import { runSingleTestController } from "~/interface-adapters/controllers/tests/run-single-test.controller";
 
 export function createExternalServicesModule() {
 	const externalServicesModule = createModule();

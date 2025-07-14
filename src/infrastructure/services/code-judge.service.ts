@@ -24,6 +24,7 @@ export class CodeJudgeService implements ICodeJudgeService {
 						expected_output: submission.expectedOutputs,
 						language_id: submission.languageId,
 					};
+					console.log(snakeCasedSubmission);
 					const res = await fetch(
 						`${process.env.CODE_RUNNER_URL}/submissions`,
 						{
@@ -42,7 +43,6 @@ export class CodeJudgeService implements ICodeJudgeService {
 
 					if (!result) throw new Error("No result from code runner");
 
-					console.log("SERVICE: ", result);
 					return result;
 				} catch (error) {
 					this.crashReporterService.report(error);

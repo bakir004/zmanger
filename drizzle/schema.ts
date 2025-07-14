@@ -2,7 +2,15 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import { sql } from "drizzle-orm";
-import { index, pgTableCreator } from "drizzle-orm/pg-core";
+import {
+	index,
+	pgTableCreator,
+	pgTable,
+	uuid,
+	text,
+	timestamp,
+	type AnyPgColumn,
+} from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -59,4 +67,19 @@ export const tests = createTable(
 			.notNull(),
 	}),
 	(t) => [index("test_batch_id_idx").on(t.testBatchId)],
+);
+
+export const files = createTable(
+	"files",
+	(d) => ({
+		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+		userId: d.text().notNull(),
+		name: d.text().notNull(),
+		type: d.text({ enum: ["file", "folder"] }).notNull(),
+		content: d.text(),
+		createdAt: d.timestamp().defaultNow().notNull(),
+		updatedAt: d.timestamp().defaultNow().notNull(),
+		parentId: d.integer().references((): AnyPgColumn => files.id),
+	}),
+	(t) => [index("user_id_idx_files").on(t.userId)],
 );

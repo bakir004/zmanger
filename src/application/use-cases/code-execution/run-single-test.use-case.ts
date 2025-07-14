@@ -1,12 +1,12 @@
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
 import type { TestWithUserCodeAndLanguage } from "~/entities/models/test";
-import type { ICodeJudgeService } from "../services/code-judge.service.interface";
+import type { ICodeJudgeService } from "../../services/code-judge.service.interface";
 import type {
 	ExecutionResult,
 	ExecutionResultWithTestId,
 	SnakeCasedExecutionResult,
 } from "~/entities/models/execution-result";
-import type { ILanguageMapperService } from "../services/language-mapper.service.interface";
+import type { ILanguageMapperService } from "../../services/language-mapper.service.interface";
 
 export type IRunSingleTestUseCase = ReturnType<typeof runSingleTestUseCase>;
 
@@ -42,8 +42,6 @@ export const runSingleTestUseCase =
 					expectedOutputs: input.testWithUserCode.test.expectedOutput,
 					languageId,
 				};
-
-				console.log(submission);
 
 				const executionResult: SnakeCasedExecutionResult =
 					await codeJudgeService.judgeCode(submission);

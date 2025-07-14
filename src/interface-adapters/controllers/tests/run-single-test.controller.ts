@@ -3,7 +3,7 @@ import { UnauthenticatedError } from "~/entities/errors/auth";
 import { InputParseError } from "~/entities/errors/common";
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
 import { testWithUserCodeAndLanguageSchema } from "~/entities/models/test";
-import type { IRunSingleTestUseCase } from "~/application/use-cases/run-single-test.use-case";
+import type { IRunSingleTestUseCase } from "~/application/use-cases/code-execution/run-single-test.use-case";
 import type {
 	ExecutionResult,
 	ExecutionResultWithTestId,

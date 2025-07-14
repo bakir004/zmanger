@@ -5,6 +5,7 @@ probably wont look at this file ever again
 components, its becoming unwieldy and inconsistent
 [ ] frontend is a mess, refactor everything
 [ ] faq, features, other PR stuff
+[ ] remove magic numbers regarding submission status from API
 [ ] stripe for subscriptions or maybe clerk
 [ ] put src folder files in folders, organize
 [ ] thoroughly go through the input parsing and

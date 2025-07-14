@@ -1,17 +1,17 @@
 import { createModule } from "@evyweb/ioctopus";
 
-import { createTestBatchController } from "~/interface-adapters/controllers/create-test-batch.controller";
+import { createTestBatchController } from "~/interface-adapters/controllers/tests/create-test-batch.controller";
 
 import { DI_SYMBOLS } from "di/types";
 import { TestBatchesRepository } from "~/infrastructure/repositories/test-batches.repository";
-import { createTestBatchUseCase } from "~/application/use-cases/create-test-batch.use-case";
+import { createTestBatchUseCase } from "~/application/use-cases/tests/create-test-batch.use-case";
 import { TestsRepository } from "~/infrastructure/repositories/tests.repository";
-import { createTestUseCase } from "~/application/use-cases/create-test.use-case";
-import { getTestBatchesController } from "~/interface-adapters/controllers/get-test-batches.controller";
-import { getTestBatchesUseCase } from "~/application/use-cases/get-test-batches.use-case";
-import { getTestsByBatchIdController } from "~/interface-adapters/controllers/get-tests-by-batch-id.controller";
-import { getTestsByBatchIdUseCase } from "~/application/use-cases/get-tests-by-batch-id.use-case";
-import { runSingleTestUseCase } from "~/application/use-cases/run-single-test.use-case";
+import { createTestUseCase } from "~/application/use-cases/tests/create-test.use-case";
+import { getTestBatchesController } from "~/interface-adapters/controllers/tests/get-test-batches.controller";
+import { getTestBatchesUseCase } from "~/application/use-cases/tests/get-test-batches.use-case";
+import { getTestsByBatchIdController } from "~/interface-adapters/controllers/tests/get-tests-by-batch-id.controller";
+import { getTestsByBatchIdUseCase } from "~/application/use-cases/tests/get-tests-by-batch-id.use-case";
+import { runSingleTestUseCase } from "~/application/use-cases/code-execution/run-single-test.use-case";
 
 export function createTestsModule() {
 	const testsModule = createModule();

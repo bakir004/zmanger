@@ -1,5 +1,5 @@
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
-import type { IGetTestsByBatchIdUseCase } from "~/application/use-cases/get-tests-by-batch-id.use-case";
+import type { IGetTestsByBatchIdUseCase } from "~/application/use-cases/tests/get-tests-by-batch-id.use-case";
 import type { Test } from "~/entities/models/test";
 import type { TestBatchWithoutTests } from "~/entities/models/test-batch";
 

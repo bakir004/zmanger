@@ -3,8 +3,8 @@ import { UnauthenticatedError } from "~/entities/errors/auth";
 import { InputParseError } from "~/entities/errors/common";
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
 import type { ITransactionManagerService } from "~/application/services/transaction-manager.service.interface";
-import type { ICreateTestBatchUseCase } from "~/application/use-cases/create-test-batch.use-case";
-import type { ICreateTestUseCase } from "~/application/use-cases/create-test.use-case";
+import type { ICreateTestBatchUseCase } from "~/application/use-cases/tests/create-test-batch.use-case";
+import type { ICreateTestUseCase } from "~/application/use-cases/tests/create-test.use-case";
 import type { Transaction } from "drizzle";
 
 const inputSchema = z.object({

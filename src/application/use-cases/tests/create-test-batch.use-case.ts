@@ -3,7 +3,7 @@ import type {
 	TestBatchInsert,
 	TestBatchWithoutTests,
 } from "~/entities/models/test-batch";
-import type { ITestBatchesRepository } from "../repositories/test-batches.repository.interface";
+import type { ITestBatchesRepository } from "../../repositories/test-batches.repository.interface";
 import type { Transaction } from "drizzle";
 
 export type ICreateTestBatchUseCase = ReturnType<typeof createTestBatchUseCase>;

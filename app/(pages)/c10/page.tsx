@@ -9,7 +9,17 @@ import {
 } from "app/_components/ui/sidebar";
 
 import Editor from "@monaco-editor/react";
-import { Check, LoaderCircle, Play, Power, Terminal, X } from "lucide-react";
+import {
+	AlertTriangle,
+	Bug,
+	Check,
+	CheckCheck,
+	LoaderCircle,
+	Play,
+	Power,
+	Terminal,
+	X,
+} from "lucide-react";
 import {
 	ResizableHandle,
 	ResizablePanel,
@@ -27,15 +37,36 @@ import {
 import { geistMono } from "app/_fonts/fonts";
 import { useState } from "react";
 import { Button } from "app/_components/ui/button";
-import { getTestBatches, getTestsByBatchId, runSingleTest } from "./actions";
+import {
+	getFilesForUser,
+	getTestBatches,
+	getTestsByBatchId,
+	runSingleTest,
+} from "./actions";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Test } from "~/entities/models/test";
-import { ScrollArea } from "app/_components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "app/_components/ui/scroll-area";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "app/_components/ui/table";
 import { Skeleton } from "app/_components/ui/skeleton";
 import type {
 	ExecutionResult,
 	ExecutionResultWithTestId,
 } from "~/entities/models/execution-result";
+import {
+	Dialog,
+	DialogTitle,
+	DialogHeader,
+	DialogContent,
+	DialogTrigger,
+	DialogDescription,
+} from "app/_components/ui/dialog";
 
 export default function Page() {
 	const [code, setCode] = useState(
@@ -109,6 +140,11 @@ export default function Page() {
 		setLoadingTestBatch(false);
 	};
 
+	const { data: files, isLoading: filesLoading } = useQuery({
+		queryKey: ["files"],
+		queryFn: getFilesForUser,
+	});
+
 	const [executionResults, setExecutionResults] = useState<
 		ExecutionResultWithTestId[]
 	>([]);
@@ -124,7 +160,7 @@ export default function Page() {
 
 	return (
 		<SidebarProvider>
-			<FileSidebar />
+			<FileSidebar filesLoading={filesLoading} files={files ?? []} />
 			<SidebarInset>
 				<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-transparent">
 					<SidebarTrigger className="-ml-1" />
@@ -375,39 +411,176 @@ export default function Page() {
 								>
 									{!loadingTestBatch
 										? tests.map((test, i) => (
-												<button
-													type="button"
-													key={i}
-													onClick={() => runTest(test.id)}
-													className={`bg-[#16101d] border-l-3 flex items-center justify-between cursor-pointer text-sm px-3 py-1 rounded ${
-														executionResults.find(
-															(result) => result?.testId === test.id,
-														)?.submissionStatus === 8
-															? "border-yellow-400"
-															: ""
-													} ${
-														executionResults.find(
-															(result) => result?.testId === test.id,
-														)?.submissionStatus !== 0 &&
-														executionResults.find(
-															(result) => result?.testId === test.id,
-														)?.submissionStatus !== 8
-															? "border-red-400"
-															: ""
-													} ${
-														executionResults.find(
-															(result) => result?.testId === test.id,
-														)?.submissionStatus === 0
-															? "border-green-400"
-															: ""
-													}`}
-												>
-													Test {i + 1}
-													<div>
-														{/* <LoaderCircle className="animate-spin w-4 h-4" /> */}
-														<Play className="w-4 h-4" />
-													</div>
-												</button>
+												<Dialog key={i}>
+													<DialogTrigger asChild>
+														<div
+															key={i}
+															className={`bg-[#16101d] group border-l-3 flex items-center justify-between cursor-pointer text-sm px-3 py-1 rounded ${
+																executionResults.find(
+																	(result) => result?.testId === test.id,
+																)?.submissionStatus === 8
+																	? "border-yellow-400"
+																	: ""
+															} ${
+																executionResults.find(
+																	(result) => result?.testId === test.id,
+																)?.submissionStatus !== 0 &&
+																executionResults.find(
+																	(result) => result?.testId === test.id,
+																)?.submissionStatus !== 8
+																	? "border-red-400"
+																	: ""
+															} ${
+																executionResults.find(
+																	(result) => result?.testId === test.id,
+																)?.submissionStatus === 0
+																	? "border-green-400"
+																	: ""
+															}`}
+														>
+															Test {i + 1}
+															<button
+																className="cursor-pointer"
+																type="button"
+																onClick={(e) => {
+																	e.preventDefault();
+																	e.stopPropagation();
+																	runTest(test.id);
+																}}
+															>
+																{/* <LoaderCircle className="animate-spin w-4 h-4" /> */}
+																<Play className="w-4 h-4 hidden group-hover:inline" />
+																{executionResults.find(
+																	(result) => result?.testId === test.id,
+																)?.submissionStatus === 2 ? (
+																	<Bug className="w-4 h-4 text-red-400 group-hover:hidden" />
+																) : executionResults.find(
+																		(result) => result?.testId === test.id,
+																	)?.submissionStatus === 1 ? (
+																	<AlertTriangle className="w-4 h-4 text-red-400 group-hover:hidden" />
+																) : executionResults.find(
+																		(result) => result?.testId === test.id,
+																	)?.submissionStatus === 8 ? (
+																	<Check className="w-4 h-4 text-yellow-400 group-hover:hidden" />
+																) : (
+																	<CheckCheck className="w-4 h-4 text-green-400 group-hover:hidden" />
+																)}
+															</button>
+														</div>
+													</DialogTrigger>
+													<DialogContent className="sm:min-w-xl md:min-w-2xl lg:min-w-3xl xl:min-w-4xl">
+														<DialogHeader>
+															<DialogTitle>
+																Test {i + 1} -{" "}
+																{executionResults.find(
+																	(result) => result?.testId === test.id,
+																)?.description ?? "N/A"}
+															</DialogTitle>
+															<DialogDescription className="italic">
+																Ako vam je test "Core Accepted", to znači da se
+																vaš izlaz poklapa sa očekivanim kada bi se
+																zanemarili svi blanko znakovi. Ovako prihvaćeni
+																testovi često prolaze na Zamgeru.
+															</DialogDescription>
+														</DialogHeader>
+														<div className="h-[calc(100dvh-200px)]">
+															<ResizablePanelGroup direction="vertical">
+																<ResizablePanel defaultSize={50} minSize={20}>
+																	<div className="h-full">
+																		<h4 className="text-sm font-bold mb-2">
+																			Kod testa
+																		</h4>
+																		<Editor
+																			value={`${test.code.topOfFile}\n// Vaš kod ide ovdje...\n${test.code.aboveMain}\nint main() {\n${test.code.main}\n}`}
+																			theme="vs-dark"
+																			language="cpp"
+																			options={{
+																				lineNumbers: "off",
+																				readOnly: true,
+																				minimap: { enabled: false },
+																				fontFamily: "Geist Mono",
+																				fontSize: 12,
+																			}}
+																		/>
+																	</div>
+																</ResizablePanel>
+																<ResizableHandle />
+																<ResizablePanel defaultSize={50} minSize={20}>
+																	<ScrollArea className="h-full sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl">
+																		<Table>
+																			<TableBody>
+																				<TableRow>
+																					<TableCell className="text-xs font-medium w-[120px]">
+																						Stdin
+																					</TableCell>
+																					<TableCell className="text-xs font-mono whitespace-pre-wrap min-w-[400px]">
+																						{test.stdin || "(prazno)"}
+																					</TableCell>
+																				</TableRow>
+																				<TableRow>
+																					<TableCell className="text-xs font-medium w-[120px]">
+																						Očekivani izlaz
+																					</TableCell>
+																					<TableCell className="text-xs font-mono whitespace-pre-wrap min-w-[400px]">
+																						{test.expectedOutput.length > 0
+																							? test.expectedOutput.map(
+																									(output, index) => (
+																										<div key={index}>
+																											{output}
+																											{index <
+																												test.expectedOutput
+																													.length -
+																													1 && (
+																												<Separator className="my-2" />
+																											)}
+																										</div>
+																									),
+																								)
+																							: "(prazno)"}
+																					</TableCell>
+																				</TableRow>
+																				<TableRow>
+																					<TableCell className="text-xs font-medium w-[120px]">
+																						Vaš izlaz
+																					</TableCell>
+																					<TableCell className="text-xs font-mono whitespace-pre-wrap min-w-[400px]">
+																						{(() => {
+																							const result =
+																								executionResults.find(
+																									(r) => r?.testId === test.id,
+																								);
+																							if (!result) return "N/A";
+
+																							if (result.compileOutput) {
+																								return (
+																									<span className="text-red-400">
+																										{result.compileOutput}
+																									</span>
+																								);
+																							}
+
+																							if (result.stderr) {
+																								return (
+																									<span className="text-red-400">
+																										{result.stderr}
+																									</span>
+																								);
+																							}
+
+																							return result.stdout || "N/A";
+																						})()}
+																					</TableCell>
+																				</TableRow>
+																			</TableBody>
+																		</Table>
+																		<ScrollBar orientation="horizontal" />
+																		<ScrollBar orientation="vertical" />
+																	</ScrollArea>
+																</ResizablePanel>
+															</ResizablePanelGroup>
+														</div>
+													</DialogContent>
+												</Dialog>
 											))
 										: [...Array(5)].map((_, i) => (
 												<Skeleton key={i} className="h-7 w-full rounded" />
