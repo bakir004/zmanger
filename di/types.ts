@@ -17,6 +17,10 @@ import type { IRunSingleTestController } from "~/interface-adapters/controllers/
 import type { IGetFilesForUserUseCase } from "~/application/use-cases/files/get-files-for-user.use-case";
 import type { IGetFilesForUserController } from "~/interface-adapters/controllers/files/get-files-for-user.controller";
 import type { IFilesRepository } from "~/application/repositories/files.repository.interface";
+import type { IGetFileContentController } from "~/interface-adapters/controllers/files/get-file-content.controller";
+import type { IGetFileContentUseCase } from "~/application/use-cases/files/get-file-content.use-case";
+import type { IUpdateFileContentController } from "~/interface-adapters/controllers/files/update-file-content.controller";
+import type { IUpdateFileContentUseCase } from "~/application/use-cases/files/update-file-content.use-case";
 
 export const DI_SYMBOLS = {
 	// Services
@@ -30,6 +34,8 @@ export const DI_SYMBOLS = {
 	IGetTestsByBatchIdController: Symbol.for("IGetTestsByBatchIdController"),
 	IRunSingleTestController: Symbol.for("IRunSingleTestController"),
 	IGetFilesForUserController: Symbol.for("IGetFilesForUserController"),
+	IGetFileContentController: Symbol.for("IGetFileContentController"),
+	IUpdateFileContentController: Symbol.for("IUpdateFileContentController"),
 
 	// Repositories
 	ITestBatchesRepository: Symbol.for("ITestBatchesRepository"),
@@ -43,6 +49,8 @@ export const DI_SYMBOLS = {
 	IGetTestsByBatchIdUseCase: Symbol.for("IGetTestsByBatchIdUseCase"),
 	IRunSingleTestUseCase: Symbol.for("IRunSingleTestUseCase"),
 	IGetFilesForUserUseCase: Symbol.for("IGetFilesForUserUseCase"),
+	IGetFileContentUseCase: Symbol.for("IGetFileContentUseCase"),
+	IUpdateFileContentUseCase: Symbol.for("IUpdateFileContentUseCase"),
 
 	// External Services
 	ILanguageMapperService: Symbol.for("ILanguageMapperService"),
@@ -60,6 +68,8 @@ export interface DI_RETURN_TYPES {
 	IGetTestsByBatchIdController: IGetTestsByBatchIdController;
 	IRunSingleTestController: IRunSingleTestController;
 	IGetFilesForUserController: IGetFilesForUserController;
+	IGetFileContentController: IGetFileContentController;
+	IUpdateFileContentController: IUpdateFileContentController;
 
 	// Repositories
 	ITestBatchesRepository: ITestBatchesRepository;
@@ -73,6 +83,8 @@ export interface DI_RETURN_TYPES {
 	IGetTestsByBatchIdUseCase: IGetTestsByBatchIdUseCase;
 	IRunSingleTestUseCase: IRunSingleTestUseCase;
 	IGetFilesForUserUseCase: IGetFilesForUserUseCase;
+	IGetFileContentUseCase: IGetFileContentUseCase;
+	IUpdateFileContentUseCase: IUpdateFileContentUseCase;
 
 	// External Services
 	ILanguageMapperService: ILanguageMapperService;

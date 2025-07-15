@@ -7,7 +7,7 @@ components, its becoming unwieldy and inconsistent
 [ ] faq, features, other PR stuff
 [ ] remove magic numbers regarding submission status from API
 [ ] stripe for subscriptions or maybe clerk
-[ ] put src folder files in folders, organize
+[x] put src folder files in folders, organize
 [ ] thoroughly go through the input parsing and
 error handling of all use-cases and controllers
 [ ] understand redis cache
@@ -20,3 +20,7 @@ of the work
 transactional
 [ ] BIG TASK: users can make files and folders,
 and can navigate them in c10 environment
+  - [ ] create
+  - [x] read
+  - [ ] update
+  - [ ] destroy

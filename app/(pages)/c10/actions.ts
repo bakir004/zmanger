@@ -80,7 +80,7 @@ export async function runSingleTest({
 	);
 }
 
-export type SidebarTree = Array<string | SidebarTree>;
+export type SidebarTree = Array<{ id: number; name: string } | SidebarTree>;
 
 // Helper: build a map of id → file with children array
 function buildFileMap(files: File[]) {
@@ -112,12 +112,12 @@ function buildSidebarTree(node: File & { children: File[] }): SidebarTree {
 		if (child.type === "folder") {
 			// For folders: [name, ...children]
 			return [
-				child.name,
+				{ id: child.id, name: child.name },
 				...buildSidebarTree(child as File & { children: File[] }),
 			];
 		}
 		// For files: just the name
-		return child.name;
+		return { id: child.id, name: child.name };
 	});
 }
 
@@ -139,9 +139,9 @@ export async function filesToSidebarTree(files: File[]): Promise<SidebarTree> {
 	});
 	return sortedRoots.map((root) => {
 		if (root.type === "folder") {
-			return [root.name, ...buildSidebarTree(root)];
+			return [{ id: root.id, name: root.name }, ...buildSidebarTree(root)];
 		}
-		return root.name;
+		return { id: root.id, name: root.name };
 	});
 }
 
@@ -162,6 +162,49 @@ export async function getFilesForUser() {
 				const files: File[] = await getFilesForUserController(userId);
 				const tree = await filesToSidebarTree(files);
 				return tree;
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
+}
+
+export async function getFileContent(fileId: number) {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"getFileContent",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const getFileContentController = getInjection(
+					"IGetFileContentController",
+				);
+				return await getFileContentController(fileId);
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
+}
+
+export async function updateFileContent(fileId: number, content: string) {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"updateFileContent",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const updateFileContentController = getInjection(
+					"IUpdateFileContentController",
+				);
+				const { userId } = await auth();
+				if (!userId)
+					throw new UnauthenticatedError(
+						"Must be logged in to update file content",
+					);
+				return await updateFileContentController(userId, { fileId, content });
 			} catch (error) {
 				console.error(error);
 			}

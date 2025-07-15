@@ -30,4 +30,41 @@ export class FilesRepository implements IFilesRepository {
 			},
 		);
 	}
+
+	async getFileContent(fileId: number): Promise<string> {
+		return await this.instrumentationService.startSpan(
+			{ name: "FilesRepository > getFileContent" },
+			async () => {
+				try {
+					const foundFile = await db
+						.select()
+						.from(files)
+						.where(eq(files.id, fileId));
+
+					if (!foundFile[0]) {
+						throw new Error("File not found");
+					}
+
+					return foundFile[0].content ?? "";
+				} catch (error) {
+					this.crashReporterService.report(error);
+					throw error;
+				}
+			},
+		);
+	}
+
+	async updateFileContent(fileId: number, content: string): Promise<void> {
+		return await this.instrumentationService.startSpan(
+			{ name: "FilesRepository > updateFileContent" },
+			async () => {
+				try {
+					await db.update(files).set({ content }).where(eq(files.id, fileId));
+				} catch (error) {
+					this.crashReporterService.report(error);
+					throw error;
+				}
+			},
+		);
+	}
 }

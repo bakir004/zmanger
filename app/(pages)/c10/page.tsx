@@ -17,6 +17,7 @@ import {
 	LoaderCircle,
 	Play,
 	Power,
+	Save,
 	Terminal,
 	X,
 } from "lucide-react";
@@ -35,13 +36,15 @@ import {
 	SelectValue,
 } from "app/_components/ui/select";
 import { geistMono } from "app/_fonts/fonts";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "app/_components/ui/button";
 import {
+	getFileContent,
 	getFilesForUser,
 	getTestBatches,
 	getTestsByBatchId,
 	runSingleTest,
+	updateFileContent,
 } from "./actions";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Test } from "~/entities/models/test";
@@ -78,8 +81,42 @@ export default function Page() {
 	const [pingSuccess, setPingSuccess] = useState(false);
 	const [pingFail, setPingFail] = useState(false);
 	const [outputMessage, setOutputMessage] = useState("");
+	const [savingFile, setSavingFile] = useState(false);
 
 	const [loading, setLoading] = useState(false);
+	const [currentFileId, setCurrentFileId] = useState<number | null>(null);
+
+	const queryClient = useQueryClient();
+
+	// Handle Ctrl+S keyboard shortcut
+	const handleSave = useCallback(async () => {
+		if (currentFileId === null) {
+			console.log("No file selected to save");
+			return;
+		}
+		try {
+			setSavingFile(true);
+			await updateFileContent(currentFileId, code);
+			queryClient.setQueryData(["fileContent", currentFileId], code);
+			setSavingFile(false);
+		} catch (error) {
+			console.error("Failed to save file:", error);
+		}
+	}, [currentFileId, code, queryClient]);
+
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+				event.preventDefault();
+				handleSave();
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyDown);
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [handleSave]);
 
 	const { data: testBatches, isLoading: testBatchesLoading } = useQuery({
 		queryKey: ["testBatches"],
@@ -87,6 +124,7 @@ export default function Page() {
 	});
 
 	const run = async () => {
+		await handleSave();
 		setLoading(true);
 		const executionResult = await runTest(0);
 		console.log(executionResult);
@@ -128,8 +166,6 @@ export default function Page() {
 	const [tests, setTests] = useState<Test[]>([]);
 	const [loadingTestBatch, setLoadingTestBatch] = useState(false);
 
-	const queryClient = useQueryClient();
-
 	const handleTestBatchChange = async (value: string) => {
 		setLoadingTestBatch(true);
 		const tests = await queryClient.fetchQuery({
@@ -150,6 +186,7 @@ export default function Page() {
 	>([]);
 
 	const runAllTests = async () => {
+		await handleSave();
 		setLoading(true);
 		const executionResults: (ExecutionResultWithTestId | undefined)[] =
 			await Promise.all(tests.map((test) => runTest(test.id)));
@@ -158,9 +195,22 @@ export default function Page() {
 		setLoading(false);
 	};
 
+	const handleFileClick = async (id: number) => {
+		const fileContent = await queryClient.fetchQuery({
+			queryKey: ["fileContent", id],
+			queryFn: () => getFileContent(id),
+		});
+		setCode(fileContent ?? "");
+		setCurrentFileId(id);
+	};
+
 	return (
 		<SidebarProvider>
-			<FileSidebar filesLoading={filesLoading} files={files ?? []} />
+			<FileSidebar
+				handleFileClick={handleFileClick}
+				filesLoading={filesLoading}
+				files={files ?? []}
+			/>
 			<SidebarInset>
 				<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-transparent">
 					<SidebarTrigger className="-ml-1" />
@@ -201,6 +251,14 @@ export default function Page() {
 								Pokreni testove
 							</>
 						)}
+					</Button>
+					<Button
+						onClick={handleSave}
+						disabled={savingFile}
+						className="flex bg-primary-gradient items-center gap-2 cursor-pointer"
+					>
+						{savingFile ? <LoaderCircle className="animate-spin" /> : <Save />}
+						Spremi
 					</Button>
 				</header>
 
