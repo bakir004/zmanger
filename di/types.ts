@@ -21,6 +21,10 @@ import type { IGetFileContentController } from "~/interface-adapters/controllers
 import type { IGetFileContentUseCase } from "~/application/use-cases/files/get-file-content.use-case";
 import type { IUpdateFileContentController } from "~/interface-adapters/controllers/files/update-file-content.controller";
 import type { IUpdateFileContentUseCase } from "~/application/use-cases/files/update-file-content.use-case";
+import type { ICreateFileController } from "~/interface-adapters/controllers/files/create-file.controller";
+import type { ICreateFileUseCase } from "~/application/use-cases/files/create-file.use-case";
+import type { IDeleteFileController } from "~/interface-adapters/controllers/files/delete-file.controller";
+import type { IDeleteFileUseCase } from "~/application/use-cases/files/delete-file.use-case";
 
 export const DI_SYMBOLS = {
 	// Services
@@ -36,6 +40,8 @@ export const DI_SYMBOLS = {
 	IGetFilesForUserController: Symbol.for("IGetFilesForUserController"),
 	IGetFileContentController: Symbol.for("IGetFileContentController"),
 	IUpdateFileContentController: Symbol.for("IUpdateFileContentController"),
+	ICreateFileController: Symbol.for("ICreateFileController"),
+	IDeleteFileController: Symbol.for("IDeleteFileController"),
 
 	// Repositories
 	ITestBatchesRepository: Symbol.for("ITestBatchesRepository"),
@@ -51,6 +57,8 @@ export const DI_SYMBOLS = {
 	IGetFilesForUserUseCase: Symbol.for("IGetFilesForUserUseCase"),
 	IGetFileContentUseCase: Symbol.for("IGetFileContentUseCase"),
 	IUpdateFileContentUseCase: Symbol.for("IUpdateFileContentUseCase"),
+	ICreateFileUseCase: Symbol.for("ICreateFileUseCase"),
+	IDeleteFileUseCase: Symbol.for("IDeleteFileUseCase"),
 
 	// External Services
 	ILanguageMapperService: Symbol.for("ILanguageMapperService"),
@@ -70,6 +78,8 @@ export interface DI_RETURN_TYPES {
 	IGetFilesForUserController: IGetFilesForUserController;
 	IGetFileContentController: IGetFileContentController;
 	IUpdateFileContentController: IUpdateFileContentController;
+	ICreateFileController: ICreateFileController;
+	IDeleteFileController: IDeleteFileController;
 
 	// Repositories
 	ITestBatchesRepository: ITestBatchesRepository;
@@ -85,6 +95,8 @@ export interface DI_RETURN_TYPES {
 	IGetFilesForUserUseCase: IGetFilesForUserUseCase;
 	IGetFileContentUseCase: IGetFileContentUseCase;
 	IUpdateFileContentUseCase: IUpdateFileContentUseCase;
+	ICreateFileUseCase: ICreateFileUseCase;
+	IDeleteFileUseCase: IDeleteFileUseCase;
 
 	// External Services
 	ILanguageMapperService: ILanguageMapperService;

@@ -4,4 +4,11 @@ export interface IFilesRepository {
 	getFilesForUser(userId: string): Promise<File[]>;
 	getFileContent(fileId: number): Promise<string>;
 	updateFileContent(fileId: number, content: string): Promise<void>;
+	createFile(
+		userId: string,
+		fileName: string,
+		type: "file" | "folder",
+		parentId: number | null,
+	): Promise<void>;
+	deleteFile(fileId: number): Promise<void>;
 }

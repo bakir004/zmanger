@@ -67,4 +67,46 @@ export class FilesRepository implements IFilesRepository {
 			},
 		);
 	}
+
+	async createFile(
+		userId: string,
+		fileName: string,
+		type: "file" | "folder",
+		parentId: number | null,
+	): Promise<void> {
+		return await this.instrumentationService.startSpan(
+			{ name: "FilesRepository > createFile" },
+			async () => {
+				try {
+					const fileToBeAdded: Omit<File, "id"> = {
+						userId,
+						name: fileName,
+						type,
+						content: type === "file" ? "" : null,
+						parentId,
+						createdAt: new Date(),
+						updatedAt: new Date(),
+					};
+					await db.insert(files).values(fileToBeAdded);
+				} catch (error) {
+					this.crashReporterService.report(error);
+					throw error;
+				}
+			},
+		);
+	}
+
+	async deleteFile(fileId: number): Promise<void> {
+		return await this.instrumentationService.startSpan(
+			{ name: "FilesRepository > deleteFile" },
+			async () => {
+				try {
+					await db.delete(files).where(eq(files.id, fileId));
+				} catch (error) {
+					this.crashReporterService.report(error);
+					throw error;
+				}
+			},
+		);
+	}
 }

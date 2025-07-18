@@ -26,6 +26,10 @@
 	height: 22px;
 }
 
+.language-cpp {
+	background: oklch(0.13 0.028 261.692) !important;
+}
+
 .bg-primary-gradient {
 	@apply bg-gradient-to-br from-[#5C87FF] to-[#003CFF] text-white
 }

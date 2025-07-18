@@ -8,6 +8,10 @@ import { getFileContentController } from "~/interface-adapters/controllers/files
 import { getFileContentUseCase } from "~/application/use-cases/files/get-file-content.use-case";
 import { updateFileContentController } from "~/interface-adapters/controllers/files/update-file-content.controller";
 import { updateFileContentUseCase } from "~/application/use-cases/files/update-file-content.use-case";
+import { createFileController } from "~/interface-adapters/controllers/files/create-file.controller";
+import { createFileUseCase } from "~/application/use-cases/files/create-file.use-case";
+import { deleteFileController } from "~/interface-adapters/controllers/files/delete-file.controller";
+import { deleteFileUseCase } from "~/application/use-cases/files/delete-file.use-case";
 
 export function createFilesModule() {
 	const filesModule = createModule();
@@ -57,6 +61,34 @@ export function createFilesModule() {
 	filesModule
 		.bind(DI_SYMBOLS.IUpdateFileContentUseCase)
 		.toHigherOrderFunction(updateFileContentUseCase, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.IFilesRepository,
+		]);
+
+	filesModule
+		.bind(DI_SYMBOLS.ICreateFileController)
+		.toHigherOrderFunction(createFileController, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.ICreateFileUseCase,
+		]);
+
+	filesModule
+		.bind(DI_SYMBOLS.ICreateFileUseCase)
+		.toHigherOrderFunction(createFileUseCase, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.IFilesRepository,
+		]);
+
+	filesModule
+		.bind(DI_SYMBOLS.IDeleteFileController)
+		.toHigherOrderFunction(deleteFileController, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.IDeleteFileUseCase,
+		]);
+
+	filesModule
+		.bind(DI_SYMBOLS.IDeleteFileUseCase)
+		.toHigherOrderFunction(deleteFileUseCase, [
 			DI_SYMBOLS.IInstrumentationService,
 			DI_SYMBOLS.IFilesRepository,
 		]);

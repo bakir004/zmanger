@@ -47,6 +47,15 @@ export const testBatches = createTable(
 		name: d.varchar({ length: 256 }).notNull(),
 		subject: d.varchar({ length: 256 }).notNull(),
 		language: d.varchar({ length: 50 }).notNull(),
+		createdAt: d
+			.timestamp({ withTimezone: true })
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`),
+		updatedAt: d
+			.timestamp({ withTimezone: true })
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`)
+			.$onUpdate(() => new Date()),
 	}),
 	(t) => [index("name_idx").on(t.name)],
 );
@@ -77,9 +86,11 @@ export const files = createTable(
 		name: d.text().notNull(),
 		type: d.text({ enum: ["file", "folder"] }).notNull(),
 		content: d.text(),
-		createdAt: d.timestamp().defaultNow().notNull(),
-		updatedAt: d.timestamp().defaultNow().notNull(),
-		parentId: d.integer().references((): AnyPgColumn => files.id),
+		createdAt: d.timestamp().notNull().defaultNow(),
+		updatedAt: d.timestamp().notNull().defaultNow(),
+		parentId: d
+			.integer()
+			.references((): AnyPgColumn => files.id, { onDelete: "cascade" }),
 	}),
 	(t) => [index("user_id_idx_files").on(t.userId)],
 );

@@ -161,6 +161,7 @@ export async function getFilesForUser() {
 					throw new UnauthenticatedError("Must be logged in to get files");
 				const files: File[] = await getFilesForUserController(userId);
 				const tree = await filesToSidebarTree(files);
+				console.log(tree);
 				return tree;
 			} catch (error) {
 				console.error(error);
@@ -205,6 +206,50 @@ export async function updateFileContent(fileId: number, content: string) {
 						"Must be logged in to update file content",
 					);
 				return await updateFileContentController(userId, { fileId, content });
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
+}
+
+export async function createFile(
+	fileName: string,
+	type: "file" | "folder",
+	parentId: number | null,
+) {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"createFile",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const createFileController = getInjection("ICreateFileController");
+				const { userId } = await auth();
+				if (!userId)
+					throw new UnauthenticatedError("Must be logged in to create file");
+				return await createFileController(userId, { fileName, type, parentId });
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
+}
+
+export async function deleteFile(fileId: number) {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"deleteFile",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const deleteFileController = getInjection("IDeleteFileController");
+				const { userId } = await auth();
+				if (!userId)
+					throw new UnauthenticatedError("Must be logged in to delete file");
+				return await deleteFileController(userId, { fileId });
 			} catch (error) {
 				console.error(error);
 			}

@@ -1,11 +1,21 @@
-import React from "react";
-import { ChevronRight, File, Loader2, MoveLeft } from "lucide-react";
+import React, { useState } from "react";
+import {
+	ChevronRight,
+	File,
+	Plus,
+	Info,
+	Loader2,
+	MoveLeft,
+	RefreshCcw,
+	Pencil,
+	Trash,
+} from "lucide-react";
 
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from "./ui/collapsible";
+} from "../../../../_components/ui/collapsible";
 import {
 	Sidebar,
 	SidebarContent,
@@ -18,28 +28,45 @@ import {
 	SidebarMenuItem,
 	SidebarMenuSub,
 	SidebarRail,
-} from "./ui/sidebar";
+} from "../../../../_components/ui/sidebar";
 import {
 	ContextMenu,
 	ContextMenuItem,
 	ContextMenuContent,
 	ContextMenuTrigger,
 	ContextMenuSeparator,
-} from "./ui/context-menu";
-import { Button } from "./ui/button";
+} from "../../../../_components/ui/context-menu";
+import { Button } from "../../../../_components/ui/button";
 import Link from "next/link";
-import { NavUser } from "./nav-user";
+import { NavUser } from "../../../../_components/nav-user";
 import { useUser } from "@clerk/nextjs";
-import type { SidebarTree } from "app/(pages)/c10/actions";
+import {
+	deleteFile,
+	getFilesForUser,
+	type SidebarTree,
+} from "app/(pages)/c10/actions";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "app/_components/ui/tooltip";
+import { FileCreateButton } from "./file-create-button";
+import { FolderCreateButton } from "./folder-create-button";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { DialogHeader, DialogTitle } from "app/_components/ui/dialog";
+import { DialogContent } from "app/_components/ui/dialog";
+import { Dialog, DialogTrigger } from "app/_components/ui/dialog";
+import { FileCreateForm } from "./file-create-form";
+import { FolderCreateForm } from "./folder-create-form";
 
 export function FileSidebar({
-	files,
-	filesLoading,
+	// files,
+	// filesLoading,
 	handleFileClick,
 	...props
 }: React.ComponentProps<typeof Sidebar> & {
-	files: SidebarTree;
-	filesLoading: boolean;
+	// files: SidebarTree;
+	// filesLoading: boolean;
 	handleFileClick: (id: number) => void;
 }) {
 	const { user } = useUser();
@@ -63,10 +90,15 @@ export function FileSidebar({
 		e.preventDefault();
 	};
 
+	const { data: files, isLoading: filesLoading } = useQuery({
+		queryKey: ["files"],
+		queryFn: getFilesForUser,
+	});
+
 	return (
 		<Sidebar {...props} className="filetree">
 			<SidebarContent
-				className=""
+				className="md:bg-transparent bg-black/80"
 				onDrop={handleRootDrop}
 				onDragOver={handleRootDragOver}
 			>
@@ -81,7 +113,28 @@ export function FileSidebar({
 					</SidebarGroupContent>
 				</SidebarGroup>
 				<SidebarGroup>
-					<SidebarGroupLabel>Datoteke</SidebarGroupLabel>
+					<SidebarGroupLabel className="flex items-center gap-1">
+						Datoteke{" "}
+						<Tooltip>
+							<TooltipTrigger>
+								<Info className="h-4 w-4" />
+							</TooltipTrigger>
+							<TooltipContent>
+								<p className="text-center">
+									Ove datoteke ne mogu imati međusobnog kontakta. <br />
+									Pokušaj da čitate jednu datoteku iz druge neće uspjeti. <br />
+									Ako želite čitati/pisati u datoteku: kreirajte je, pišite,
+									<br /> pa čitajte iz nje u jednom pokretanju programa. <br />
+									Bilo kakve kreirane datoteke se brišu automatski nakon <br />
+									završetka programa.
+								</p>
+							</TooltipContent>
+						</Tooltip>
+					</SidebarGroupLabel>
+					<div className="flex gap-2 mb-2 px-2">
+						<FileCreateButton />
+						<FolderCreateButton />
+					</div>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{filesLoading ? (
@@ -90,7 +143,7 @@ export function FileSidebar({
 									Učitavanje Vaših datoteka...
 								</SidebarMenuButton>
 							) : (
-								files.map((item, index) => (
+								files?.map((item, index) => (
 									<Tree
 										handleFileClick={handleFileClick}
 										key={index}
@@ -126,6 +179,9 @@ function Tree({
 	const dragGhostRef = React.useRef<HTMLDivElement | null>(null);
 	const [isDragging, setIsDragging] = React.useState(false);
 	const [isDragHover, setIsDragHover] = React.useState(false);
+
+	const [fileDialogOpen, setFileDialogOpen] = useState(false);
+	const [folderDialogOpen, setFolderDialogOpen] = useState(false);
 
 	const handleDragStart = (
 		e: React.DragEvent,
@@ -181,7 +237,14 @@ function Tree({
 		setIsDragHover(false);
 	};
 
-	if (!items.length) {
+	const queryClient = useQueryClient();
+
+	const handleDeleteFile = async (fileId: number) => {
+		await deleteFile(fileId);
+		queryClient.invalidateQueries({ queryKey: ["files"] });
+	};
+
+	if (!items.length && isObject) {
 		return (
 			<>
 				<div
@@ -220,10 +283,10 @@ function Tree({
 						</SidebarMenuButton>
 					</ContextMenuTrigger>
 					<ContextMenuContent>
-						<ContextMenuItem>niggas</ContextMenuItem>
-						<ContextMenuItem>Billing</ContextMenuItem>
-						<ContextMenuItem>Team</ContextMenuItem>
-						<ContextMenuItem>Subscription</ContextMenuItem>
+						<ContextMenuItem>Reimenuj</ContextMenuItem>
+						<ContextMenuItem onClick={() => handleDeleteFile(id)}>
+							Izbriši
+						</ContextMenuItem>
 					</ContextMenuContent>
 				</ContextMenu>
 			</>
@@ -292,11 +355,57 @@ function Tree({
 						</CollapsibleContent>
 					</Collapsible>
 				</ContextMenuTrigger>
-				<ContextMenuContent>
-					<ContextMenuItem>Rename</ContextMenuItem>
-					<ContextMenuItem>Delete</ContextMenuItem>
+				<ContextMenuContent className="!text-white">
+					<ContextMenuItem>
+						<Pencil className="h-4 w-4" /> Reimenuj
+					</ContextMenuItem>
+					<ContextMenuItem onClick={() => handleDeleteFile(id)}>
+						<Trash className="h-4 w-4" /> Izbriši
+					</ContextMenuItem>
+					<Dialog open={fileDialogOpen} onOpenChange={setFileDialogOpen}>
+						<DialogTrigger asChild>
+							<ContextMenuItem
+								onClick={(e) => {
+									e.preventDefault();
+									setFileDialogOpen(true);
+								}}
+							>
+								<Plus className="h-4 w-4" /> Datoteka
+							</ContextMenuItem>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Nova datoteka</DialogTitle>
+							</DialogHeader>
+							<FileCreateForm
+								close={() => setFileDialogOpen(false)}
+								parentId={id}
+							/>
+						</DialogContent>
+					</Dialog>
+					<Dialog open={folderDialogOpen} onOpenChange={setFolderDialogOpen}>
+						<DialogTrigger asChild>
+							<ContextMenuItem
+								onClick={(e) => {
+									e.preventDefault();
+									setFolderDialogOpen(true);
+								}}
+							>
+								<Plus className="h-4 w-4" /> Folder
+							</ContextMenuItem>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Novi folder</DialogTitle>
+							</DialogHeader>
+							<FolderCreateForm
+								close={() => setFolderDialogOpen(false)}
+								parentId={id}
+							/>
+						</DialogContent>
+					</Dialog>
 					<ContextMenuSeparator />
-					<ContextMenuItem>Properties</ContextMenuItem>
+					<ContextMenuItem>Prikaži detalje</ContextMenuItem>
 				</ContextMenuContent>
 			</ContextMenu>
 		</SidebarMenuItem>

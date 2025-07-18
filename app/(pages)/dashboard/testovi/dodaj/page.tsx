@@ -1,14 +1,11 @@
 "use client";
 import {
-	Check,
 	CheckCheck,
-	Dot,
 	EyeOff,
 	Plus,
 	RefreshCcw,
 	Save,
 	TriangleAlert,
-	Upload,
 	X,
 } from "lucide-react";
 import ImportTestsDialog from "./_components/import-tests-dialog";
@@ -186,7 +183,6 @@ export default function Page() {
 					<Save className="w-4 h-4" />
 				</Button>
 			</div>
-			{/* <div className="flex items-center gap-2"></div> */}
 			<div className="flex flex-wrap gap-2 text-sm my-4 border rounded-md p-2">
 				{testObject.tests.map((test: Test) => (
 					<button
