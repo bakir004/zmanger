@@ -53,7 +53,12 @@ import {
 import { FileCreateButton } from "./file-create-button";
 import { FolderCreateButton } from "./folder-create-button";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { DialogHeader, DialogTitle } from "app/_components/ui/dialog";
+import {
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "app/_components/ui/dialog";
 import { DialogContent } from "app/_components/ui/dialog";
 import { Dialog, DialogTrigger } from "app/_components/ui/dialog";
 import { FileCreateForm } from "./file-create-form";
@@ -182,6 +187,7 @@ function Tree({
 
 	const [fileDialogOpen, setFileDialogOpen] = useState(false);
 	const [folderDialogOpen, setFolderDialogOpen] = useState(false);
+	const [fileDeleteDialogOpen, setFileDeleteDialogOpen] = useState(false);
 
 	const handleDragStart = (
 		e: React.DragEvent,
@@ -240,8 +246,14 @@ function Tree({
 	const queryClient = useQueryClient();
 
 	const handleDeleteFile = async (fileId: number) => {
-		await deleteFile(fileId);
-		queryClient.invalidateQueries({ queryKey: ["files"] });
+		try {
+			await deleteFile(fileId);
+			queryClient.invalidateQueries({ queryKey: ["files"] });
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setFileDeleteDialogOpen(false);
+		}
 	};
 
 	if (!items.length && isObject) {
@@ -284,9 +296,43 @@ function Tree({
 					</ContextMenuTrigger>
 					<ContextMenuContent>
 						<ContextMenuItem>Reimenuj</ContextMenuItem>
-						<ContextMenuItem onClick={() => handleDeleteFile(id)}>
-							Izbriši
-						</ContextMenuItem>
+						<Dialog
+							open={fileDeleteDialogOpen}
+							onOpenChange={setFileDeleteDialogOpen}
+						>
+							<DialogTrigger asChild>
+								<ContextMenuItem
+									onClick={(e) => {
+										e.preventDefault();
+										setFileDeleteDialogOpen(true);
+									}}
+								>
+									<Trash className="h-4 w-4" /> Izbriši
+								</ContextMenuItem>
+							</DialogTrigger>
+							<DialogContent>
+								<DialogHeader>
+									<DialogTitle>Izbriši datoteku?</DialogTitle>
+								</DialogHeader>
+								<DialogDescription>
+									Želite li izbrisati datoteku {name}?
+								</DialogDescription>
+								<DialogFooter>
+									<Button
+										variant="ghost"
+										onClick={() => setFileDeleteDialogOpen(false)}
+									>
+										Otkaži
+									</Button>
+									<Button
+										className="bg-red-500 hover:bg-red-600 text-white cursor-pointer"
+										onClick={() => handleDeleteFile(id)}
+									>
+										Izbriši
+									</Button>
+								</DialogFooter>
+							</DialogContent>
+						</Dialog>
 					</ContextMenuContent>
 				</ContextMenu>
 			</>
@@ -359,9 +405,43 @@ function Tree({
 					<ContextMenuItem>
 						<Pencil className="h-4 w-4" /> Reimenuj
 					</ContextMenuItem>
-					<ContextMenuItem onClick={() => handleDeleteFile(id)}>
-						<Trash className="h-4 w-4" /> Izbriši
-					</ContextMenuItem>
+					<Dialog
+						open={fileDeleteDialogOpen}
+						onOpenChange={setFileDeleteDialogOpen}
+					>
+						<DialogTrigger asChild>
+							<ContextMenuItem
+								onClick={(e) => {
+									e.preventDefault();
+									setFileDeleteDialogOpen(true);
+								}}
+							>
+								<Trash className="h-4 w-4" /> Izbriši
+							</ContextMenuItem>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Izbriši folder?</DialogTitle>
+							</DialogHeader>
+							<DialogDescription>
+								Želite li izbrisati folder {name}?
+							</DialogDescription>
+							<DialogFooter>
+								<Button
+									variant="ghost"
+									onClick={() => setFileDeleteDialogOpen(false)}
+								>
+									Otkaži
+								</Button>
+								<Button
+									className="bg-red-500 hover:bg-red-600 text-white cursor-pointer"
+									onClick={() => handleDeleteFile(id)}
+								>
+									Izbriši
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					</Dialog>
 					<Dialog open={fileDialogOpen} onOpenChange={setFileDialogOpen}>
 						<DialogTrigger asChild>
 							<ContextMenuItem

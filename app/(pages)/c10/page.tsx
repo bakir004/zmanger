@@ -27,7 +27,7 @@ import { OpenedFilesTrack } from "./_components/opened-files-track";
 
 export default function Page() {
 	const [code, setCode] = useState(
-		'#include<iostream>\nint main() { std::cout << "niggas"; return 0; }',
+		'#include<iostream>\nint main() { std::cout << "gewad"; return 0; }',
 	);
 	const [stdin, setStdin] = useState("");
 	const [stdout, setStdout] = useState("");

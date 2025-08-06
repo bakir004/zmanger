@@ -1,5 +1,4 @@
 import Editor from "@monaco-editor/react";
-import { X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 
 interface EditorMainProps {
