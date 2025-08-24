@@ -9,7 +9,7 @@ import {
 	NavigationMenuTrigger,
 } from "./_components/ui/navigation-menu";
 import { Button } from "./_components/ui/button";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Dot, ExternalLink, MoveRight } from "lucide-react";
 
 export default function HomePage() {
@@ -95,14 +95,24 @@ export default function HomePage() {
 						<p className="text-gray-300 font-light tracking-wider">Github</p>
 					</Button>
 					<SignedOut>
-						<Link
+						{/* <Link
 							href={"/dashboard"}
 							className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}
 						>
 							<div className="bg-gray-950 group:hover:bg-gray-900 rounded-full text-nowrap flex items-center px-4 w-[calc(100%-2px)] h-[calc(100%-2px)]">
 								Prijavi se
 							</div>
-						</Link>
+						</Link> */}
+						<SignInButton mode="modal">
+							<button
+								type="button"
+								className={`${inter.className} transition group bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 cursor-pointer from-gray-500 to-gray-700 rounded-full uppercase font-medium flex items-center justify-center h-8 text-[11px] text-white tracking-snug`}
+							>
+								<div className="bg-gray-950 group:hover:bg-gray-900 rounded-full text-nowrap flex items-center px-4 w-[calc(100%-2px)] h-[calc(100%-2px)]">
+									Prijavi se
+								</div>
+							</button>
+						</SignInButton>
 					</SignedOut>
 					<SignedIn>
 						<Link href="/dashboard">
@@ -152,8 +162,8 @@ export default function HomePage() {
 				<div className="absolute w-[69.4%] aspect-video sm:left-[8.8%] left-[calc(8.8%-40px)] top-[54.9%] rounded-sm text-white bg-gray-800">
 					<img
 						className="w-full h-full rounded-sm"
-						src="/huly.png"
-						alt="huly"
+						src="/zmanger.png"
+						alt="zmanger"
 					/>
 				</div>
 				<div className="absolute bottom-0 left-0 h-[100px] w-full bg-gradient-to-b from-transparent to-[#090a0c] to-80% lg:h-[250px] md:h-44 sm:left-0 sm:h-[170px] sm:w-[107%]" />
