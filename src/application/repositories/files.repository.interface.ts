@@ -2,8 +2,10 @@ import type { File } from "~/entities/models/file";
 
 export interface IFilesRepository {
 	getFilesForUser(userId: string): Promise<File[]>;
-	getFileContent(fileId: number): Promise<string>;
+	getFileContent(fileId: number): Promise<{ content: string; name: string }>;
 	updateFileContent(fileId: number, content: string): Promise<void>;
+	renameFile(fileId: number, newName: string): Promise<void>;
+	moveFile(fileId: number, newParentId: number | null): Promise<void>;
 	createFile(
 		userId: string,
 		fileName: string,

@@ -12,6 +12,10 @@ import { createFileController } from "~/interface-adapters/controllers/files/cre
 import { createFileUseCase } from "~/application/use-cases/files/create-file.use-case";
 import { deleteFileController } from "~/interface-adapters/controllers/files/delete-file.controller";
 import { deleteFileUseCase } from "~/application/use-cases/files/delete-file.use-case";
+import { renameFileController } from "~/interface-adapters/controllers/files/rename-file.controller";
+import { renameFileUseCase } from "~/application/use-cases/files/rename-file.use-case";
+import { moveFileController } from "~/interface-adapters/controllers/files/move-file.controller";
+import { moveFileUseCase } from "~/application/use-cases/files/move-file.use-case";
 
 export function createFilesModule() {
 	const filesModule = createModule();
@@ -89,6 +93,34 @@ export function createFilesModule() {
 	filesModule
 		.bind(DI_SYMBOLS.IDeleteFileUseCase)
 		.toHigherOrderFunction(deleteFileUseCase, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.IFilesRepository,
+		]);
+
+	filesModule
+		.bind(DI_SYMBOLS.IRenameFileController)
+		.toHigherOrderFunction(renameFileController, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.IRenameFileUseCase,
+		]);
+
+	filesModule
+		.bind(DI_SYMBOLS.IRenameFileUseCase)
+		.toHigherOrderFunction(renameFileUseCase, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.IFilesRepository,
+		]);
+
+	filesModule
+		.bind(DI_SYMBOLS.IMoveFileController)
+		.toHigherOrderFunction(moveFileController, [
+			DI_SYMBOLS.IInstrumentationService,
+			DI_SYMBOLS.IMoveFileUseCase,
+		]);
+
+	filesModule
+		.bind(DI_SYMBOLS.IMoveFileUseCase)
+		.toHigherOrderFunction(moveFileUseCase, [
 			DI_SYMBOLS.IInstrumentationService,
 			DI_SYMBOLS.IFilesRepository,
 		]);

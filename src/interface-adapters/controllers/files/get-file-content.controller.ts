@@ -10,7 +10,7 @@ export const getFileContentController =
 		instrumentationService: IInstrumentationService,
 		getFileContentUseCase: IGetFileContentUseCase,
 	) =>
-	async (fileId: number): Promise<string> => {
+	async (fileId: number): Promise<{ content: string; name: string }> => {
 		return await instrumentationService.startSpan(
 			{
 				name: "getFileContentController",

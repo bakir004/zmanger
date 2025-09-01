@@ -31,7 +31,9 @@ export class FilesRepository implements IFilesRepository {
 		);
 	}
 
-	async getFileContent(fileId: number): Promise<string> {
+	async getFileContent(
+		fileId: number,
+	): Promise<{ content: string; name: string }> {
 		return await this.instrumentationService.startSpan(
 			{ name: "FilesRepository > getFileContent" },
 			async () => {
@@ -45,7 +47,10 @@ export class FilesRepository implements IFilesRepository {
 						throw new Error("File not found");
 					}
 
-					return foundFile[0].content ?? "";
+					return {
+						content: foundFile[0].content ?? "",
+						name: foundFile[0].name,
+					};
 				} catch (error) {
 					this.crashReporterService.report(error);
 					throw error;
@@ -60,6 +65,40 @@ export class FilesRepository implements IFilesRepository {
 			async () => {
 				try {
 					await db.update(files).set({ content }).where(eq(files.id, fileId));
+				} catch (error) {
+					this.crashReporterService.report(error);
+					throw error;
+				}
+			},
+		);
+	}
+
+	async renameFile(fileId: number, newName: string): Promise<void> {
+		return await this.instrumentationService.startSpan(
+			{ name: "FilesRepository > renameFile" },
+			async () => {
+				try {
+					await db
+						.update(files)
+						.set({ name: newName })
+						.where(eq(files.id, fileId));
+				} catch (error) {
+					this.crashReporterService.report(error);
+					throw error;
+				}
+			},
+		);
+	}
+
+	async moveFile(fileId: number, newParentId: number | null): Promise<void> {
+		return await this.instrumentationService.startSpan(
+			{ name: "FilesRepository > moveFile" },
+			async () => {
+				try {
+					await db
+						.update(files)
+						.set({ parentId: newParentId })
+						.where(eq(files.id, fileId));
 				} catch (error) {
 					this.crashReporterService.report(error);
 					throw error;

@@ -2,13 +2,43 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher([
 	"/",
-	"/dashboard(.*)",
+	"/pricing",
 	"/sign-in(.*)",
+	"/sign-up(.*)",
+	"/unauthorized",
+]);
+
+const isAdminRoute = createRouteMatcher([
+	"/dashboard/korisnici(.*)",
+	"/api/admin(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+	// Protect all non-public routes
 	if (!isPublicRoute(req)) {
 		await auth.protect();
+	}
+
+	// Check admin access for admin routes
+	if (isAdminRoute(req)) {
+		const { userId } = await auth.protect();
+
+		if (!userId) {
+			return Response.redirect(new URL("/sign-in", req.url));
+		}
+
+		// Get user from Clerk to check publicMetadata
+		const { clerkClient } = await import("@clerk/nextjs/server");
+		const clerk = await clerkClient();
+		const user = await clerk.users.getUser(userId);
+
+		// Check if user has admin role in publicMetadata
+		const isAdmin = (user.publicMetadata as any)?.role === "admin";
+
+		if (!isAdmin) {
+			// Redirect to unauthorized page
+			return Response.redirect(new URL("/unauthorized", req.url));
+		}
 	}
 });
 
@@ -20,17 +50,3 @@ export const config = {
 		"/(api|trpc)(.*)",
 	],
 };
-
-// export default clerkMiddleware(async (auth, req) => {
-// 	if (!isPublicRoute(req)) {
-// 	  const { userId, sessionClaims } = await auth.protect();
-
-// 	  // Example: Check for a custom role claim
-// 	  const userRole = sessionClaims?.role; // or sessionClaims?.publicMetadata?.role
-
-// 	  if (userRole !== "admin") {
-// 		// Optionally, you can redirect or throw an error
-// 		return Response.redirect("/unauthorized");
-// 	  }
-// 	}
-//   });

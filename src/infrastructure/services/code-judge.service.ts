@@ -24,7 +24,6 @@ export class CodeJudgeService implements ICodeJudgeService {
 						expected_output: submission.expectedOutputs,
 						language_id: submission.languageId,
 					};
-					console.log(snakeCasedSubmission);
 					const res = await fetch(
 						`${process.env.CODE_RUNNER_URL}/submissions`,
 						{

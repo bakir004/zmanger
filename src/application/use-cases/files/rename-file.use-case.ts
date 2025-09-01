@@ -1,18 +1,18 @@
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
 import type { IFilesRepository } from "../../repositories/files.repository.interface";
 
-export type IGetFileContentUseCase = ReturnType<typeof getFileContentUseCase>;
+export type IRenameFileUseCase = ReturnType<typeof renameFileUseCase>;
 
-export const getFileContentUseCase =
+export const renameFileUseCase =
 	(
 		instrumentationService: IInstrumentationService,
 		filesRepository: IFilesRepository,
 	) =>
-	(fileId: number): Promise<{ content: string; name: string }> => {
+	(fileId: number, newName: string): Promise<void> => {
 		return instrumentationService.startSpan(
-			{ name: "getFileContentUseCase", op: "function" },
+			{ name: "renameFileUseCase", op: "function" },
 			async () => {
-				return await filesRepository.getFileContent(fileId);
+				return await filesRepository.renameFile(fileId, newName);
 			},
 		);
 	};

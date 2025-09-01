@@ -33,7 +33,7 @@ export function CustomForm() {
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		const res = await addOffer();
-		console.log(values);
+		// console.log(values);
 	}
 
 	return (

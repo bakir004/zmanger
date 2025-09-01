@@ -3,6 +3,7 @@ import {
 	Forward,
 	MoreHorizontal,
 	Trash2,
+	Users,
 	type LucideIcon,
 } from "lucide-react";
 
@@ -22,6 +23,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "./ui/sidebar";
+import Link from "next/link";
 
 export function NavProjects({
 	projects,
@@ -38,6 +40,14 @@ export function NavProjects({
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
 			<SidebarGroupLabel>Projects</SidebarGroupLabel>
 			<SidebarMenu>
+				<SidebarMenuItem>
+					<SidebarMenuButton asChild>
+						<Link href="/dashboard/korisnici">
+							<Users />
+							<span>Korisnici</span>
+						</Link>
+					</SidebarMenuButton>
+				</SidebarMenuItem>
 				{projects.map((item) => (
 					<SidebarMenuItem key={item.name}>
 						<SidebarMenuButton asChild>
@@ -75,12 +85,12 @@ export function NavProjects({
 						</DropdownMenu>
 					</SidebarMenuItem>
 				))}
-				<SidebarMenuItem>
+				{/* <SidebarMenuItem>
 					<SidebarMenuButton className="text-sidebar-foreground/70">
 						<MoreHorizontal className="text-sidebar-foreground/70" />
 						<span>More</span>
 					</SidebarMenuButton>
-				</SidebarMenuItem>
+				</SidebarMenuItem> */}
 			</SidebarMenu>
 		</SidebarGroup>
 	);

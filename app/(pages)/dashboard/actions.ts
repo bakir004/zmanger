@@ -1,6 +1,88 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
+import { getInjection } from "di/container";
+import { UnauthenticatedError } from "~/entities/errors/auth";
+import type { ClerkUser } from "~/application/services/clerk.service.interface";
+
+export async function getUsersFromClerk(): Promise<ClerkUser[]> {
+	console.log("getUsersFromClerk server action called");
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"getUsersFromClerk",
+		{ recordResponse: true },
+		async () => {
+			try {
+				console.log("Getting controller from DI container...");
+				const getUsersFromClerkController = getInjection(
+					"IGetUsersFromClerkController",
+				);
+				console.log("Controller obtained, calling it...");
+				const result = await getUsersFromClerkController();
+				console.log("Controller returned:", result.length, "users");
+				console.log(
+					"First user structure:",
+					JSON.stringify(result[0], null, 2),
+				);
+				return result;
+			} catch (error) {
+				console.error("Error fetching users from Clerk:", error);
+				throw error;
+			}
+		},
+	);
+}
+
+export async function updateUserRole(
+	clerkUserId: string,
+	role: string,
+): Promise<void> {
+	console.log("updateUserRole server action called", { clerkUserId, role });
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"updateUserRole",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const updateUserRoleController = getInjection(
+					"IUpdateUserRoleController",
+				);
+				await updateUserRoleController(clerkUserId, role);
+				console.log("User role updated successfully");
+			} catch (error) {
+				console.error("Error updating user role:", error);
+				throw error;
+			}
+		},
+	);
+}
+
+export async function updateUserPlan(
+	clerkUserId: string,
+	plan: string,
+): Promise<void> {
+	console.log("updateUserPlan server action called", { clerkUserId, plan });
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"updateUserPlan",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const updateUserPlanController = getInjection(
+					"IUpdateUserPlanController",
+				);
+				await updateUserPlanController(clerkUserId, plan);
+				console.log("User plan updated successfully");
+			} catch (error) {
+				console.error("Error updating user plan:", error);
+				throw error;
+			}
+		},
+	);
+}
 
 export async function addOffer() {
 	const { userId } = await auth();

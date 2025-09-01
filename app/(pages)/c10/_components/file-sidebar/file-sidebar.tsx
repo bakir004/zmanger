@@ -43,6 +43,8 @@ import { useUser } from "@clerk/nextjs";
 import {
 	deleteFile,
 	getFilesForUser,
+	renameFile,
+	moveFile,
 	type SidebarTree,
 } from "app/(pages)/c10/actions";
 import {
@@ -52,7 +54,7 @@ import {
 } from "app/_components/ui/tooltip";
 import { FileCreateButton } from "./file-create-button";
 import { FolderCreateButton } from "./folder-create-button";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
 	DialogDescription,
 	DialogFooter,
@@ -61,8 +63,10 @@ import {
 } from "app/_components/ui/dialog";
 import { DialogContent } from "app/_components/ui/dialog";
 import { Dialog, DialogTrigger } from "app/_components/ui/dialog";
+import { Input } from "app/_components/ui/input";
 import { FileCreateForm } from "./file-create-form";
 import { FolderCreateForm } from "./folder-create-form";
+import { z } from "zod";
 
 export function FileSidebar({
 	// files,
@@ -74,6 +78,7 @@ export function FileSidebar({
 	// filesLoading: boolean;
 	handleFileClick: (id: number) => void;
 }) {
+	const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
 	const { user } = useUser();
 	const userObject = {
 		name: `${user?.firstName ?? "Učitavam..."} ${user?.lastName ?? ""}`,
@@ -82,12 +87,46 @@ export function FileSidebar({
 	};
 
 	// Handler for dropping to root
-	const handleRootDrop = (e: React.DragEvent) => {
+	const handleRootDrop = async (e: React.DragEvent) => {
 		e.preventDefault();
 		const type = e.dataTransfer.getData("application/x-item-type");
 		const draggedName = e.dataTransfer.getData("application/x-item-name");
+
 		if (type && draggedName) {
-			console.log(`Dragged ${type} '${draggedName}' to root folder`);
+			// Find the dragged item in the files list to get its ID
+			const findItemById = (
+				items: any[],
+				targetName: string,
+			): { id: number } | null => {
+				for (const item of items) {
+					if (Array.isArray(item)) {
+						// This is a folder with children
+						if (item[0]?.name === targetName) {
+							return { id: item[0].id };
+						}
+						// Search in children
+						const found = findItemById(item.slice(1), targetName);
+						if (found) return found;
+					} else {
+						// This is a file
+						if (item.name === targetName) {
+							return { id: item.id };
+						}
+					}
+				}
+				return null;
+			};
+
+			const draggedItem = findItemById(files || [], draggedName);
+
+			if (draggedItem) {
+				try {
+					await moveFile(draggedItem.id, null); // null means move to root
+					queryClient.invalidateQueries({ queryKey: ["files"] });
+				} catch (error) {
+					console.error("Failed to move file to root:", error);
+				}
+			}
 		}
 	};
 
@@ -95,6 +134,7 @@ export function FileSidebar({
 		e.preventDefault();
 	};
 
+	const queryClient = useQueryClient();
 	const { data: files, isLoading: filesLoading } = useQuery({
 		queryKey: ["files"],
 		queryFn: getFilesForUser,
@@ -143,14 +183,19 @@ export function FileSidebar({
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{filesLoading ? (
-								<SidebarMenuButton>
+								<SidebarMenuButton className="cursor-pointer">
 									<Loader2 className="h-4 w-4 animate-spin" />
 									Učitavanje Vaših datoteka...
 								</SidebarMenuButton>
 							) : (
 								files?.map((item, index) => (
 									<Tree
-										handleFileClick={handleFileClick}
+										handleFileClick={(id) => {
+											setSelectedFileId(id);
+											handleFileClick(id);
+										}}
+										selectedFileId={selectedFileId}
+										files={files}
 										key={index}
 										item={item}
 									/>
@@ -171,9 +216,13 @@ export function FileSidebar({
 function Tree({
 	item,
 	handleFileClick,
+	selectedFileId,
+	files,
 }: {
 	item: { id: number; name: string } | any[];
 	handleFileClick: (id: number) => void;
+	selectedFileId: number | null;
+	files: any[];
 }) {
 	// Handle both object format {id, name} and array format
 	const isObject = !Array.isArray(item);
@@ -188,6 +237,43 @@ function Tree({
 	const [fileDialogOpen, setFileDialogOpen] = useState(false);
 	const [folderDialogOpen, setFolderDialogOpen] = useState(false);
 	const [fileDeleteDialogOpen, setFileDeleteDialogOpen] = useState(false);
+	const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+	const [newFileName, setNewFileName] = useState("");
+	const [renameError, setRenameError] = useState("");
+
+	// Validation schema for file names (same as file creation)
+	const fileNameSchema = z.object({
+		fileName: z
+			.string()
+			.min(2, { message: "Naziv datoteke mora imati najmanje 2 znaka." })
+			.regex(/^[^\\/:*?"<>|]+\.[^\\/:*?"<>|]+$/, {
+				message:
+					'Naziv datoteke mora sadržavati ekstenziju (npr. .cpp) i ne smije sadržavati zabranjene znakove (\\ / : * ? " < > |)',
+			})
+			.refine(
+				(val) => {
+					if (typeof val !== "string") return false;
+					const parts = val.split(".");
+					if (parts.length !== 2) return false;
+					const ext = parts[1];
+					return ext === "c" || ext === "cpp";
+				},
+				{
+					message: "Ekstenzija datoteke mora biti .c ili .cpp.",
+				},
+			),
+	});
+
+	// Validation schema for folder names (no extension required)
+	const folderNameSchema = z.object({
+		fileName: z
+			.string()
+			.min(2, { message: "Naziv foldera mora imati najmanje 2 znaka." })
+			.regex(/^[^\\/:*?"<>|]+$/, {
+				message:
+					'Naziv foldera ne smije sadržavati zabranjene znakove (\\ / : * ? " < > |)',
+			}),
+	});
 
 	const handleDragStart = (
 		e: React.DragEvent,
@@ -215,13 +301,47 @@ function Tree({
 		setIsDragHover(false);
 	};
 
-	const handleDrop = (e: React.DragEvent, folderName: string) => {
+	const handleDrop = async (e: React.DragEvent, folderName: string) => {
 		e.preventDefault();
 		e.stopPropagation();
 		const type = e.dataTransfer.getData("application/x-item-type");
 		const draggedName = e.dataTransfer.getData("application/x-item-name");
+
 		if (type && draggedName) {
-			console.log(`Dragged ${type} '${draggedName}' to folder '${folderName}'`);
+			// Find the dragged item in the files list to get its ID
+			const findItemById = (
+				items: any[],
+				targetName: string,
+			): { id: number } | null => {
+				for (const item of items) {
+					if (Array.isArray(item)) {
+						// This is a folder with children
+						if (item[0]?.name === targetName) {
+							return { id: item[0].id };
+						}
+						// Search in children
+						const found = findItemById(item.slice(1), targetName);
+						if (found) return found;
+					} else {
+						// This is a file
+						if (item.name === targetName) {
+							return { id: item.id };
+						}
+					}
+				}
+				return null;
+			};
+
+			const draggedItem = findItemById(files || [], draggedName);
+
+			if (draggedItem) {
+				try {
+					await moveFile(draggedItem.id, id); // id is the folder's ID where we're dropping
+					queryClient.invalidateQueries({ queryKey: ["files"] });
+				} catch (error) {
+					console.error("Failed to move file:", error);
+				}
+			}
 		}
 		setIsDragHover(false);
 	};
@@ -256,6 +376,43 @@ function Tree({
 		}
 	};
 
+	const renameFileMutation = useMutation({
+		mutationFn: async ({
+			fileId,
+			newName,
+		}: { fileId: number; newName: string }) => {
+			return renameFile(fileId, newName);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["files"] });
+			setRenameDialogOpen(false);
+			setNewFileName("");
+			setRenameError("");
+		},
+		onError: (error) => {
+			console.error("Failed to rename file:", error);
+		},
+	});
+
+	const handleRenameFile = (isFolder: boolean) => {
+		setRenameError("");
+
+		// Use the appropriate validation schema based on whether it's a file or folder
+		const validationSchema = isFolder ? folderNameSchema : fileNameSchema;
+
+		// Validate the name using the appropriate schema
+		const validation = validationSchema.safeParse({
+			fileName: newFileName.trim(),
+		});
+
+		if (!validation.success) {
+			setRenameError(validation.error.errors[0]?.message || "Neispravno ime");
+			return;
+		}
+
+		renameFileMutation.mutate({ fileId: id, newName: newFileName.trim() });
+	};
+
 	if (!items.length && isObject) {
 		return (
 			<>
@@ -280,8 +437,8 @@ function Tree({
 				<ContextMenu>
 					<ContextMenuTrigger>
 						<SidebarMenuButton
-							isActive={name === "button.tsx"}
-							className="data-[active=true]:bg-transparent"
+							isActive={selectedFileId === id}
+							className="cursor-pointer data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
 							draggable
 							onDragStart={(e) => handleDragStart(e, "file", name)}
 							onDragEnd={handleDragEnd}
@@ -295,7 +452,64 @@ function Tree({
 						</SidebarMenuButton>
 					</ContextMenuTrigger>
 					<ContextMenuContent>
-						<ContextMenuItem>Reimenuj</ContextMenuItem>
+						<Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+							<DialogTrigger asChild>
+								<ContextMenuItem
+									onClick={(e) => {
+										e.preventDefault();
+										setNewFileName(name);
+										setRenameError("");
+										setRenameDialogOpen(true);
+									}}
+								>
+									<Pencil className="h-4 w-4" /> Reimenuj
+								</ContextMenuItem>
+							</DialogTrigger>
+							<DialogContent>
+								<DialogHeader>
+									<DialogTitle>Reimenuj datoteku</DialogTitle>
+								</DialogHeader>
+								<DialogDescription>
+									Unesite novo ime za datoteku {name}
+								</DialogDescription>
+								<Input
+									value={newFileName}
+									onChange={(e) => {
+										setNewFileName(e.target.value);
+										if (renameError) setRenameError("");
+									}}
+									placeholder="Novo ime datoteke"
+									onKeyDown={(e) => {
+										if (e.key === "Enter") {
+											handleRenameFile(false);
+										}
+									}}
+								/>
+								{renameError && (
+									<p className="text-sm text-red-500">{renameError}</p>
+								)}
+								<DialogFooter>
+									<Button
+										variant="ghost"
+										onClick={() => {
+											setRenameDialogOpen(false);
+											setNewFileName("");
+											setRenameError("");
+										}}
+									>
+										Otkaži
+									</Button>
+									<Button
+										onClick={() => handleRenameFile(false)}
+										disabled={
+											!newFileName.trim() || renameFileMutation.isPending
+										}
+									>
+										{renameFileMutation.isPending ? "Spremam..." : "Spremi"}
+									</Button>
+								</DialogFooter>
+							</DialogContent>
+						</Dialog>
 						<Dialog
 							open={fileDeleteDialogOpen}
 							onOpenChange={setFileDeleteDialogOpen}
@@ -372,11 +586,11 @@ function Tree({
 					>
 						<CollapsibleTrigger asChild>
 							<SidebarMenuButton
-								className={
+								className={`cursor-pointer ${
 									isDragHover
 										? "[&[data-state=open]>svg:first-child]:rotate-90 drag-hover"
 										: "[&[data-state=open]>svg:first-child]:rotate-90"
-								}
+								}`}
 								onDrop={(e) => handleDrop(e, name)}
 								onDragOver={handleDragOver}
 								onDragEnter={handleDragEnter}
@@ -393,6 +607,8 @@ function Tree({
 								{items.map((subItem, index) => (
 									<Tree
 										handleFileClick={handleFileClick}
+										selectedFileId={selectedFileId}
+										files={files}
 										key={index}
 										item={subItem}
 									/>
@@ -402,9 +618,62 @@ function Tree({
 					</Collapsible>
 				</ContextMenuTrigger>
 				<ContextMenuContent className="!text-white">
-					<ContextMenuItem>
-						<Pencil className="h-4 w-4" /> Reimenuj
-					</ContextMenuItem>
+					<Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+						<DialogTrigger asChild>
+							<ContextMenuItem
+								onClick={(e) => {
+									e.preventDefault();
+									setNewFileName(name);
+									setRenameError("");
+									setRenameDialogOpen(true);
+								}}
+							>
+								<Pencil className="h-4 w-4" /> Reimenuj
+							</ContextMenuItem>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Reimenuj folder</DialogTitle>
+							</DialogHeader>
+							<DialogDescription>
+								Unesite novo ime za folder {name}
+							</DialogDescription>
+							<Input
+								value={newFileName}
+								onChange={(e) => {
+									setNewFileName(e.target.value);
+									if (renameError) setRenameError("");
+								}}
+								placeholder="Novo ime foldera"
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										handleRenameFile(true);
+									}
+								}}
+							/>
+							{renameError && (
+								<p className="text-sm text-red-500">{renameError}</p>
+							)}
+							<DialogFooter>
+								<Button
+									variant="ghost"
+									onClick={() => {
+										setRenameDialogOpen(false);
+										setNewFileName("");
+										setRenameError("");
+									}}
+								>
+									Otkaži
+								</Button>
+								<Button
+									onClick={() => handleRenameFile(true)}
+									disabled={!newFileName.trim() || renameFileMutation.isPending}
+								>
+									{renameFileMutation.isPending ? "Spremam..." : "Spremi"}
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					</Dialog>
 					<Dialog
 						open={fileDeleteDialogOpen}
 						onOpenChange={setFileDeleteDialogOpen}

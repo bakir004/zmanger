@@ -161,7 +161,6 @@ export async function getFilesForUser() {
 					throw new UnauthenticatedError("Must be logged in to get files");
 				const files: File[] = await getFilesForUserController(userId);
 				const tree = await filesToSidebarTree(files);
-				console.log(tree);
 				return tree;
 			} catch (error) {
 				console.error(error);
@@ -250,6 +249,46 @@ export async function deleteFile(fileId: number) {
 				if (!userId)
 					throw new UnauthenticatedError("Must be logged in to delete file");
 				return await deleteFileController(userId, { fileId });
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
+}
+
+export async function renameFile(fileId: number, newName: string) {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"renameFile",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const renameFileController = getInjection("IRenameFileController");
+				const { userId } = await auth();
+				if (!userId)
+					throw new UnauthenticatedError("Must be logged in to rename file");
+				return await renameFileController(userId, { fileId, newName });
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	);
+}
+
+export async function moveFile(fileId: number, newParentId: number | null) {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"moveFile",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const moveFileController = getInjection("IMoveFileController");
+				const { userId } = await auth();
+				if (!userId)
+					throw new UnauthenticatedError("Must be logged in to move file");
+				return await moveFileController(userId, { fileId, newParentId });
 			} catch (error) {
 				console.error(error);
 			}

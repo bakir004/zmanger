@@ -35,6 +35,7 @@ export default function Page() {
 
 	const [loading, setLoading] = useState(false);
 	const [currentFileId, setCurrentFileId] = useState<number | null>(null);
+	const [currentFileName, setCurrentFileName] = useState<string>("");
 
 	const queryClient = useQueryClient();
 
@@ -43,10 +44,10 @@ export default function Page() {
 			return updateFileContent(fileId, code);
 		},
 		onSuccess: (data, variables) => {
-			queryClient.setQueryData(
-				["fileContent", variables.fileId],
-				variables.code,
-			);
+			queryClient.setQueryData(["fileContent", variables.fileId], {
+				content: variables.code,
+				name: currentFileName,
+			});
 		},
 	});
 
@@ -81,7 +82,6 @@ export default function Page() {
 		await handleSave();
 		setLoading(true);
 		const executionResult = await runTest(0);
-		console.log(executionResult);
 		if (executionResult?.compileOutput) {
 			setStdout(executionResult?.compileOutput);
 		} else if (executionResult?.stderr) {
@@ -150,11 +150,14 @@ export default function Page() {
 	};
 
 	const handleFileClick = async (id: number) => {
-		const fileContent = await queryClient.fetchQuery({
+		const fileData = await queryClient.fetchQuery({
 			queryKey: ["fileContent", id],
 			queryFn: () => getFileContent(id),
 		});
-		setCode(fileContent ?? "");
+		if (fileData) {
+			setCode(fileData.content ?? "");
+			setCurrentFileName(fileData.name ?? "");
+		}
 		setCurrentFileId(id);
 	};
 
@@ -183,8 +186,16 @@ export default function Page() {
 							className="h-[calc(100vh-96px)]"
 						>
 							<ResizablePanel>
-								<OpenedFilesTrack />
-								<EditorMain code={code} setCode={setCode} />
+								<OpenedFilesTrack currentFileName={currentFileName} />
+								{currentFileName ? (
+									<EditorMain code={code} setCode={setCode} />
+								) : (
+									<div className="flex h-full items-center justify-center">
+										<p className="text-sm text-gray-500 -mt-12">
+											Otvorite datoteku
+										</p>
+									</div>
+								)}
 							</ResizablePanel>
 							<ResizableHandle />
 							<ResizablePanel defaultSize={30}>

@@ -1,19 +1,30 @@
 probably wont look at this file ever again
 
+31. 8. 2025. - getting back at it
+
+[x] make a quick billing page on landing
+[x] implement a dashboard that will be used to control privileges
+[ ] go through every endpoint authorization and authentication
+[ ] every endpoint input parsing, error handling, logging
+[x] c10 ui final touches
+[ ] c10 user ui make it functional
+-- end of c10 (hopefully) -- 
+[ ] dashboard tests edit
+[ ] dashboard tests view, possibly some info regarding tests success rate
+
+
+
+
+
 14. 07. 2025.
 [ ] refactor types that go in and out of 
 components, its becoming unwieldy and inconsistent
-[x] frontend is a mess, refactor everything
 [ ] faq, features, other PR stuff
-[x] remove magic numbers regarding submission status from API
 [ ] stripe for subscriptions or maybe clerk
-[x] put src folder files in folders, organize
 [ ] thoroughly go through the input parsing and
 error handling of all use-cases and controllers
 [ ] understand redis cache
 [ ] implement redis cache (infrastructure layer)
-[x] u gay if u read this
-[x] fml i read the todo above
 [ ] implement logging, though sentry does most
 of the work
 [ ] test batches should be editable on frontend
