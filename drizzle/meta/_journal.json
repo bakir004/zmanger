@@ -15,6 +15,20 @@
       "when": 1752849314958,
       "tag": "0001_amused_dreaming_celestial",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756826867059,
+      "tag": "0002_solid_mastermind",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1756892207341,
+      "tag": "0003_stale_kree",
+      "breakpoints": true
     }
   ]
 }

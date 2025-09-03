@@ -1,6 +1,7 @@
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
 import type { ICrashReporterService } from "~/application/services/crash-reporter.service.interface";
 import type { ICreateTestBatchController } from "~/interface-adapters/controllers/tests/create-test-batch.controller";
+import type { ICreateTestController } from "~/interface-adapters/controllers/tests/create-test.controller";
 import type { ITransactionManagerService } from "~/application/services/transaction-manager.service.interface";
 import type { ITestBatchesRepository } from "~/application/repositories/test-batches.repository.interface";
 import type { ICreateTestBatchUseCase } from "~/application/use-cases/tests/create-test-batch.use-case";
@@ -10,6 +11,14 @@ import type { IGetTestBatchesController } from "~/interface-adapters/controllers
 import type { IGetTestBatchesUseCase } from "~/application/use-cases/tests/get-test-batches.use-case";
 import type { IGetTestsByBatchIdController } from "~/interface-adapters/controllers/tests/get-tests-by-batch-id.controller";
 import type { IGetTestsByBatchIdUseCase } from "~/application/use-cases/tests/get-tests-by-batch-id.use-case";
+import type { IUpdateTestBatchController } from "~/interface-adapters/controllers/tests/update-test-batch.controller";
+import type { IUpdateTestBatchUseCase } from "~/application/use-cases/tests/update-test-batch.use-case";
+import type { IUpdateTestController } from "~/interface-adapters/controllers/tests/update-test.controller";
+import type { IUpdateTestUseCase } from "~/application/use-cases/tests/update-test.use-case";
+import type { IDeleteTestController } from "~/interface-adapters/controllers/tests/delete-test.controller";
+import type { IDeleteTestBatchController } from "~/interface-adapters/controllers/tests/delete-test-batch.controller";
+import type { IDeleteTestUseCase } from "~/application/use-cases/tests/delete-test.use-case";
+import type { IDeleteTestBatchUseCase } from "~/application/use-cases/tests/delete-test-batch.use-case";
 import type { ICodeJudgeService } from "~/application/services/code-judge.service.interface";
 import type { IRunSingleTestUseCase } from "~/application/use-cases/code-execution/run-single-test.use-case";
 import type { ILanguageMapperService } from "~/application/services/language-mapper.service.interface";
@@ -45,8 +54,13 @@ export const DI_SYMBOLS = {
 
 	// Controllers
 	ICreateTestBatchController: Symbol.for("ICreateTestBatchController"),
+	ICreateTestController: Symbol.for("ICreateTestController"),
 	IGetTestBatchesController: Symbol.for("IGetTestBatchesController"),
 	IGetTestsByBatchIdController: Symbol.for("IGetTestsByBatchIdController"),
+	IUpdateTestBatchController: Symbol.for("IUpdateTestBatchController"),
+	IUpdateTestController: Symbol.for("IUpdateTestController"),
+	IDeleteTestController: Symbol.for("IDeleteTestController"),
+	IDeleteTestBatchController: Symbol.for("IDeleteTestBatchController"),
 	IRunSingleTestController: Symbol.for("IRunSingleTestController"),
 	IGetFilesForUserController: Symbol.for("IGetFilesForUserController"),
 	IGetFileContentController: Symbol.for("IGetFileContentController"),
@@ -69,6 +83,10 @@ export const DI_SYMBOLS = {
 	ICreateTestUseCase: Symbol.for("ICreateTestUseCase"),
 	IGetTestBatchesUseCase: Symbol.for("IGetTestBatchesUseCase"),
 	IGetTestsByBatchIdUseCase: Symbol.for("IGetTestsByBatchIdUseCase"),
+	IUpdateTestBatchUseCase: Symbol.for("IUpdateTestBatchUseCase"),
+	IUpdateTestUseCase: Symbol.for("IUpdateTestUseCase"),
+	IDeleteTestUseCase: Symbol.for("IDeleteTestUseCase"),
+	IDeleteTestBatchUseCase: Symbol.for("IDeleteTestBatchUseCase"),
 	IRunSingleTestUseCase: Symbol.for("IRunSingleTestUseCase"),
 	IGetFilesForUserUseCase: Symbol.for("IGetFilesForUserUseCase"),
 	IGetFileContentUseCase: Symbol.for("IGetFileContentUseCase"),
@@ -94,8 +112,13 @@ export interface DI_RETURN_TYPES {
 
 	// Controllers
 	ICreateTestBatchController: ICreateTestBatchController;
+	ICreateTestController: ICreateTestController;
 	IGetTestBatchesController: IGetTestBatchesController;
 	IGetTestsByBatchIdController: IGetTestsByBatchIdController;
+	IUpdateTestBatchController: IUpdateTestBatchController;
+	IUpdateTestController: IUpdateTestController;
+	IDeleteTestController: IDeleteTestController;
+	IDeleteTestBatchController: IDeleteTestBatchController;
 	IRunSingleTestController: IRunSingleTestController;
 	IGetFilesForUserController: IGetFilesForUserController;
 	IGetFileContentController: IGetFileContentController;
@@ -118,6 +141,10 @@ export interface DI_RETURN_TYPES {
 	ICreateTestUseCase: ICreateTestUseCase;
 	IGetTestBatchesUseCase: IGetTestBatchesUseCase;
 	IGetTestsByBatchIdUseCase: IGetTestsByBatchIdUseCase;
+	IUpdateTestBatchUseCase: IUpdateTestBatchUseCase;
+	IUpdateTestUseCase: IUpdateTestUseCase;
+	IDeleteTestUseCase: IDeleteTestUseCase;
+	IDeleteTestBatchUseCase: IDeleteTestBatchUseCase;
 	IRunSingleTestUseCase: IRunSingleTestUseCase;
 	IGetFilesForUserUseCase: IGetFilesForUserUseCase;
 	IGetFileContentUseCase: IGetFileContentUseCase;

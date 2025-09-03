@@ -56,6 +56,7 @@ export const testBatches = createTable(
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`)
 			.$onUpdate(() => new Date()),
+		public: d.boolean().notNull().default(false),
 	}),
 	(t) => [index("name_idx").on(t.name)],
 );
@@ -72,7 +73,7 @@ export const tests = createTable(
 		hidden: d.boolean().notNull().default(false),
 		testBatchId: d
 			.integer()
-			.references(() => testBatches.id)
+			.references(() => testBatches.id, { onDelete: "cascade" })
 			.notNull(),
 	}),
 	(t) => [index("test_batch_id_idx").on(t.testBatchId)],

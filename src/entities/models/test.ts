@@ -54,6 +54,17 @@ export const insertFlatTestSchema = z.object({
 
 export type FlatTestInsert = z.infer<typeof insertFlatTestSchema>;
 
+export const updateTestSchema = z.object({
+	topOfFile: z.string().optional(),
+	aboveMain: z.string().optional(),
+	main: z.string().optional(),
+	stdin: z.string().optional(),
+	expectedOutput: z.array(z.string()).optional(),
+	hidden: z.boolean().optional(),
+});
+
+export type TestUpdate = z.infer<typeof updateTestSchema>;
+
 export const testWithUserCodeAndLanguageSchema = z.object({
 	test: selectTestSchema,
 	userCode: z.string(),

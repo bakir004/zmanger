@@ -1,0 +1,1 @@
+ALTER TABLE "zmanger_test_batch" ADD COLUMN "public" boolean DEFAULT false NOT NULL;

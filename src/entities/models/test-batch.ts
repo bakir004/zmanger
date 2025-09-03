@@ -7,6 +7,7 @@ export const selectTestBatchSchema = z.object({
 	subject: z.string(),
 	language: z.string(),
 	tests: z.array(selectTestSchema),
+	public: z.boolean(),
 });
 
 export type TestBatch = z.infer<typeof selectTestBatchSchema>;
@@ -19,3 +20,12 @@ export const insertTestBatchSchema = z.object({
 });
 
 export type TestBatchInsert = z.infer<typeof insertTestBatchSchema>;
+
+export const updateTestBatchSchema = z.object({
+	name: z.string().optional(),
+	subject: z.string().optional(),
+	language: z.string().optional(),
+	public: z.boolean().optional(),
+});
+
+export type TestBatchUpdate = z.infer<typeof updateTestBatchSchema>;

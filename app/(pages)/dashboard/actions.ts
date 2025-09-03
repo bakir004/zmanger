@@ -6,7 +6,6 @@ import { UnauthenticatedError } from "~/entities/errors/auth";
 import type { ClerkUser } from "~/application/services/clerk.service.interface";
 
 export async function getUsersFromClerk(): Promise<ClerkUser[]> {
-	console.log("getUsersFromClerk server action called");
 	const instrumentationService = getInjection("IInstrumentationService");
 
 	return await instrumentationService.instrumentServerAction(
@@ -18,13 +17,7 @@ export async function getUsersFromClerk(): Promise<ClerkUser[]> {
 				const getUsersFromClerkController = getInjection(
 					"IGetUsersFromClerkController",
 				);
-				console.log("Controller obtained, calling it...");
 				const result = await getUsersFromClerkController();
-				console.log("Controller returned:", result.length, "users");
-				console.log(
-					"First user structure:",
-					JSON.stringify(result[0], null, 2),
-				);
 				return result;
 			} catch (error) {
 				console.error("Error fetching users from Clerk:", error);

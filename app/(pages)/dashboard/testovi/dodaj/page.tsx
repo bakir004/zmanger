@@ -39,30 +39,36 @@ export default function Page() {
 	const [selectedTestId, setSelectedTestId] = useState<number | undefined>();
 
 	const getTestsFromImportDialog = (receivedTestsObject: Tests) => {
-		setTestObject(receivedTestsObject);
-		setSelectedTestId(receivedTestsObject.tests[0]?.id ?? 1);
+		// Sort imported tests by ID to ensure proper order
+		const sortedTestsObject = {
+			...receivedTestsObject,
+			tests: receivedTestsObject.tests.sort((a, b) => a.id - b.id),
+		};
+		setTestObject(sortedTestsObject);
+		setSelectedTestId(sortedTestsObject.tests[0]?.id ?? 1);
 	};
 
 	const addTest = () => {
 		setTestObject((prev) => {
 			const newId = (prev.tests[prev.tests.length - 1]?.id ?? 0) + 1;
 			setSelectedTestId(newId);
+			const updatedTests = [
+				...prev.tests,
+				{
+					id: newId,
+					code: {
+						topOfFile: "",
+						aboveMain: "",
+						main: "",
+					},
+					stdin: "",
+					expectedOutput: [],
+					hidden: false,
+				},
+			];
 			return {
 				...prev,
-				tests: [
-					...prev.tests,
-					{
-						id: newId,
-						code: {
-							topOfFile: "",
-							aboveMain: "",
-							main: "",
-						},
-						stdin: "",
-						expectedOutput: [],
-						hidden: false,
-					},
-				],
+				tests: updatedTests.sort((a, b) => a.id - b.id),
 			};
 		});
 	};
