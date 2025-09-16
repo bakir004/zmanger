@@ -11,6 +11,7 @@ import {
 	timestamp,
 	type AnyPgColumn,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -95,3 +96,119 @@ export const files = createTable(
 	}),
 	(t) => [index("user_id_idx_files").on(t.userId)],
 );
+
+export const notifications = createTable(
+	"notification",
+	(d) => ({
+		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+		title: d.varchar({ length: 256 }).notNull(),
+		description: d.text(),
+		type: d.varchar({ length: 50 }).notNull().default("info"), // info, success, warning, error
+		actionUrl: d.varchar({ length: 512 }), // Optional URL for action button
+		actionLabel: d.varchar({ length: 100 }), // Label for action button
+		createdAt: d
+			.timestamp({ withTimezone: true })
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`),
+	}),
+	(t) => [
+		index("created_at_idx_notifications").on(t.createdAt),
+		index("type_idx_notifications").on(t.type),
+	],
+);
+
+export const userSubmissions = createTable(
+	"user_submission",
+	(d) => ({
+		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+		userId: d.varchar({ length: 64 }).notNull(),
+		testBatchId: d
+			.integer()
+			.references(() => testBatches.id, { onDelete: "cascade" })
+			.notNull(),
+		createdAt: d
+			.timestamp({ withTimezone: true })
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`),
+		updatedAt: d
+			.timestamp({ withTimezone: true })
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`)
+			.$onUpdate(() => new Date()),
+	}),
+	(t) => [
+		index("user_id_idx_submissions").on(t.userId),
+		index("test_batch_id_idx_submissions").on(t.testBatchId),
+		index("user_test_batch_idx_submissions").on(t.userId, t.testBatchId),
+	],
+);
+
+export const userSubmissionTests = createTable(
+	"user_submission_test",
+	(d) => ({
+		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+		userSubmissionId: d
+			.integer()
+			.references(() => userSubmissions.id, { onDelete: "cascade" })
+			.notNull(),
+		testId: d
+			.integer()
+			.references(() => tests.id, { onDelete: "cascade" })
+			.notNull(),
+		compileOutput: d.text().notNull(),
+		stdout: d.text().notNull(),
+		stderr: d.text().notNull(),
+		time: d.real().notNull(), // execution time in seconds
+		runtimeStatus: d.integer().notNull(),
+		submissionStatus: d.integer().notNull(),
+		description: d.text().notNull(),
+		createdAt: d
+			.timestamp({ withTimezone: true })
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`),
+	}),
+	(t) => [
+		index("user_submission_id_idx").on(t.userSubmissionId),
+		index("test_id_idx_submission_tests").on(t.testId),
+		index("submission_status_idx").on(t.submissionStatus),
+	],
+);
+
+// Relations
+export const userSubmissionsRelations = relations(
+	userSubmissions,
+	({ many, one }) => ({
+		tests: many(userSubmissionTests),
+		testBatch: one(testBatches, {
+			fields: [userSubmissions.testBatchId],
+			references: [testBatches.id],
+		}),
+	}),
+);
+
+export const userSubmissionTestsRelations = relations(
+	userSubmissionTests,
+	({ one }) => ({
+		userSubmission: one(userSubmissions, {
+			fields: [userSubmissionTests.userSubmissionId],
+			references: [userSubmissions.id],
+		}),
+		test: one(tests, {
+			fields: [userSubmissionTests.testId],
+			references: [tests.id],
+		}),
+	}),
+);
+
+export const testBatchesRelations = relations(testBatches, ({ many }) => ({
+	tests: many(tests),
+	userSubmissions: many(userSubmissions),
+}));
+
+export const testsRelations = relations(tests, ({ one, many }) => ({
+	testBatch: one(testBatches, {
+		fields: [tests.testBatchId],
+		references: [testBatches.id],
+	}),
+	userSubmissionTests: many(userSubmissionTests),
+}));

@@ -6,7 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import Provider from "./_components/theme-provider";
 import { QueryProvider } from "./providers/query-provider";
-import Navbar from "./_components/custom/navbar";
+import { Toaster } from "app/_components/ui/sonner";
 
 export const metadata: Metadata = {
 	title: "Zmanger",

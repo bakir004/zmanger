@@ -1,41 +1,16 @@
-import {
-	Folder,
-	Forward,
-	MoreHorizontal,
-	Trash2,
-	Users,
-	type LucideIcon,
-} from "lucide-react";
+import { Users, Bell, type LucideIcon } from "lucide-react";
 
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
 	SidebarMenu,
-	SidebarMenuAction,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
 } from "./ui/sidebar";
 import Link from "next/link";
 
-export function NavProjects({
-	projects,
-}: {
-	projects: {
-		name: string;
-		url: string;
-		icon: LucideIcon;
-	}[];
-}) {
-	const { isMobile } = useSidebar();
-
+export function NavProjects() {
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
 			<SidebarGroupLabel>Admin</SidebarGroupLabel>
@@ -45,6 +20,14 @@ export function NavProjects({
 						<Link href="/dashboard/korisnici">
 							<Users />
 							<span>Korisnici</span>
+						</Link>
+					</SidebarMenuButton>
+				</SidebarMenuItem>
+				<SidebarMenuItem>
+					<SidebarMenuButton asChild>
+						<Link href="/dashboard/obavijesti">
+							<Bell />
+							<span>Obavještenja</span>
 						</Link>
 					</SidebarMenuButton>
 				</SidebarMenuItem>

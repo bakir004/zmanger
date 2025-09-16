@@ -29,6 +29,20 @@
       "when": 1756892207341,
       "tag": "0003_stale_kree",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757418885111,
+      "tag": "0004_unusual_elektra",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1757420729677,
+      "tag": "0005_solid_wolfpack",
+      "breakpoints": true
     }
   ]
 }

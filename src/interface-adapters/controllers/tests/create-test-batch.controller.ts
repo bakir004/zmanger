@@ -11,6 +11,7 @@ const inputSchema = z.object({
 	name: z.string(),
 	subject: z.string(),
 	language: z.string(),
+	public: z.boolean(),
 	tests: z.array(
 		z.object({
 			code: z.object({
@@ -58,6 +59,7 @@ export const createTestBatchController =
 					name: data.name,
 					subject: data.subject,
 					language: data.language,
+					public: data.public,
 				};
 
 				const tests = data.tests;
@@ -69,6 +71,7 @@ export const createTestBatchController =
 							async (tx: Transaction) => {
 								try {
 									const createdTestBatch = await createTestBatchUseCase(
+										userId,
 										{
 											testBatch,
 										},

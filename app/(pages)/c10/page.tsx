@@ -14,6 +14,7 @@ import {
 	getTestsByBatchId,
 	runSingleTest,
 	updateFileContent,
+	createUserSubmission,
 } from "./actions";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import type { Test } from "~/entities/models/test";
@@ -24,6 +25,7 @@ import { EditorStdin } from "./_components/editors/editor-stdin";
 import { EditorStdout } from "./_components/editors/editor-stdout";
 import { SidebarTests } from "./_components/sidebar-tests/sidebar-tests";
 import { OpenedFilesTrack } from "./_components/opened-files-track";
+import { Toaster } from "sonner";
 
 export default function Page() {
 	const [code, setCode] = useState(
@@ -119,12 +121,17 @@ export default function Page() {
 
 	const [tests, setTests] = useState<Test[]>([]);
 	const [loadingTestBatch, setLoadingTestBatch] = useState(false);
+	const [currentTestBatchId, setCurrentTestBatchId] = useState<number | null>(
+		null,
+	);
 
 	const handleTestBatchChange = async (value: string) => {
 		setLoadingTestBatch(true);
+		const testBatchId = Number(value);
+		setCurrentTestBatchId(testBatchId);
 		const tests = await queryClient.fetchQuery({
 			queryKey: ["testsByBatch", value],
-			queryFn: () => getTestsByBatchId(Number(value)),
+			queryFn: () => getTestsByBatchId(testBatchId),
 		});
 		setTests(tests?.sort((a, b) => a.id - b.id) ?? []);
 		setLoadingTestBatch(false);
@@ -146,6 +153,37 @@ export default function Page() {
 			await Promise.all(tests.map((test) => runTest(test.id)));
 		executionResults.sort((a, b) => (a?.testId ?? 0) - (b?.testId ?? 0));
 		setExecutionResults(executionResults as ExecutionResultWithTestId[]);
+
+		// Create user submission if we have valid results and test batch
+		if (currentTestBatchId && executionResults.length > 0) {
+			try {
+				const validResults = executionResults.filter(
+					(result) => result !== undefined,
+				) as ExecutionResultWithTestId[];
+				const testResults = validResults.map((result) => ({
+					testId: result.testId,
+					executionResult: {
+						compileOutput: result.compileOutput,
+						stdout: result.stdout,
+						stderr: result.stderr,
+						time: result.time,
+						runtimeStatus: result.runtimeStatus,
+						submissionStatus: result.submissionStatus,
+						description: result.description,
+					},
+				}));
+
+				await createUserSubmission({
+					testBatchId: currentTestBatchId,
+					testResults,
+				});
+
+				console.log("User submission created successfully");
+			} catch (error) {
+				console.error("Failed to create user submission:", error);
+			}
+		}
+
 		setLoading(false);
 	};
 
@@ -228,6 +266,7 @@ export default function Page() {
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</SidebarInset>
+			<Toaster />
 		</SidebarProvider>
 	);
 }

@@ -311,9 +311,9 @@ export default function KorisniciPage() {
 									<TableHeader>
 										<TableRow className="border-gray-700">
 											<TableHead className="text-gray-300">Korisnik</TableHead>
-											<TableHead className="text-gray-300">Email</TableHead>
 											<TableHead className="text-gray-300">Uloga</TableHead>
 											<TableHead className="text-gray-300">Plan</TableHead>
+											<TableHead className="text-gray-300">Želi</TableHead>
 											<TableHead className="text-gray-300">
 												Registracija
 											</TableHead>
@@ -336,16 +336,9 @@ export default function KorisniciPage() {
 																{user.firstName} {user.lastName}
 															</p>
 															<p className="text-sm text-gray-400">
-																{user.id.slice(0, 15)}...
+																{user.emailAddresses?.[0]?.emailAddress}
 															</p>
 														</div>
-													</div>
-												</TableCell>
-												<TableCell>
-													<div className="flex items-center gap-2">
-														<span>
-															{user.emailAddresses?.[0]?.emailAddress}
-														</span>
 													</div>
 												</TableCell>
 												<TableCell>
@@ -366,6 +359,19 @@ export default function KorisniciPage() {
 														}
 													>
 														{(user.publicMetadata as any)?.plan || "free"}
+													</Badge>
+												</TableCell>
+												<TableCell>
+													<Badge
+														variant={
+															(user.publicMetadata as any)?.wants === "pro+"
+																? "default"
+																: (user.publicMetadata as any)?.wants === "pro"
+																	? "secondary"
+																	: "outline"
+														}
+													>
+														{(user.publicMetadata as any)?.wants || "free"}
 													</Badge>
 												</TableCell>
 												<TableCell>

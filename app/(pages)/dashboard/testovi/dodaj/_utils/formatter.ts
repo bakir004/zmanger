@@ -69,6 +69,7 @@ export type Tests = {
 	name: string;
 	language: string;
 	subject: string;
+	public: boolean;
 	tests: Test[];
 };
 type ZamgerTests = z.infer<typeof ZamgerTestsSchema>;
@@ -86,6 +87,7 @@ export const testJsonFormatter = (json: string): Tests => {
 	const formattedTestJson: Tests = {
 		name: "",
 		subject: "",
+		public: false,
 		tests: [],
 		language: "",
 	};
@@ -97,6 +99,7 @@ export const testJsonFormatter = (json: string): Tests => {
 		const tests = parsedJson.tests;
 		formattedTestJson.name = parsedJson.name;
 		formattedTestJson.language = parsedJson.languages[0] ?? "cpp";
+		formattedTestJson.public = false;
 
 		for (const item of tests) {
 			const newTest: Test = {

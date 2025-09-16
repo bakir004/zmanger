@@ -5,6 +5,7 @@ import { getInjection } from "di/container";
 import { UnauthenticatedError } from "~/entities/errors/auth";
 import type { Test, TestWithUserCodeAndLanguage } from "~/entities/models/test";
 import type { File } from "~/entities/models/file";
+import type { CreateUserSubmissionWithTests } from "~/entities/models/user-submission";
 
 export async function getTestBatches() {
 	const instrumentationService = getInjection("IInstrumentationService");
@@ -231,6 +232,7 @@ export async function createFile(
 				return await createFileController(userId, { fileName, type, parentId });
 			} catch (error) {
 				console.error(error);
+				throw error;
 			}
 		},
 	);
@@ -291,6 +293,35 @@ export async function moveFile(fileId: number, newParentId: number | null) {
 				return await moveFileController(userId, { fileId, newParentId });
 			} catch (error) {
 				console.error(error);
+			}
+		},
+	);
+}
+
+export async function createUserSubmission(
+	submission: Omit<CreateUserSubmissionWithTests, "userId">,
+) {
+	const instrumentationService = getInjection("IInstrumentationService");
+
+	return await instrumentationService.instrumentServerAction(
+		"createUserSubmission",
+		{ recordResponse: true },
+		async () => {
+			try {
+				const createUserSubmissionController = getInjection(
+					"ICreateUserSubmissionController",
+				);
+				const { userId } = await auth();
+				if (!userId)
+					throw new UnauthenticatedError(
+						"Must be logged in to create submission",
+					);
+				return await createUserSubmissionController(userId, {
+					...submission,
+				});
+			} catch (error) {
+				console.error(error);
+				throw error;
 			}
 		},
 	);

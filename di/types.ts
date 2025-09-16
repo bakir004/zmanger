@@ -45,6 +45,20 @@ import type { IUpdateUserRoleController } from "~/interface-adapters/controllers
 import type { IUpdateUserRoleUseCase } from "~/application/use-cases/users/update-user-role.use-case";
 import type { IUpdateUserPlanController } from "~/interface-adapters/controllers/users/update-user-plan.controller";
 import type { IUpdateUserPlanUseCase } from "~/application/use-cases/users/update-user-plan.use-case";
+import type { ICreateNotificationController } from "~/interface-adapters/controllers/notifications/create-notification.controller";
+import type { IGetNotificationsController } from "~/interface-adapters/controllers/notifications/get-notifications.controller";
+import type { IDeleteNotificationController } from "~/interface-adapters/controllers/notifications/delete-notification.controller";
+import type { INotificationsRepository } from "~/application/repositories/notifications.repository.interface";
+import type { ICreateNotificationUseCase } from "~/application/use-cases/notifications/create-notification.use-case";
+import type { IGetNotificationsUseCase } from "~/application/use-cases/notifications/get-notifications.use-case";
+import type { IDeleteNotificationUseCase } from "~/application/use-cases/notifications/delete-notification.use-case";
+import type { IUserSubmissionsRepository } from "~/application/repositories/user-submissions.repository.interface";
+import type { ICreateUserSubmissionController } from "~/interface-adapters/controllers/user-submissions/create-user-submission.controller";
+import type { IGetUserSubmissionsOverviewController } from "~/interface-adapters/controllers/user-submissions/get-user-submissions-overview.controller";
+import type { IGetUserSubmissionByBatchController } from "~/interface-adapters/controllers/user-submissions/get-user-submission-by-batch.controller";
+import type { ICreateUserSubmissionUseCase } from "~/application/use-cases/user-submissions/create-user-submission.use-case";
+import type { IGetUserSubmissionsOverviewUseCase } from "~/application/use-cases/user-submissions/get-user-submissions-overview.use-case";
+import type { IGetUserSubmissionByBatchUseCase } from "~/application/use-cases/user-submissions/get-user-submission-by-batch.use-case";
 
 export const DI_SYMBOLS = {
 	// Services
@@ -72,11 +86,25 @@ export const DI_SYMBOLS = {
 	IGetUsersFromClerkController: Symbol.for("IGetUsersFromClerkController"),
 	IUpdateUserRoleController: Symbol.for("IUpdateUserRoleController"),
 	IUpdateUserPlanController: Symbol.for("IUpdateUserPlanController"),
+	ICreateNotificationController: Symbol.for("ICreateNotificationController"),
+	IGetNotificationsController: Symbol.for("IGetNotificationsController"),
+	IDeleteNotificationController: Symbol.for("IDeleteNotificationController"),
+	ICreateUserSubmissionController: Symbol.for(
+		"ICreateUserSubmissionController",
+	),
+	IGetUserSubmissionsOverviewController: Symbol.for(
+		"IGetUserSubmissionsOverviewController",
+	),
+	IGetUserSubmissionByBatchController: Symbol.for(
+		"IGetUserSubmissionByBatchController",
+	),
 
 	// Repositories
 	ITestBatchesRepository: Symbol.for("ITestBatchesRepository"),
 	ITestsRepository: Symbol.for("ITestsRepository"),
 	IFilesRepository: Symbol.for("IFilesRepository"),
+	INotificationsRepository: Symbol.for("INotificationsRepository"),
+	IUserSubmissionsRepository: Symbol.for("IUserSubmissionsRepository"),
 
 	// Use Cases
 	ICreateTestBatchUseCase: Symbol.for("ICreateTestBatchUseCase"),
@@ -98,6 +126,16 @@ export const DI_SYMBOLS = {
 	IGetUsersFromClerkUseCase: Symbol.for("IGetUsersFromClerkUseCase"),
 	IUpdateUserRoleUseCase: Symbol.for("IUpdateUserRoleUseCase"),
 	IUpdateUserPlanUseCase: Symbol.for("IUpdateUserPlanUseCase"),
+	ICreateNotificationUseCase: Symbol.for("ICreateNotificationUseCase"),
+	IGetNotificationsUseCase: Symbol.for("IGetNotificationsUseCase"),
+	IDeleteNotificationUseCase: Symbol.for("IDeleteNotificationUseCase"),
+	ICreateUserSubmissionUseCase: Symbol.for("ICreateUserSubmissionUseCase"),
+	IGetUserSubmissionsOverviewUseCase: Symbol.for(
+		"IGetUserSubmissionsOverviewUseCase",
+	),
+	IGetUserSubmissionByBatchUseCase: Symbol.for(
+		"IGetUserSubmissionByBatchUseCase",
+	),
 
 	// External Services
 	ILanguageMapperService: Symbol.for("ILanguageMapperService"),
@@ -130,11 +168,19 @@ export interface DI_RETURN_TYPES {
 	IGetUsersFromClerkController: IGetUsersFromClerkController;
 	IUpdateUserRoleController: IUpdateUserRoleController;
 	IUpdateUserPlanController: IUpdateUserPlanController;
+	ICreateNotificationController: ICreateNotificationController;
+	IGetNotificationsController: IGetNotificationsController;
+	IDeleteNotificationController: IDeleteNotificationController;
+	ICreateUserSubmissionController: ICreateUserSubmissionController;
+	IGetUserSubmissionsOverviewController: IGetUserSubmissionsOverviewController;
+	IGetUserSubmissionByBatchController: IGetUserSubmissionByBatchController;
 
 	// Repositories
 	ITestBatchesRepository: ITestBatchesRepository;
 	ITestsRepository: ITestsRepository;
 	IFilesRepository: IFilesRepository;
+	INotificationsRepository: INotificationsRepository;
+	IUserSubmissionsRepository: IUserSubmissionsRepository;
 
 	// Use Cases
 	ICreateTestBatchUseCase: ICreateTestBatchUseCase;
@@ -156,6 +202,12 @@ export interface DI_RETURN_TYPES {
 	IGetUsersFromClerkUseCase: IGetUsersFromClerkUseCase;
 	IUpdateUserRoleUseCase: IUpdateUserRoleUseCase;
 	IUpdateUserPlanUseCase: IUpdateUserPlanUseCase;
+	ICreateNotificationUseCase: ICreateNotificationUseCase;
+	IGetNotificationsUseCase: IGetNotificationsUseCase;
+	IDeleteNotificationUseCase: IDeleteNotificationUseCase;
+	ICreateUserSubmissionUseCase: ICreateUserSubmissionUseCase;
+	IGetUserSubmissionsOverviewUseCase: IGetUserSubmissionsOverviewUseCase;
+	IGetUserSubmissionByBatchUseCase: IGetUserSubmissionByBatchUseCase;
 
 	// External Services
 	ILanguageMapperService: ILanguageMapperService;

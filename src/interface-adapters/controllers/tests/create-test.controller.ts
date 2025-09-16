@@ -40,9 +40,7 @@ export const createTestController =
 
 				const { data, error: inputParseError } = inputSchema.safeParse(input);
 
-				if (inputParseError) {
-					throw new InputParseError("Invalid input");
-				}
+				if (inputParseError) throw new InputParseError("Invalid input");
 
 				const test: TestInsert = {
 					code: data.test.code,

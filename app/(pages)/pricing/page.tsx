@@ -5,6 +5,7 @@ import { Check } from "lucide-react";
 import { lexend, inter } from "app/_fonts/fonts";
 import { Separator } from "app/_components/ui/separator";
 import Navbar from "app/_components/custom/navbar";
+import Link from "next/link";
 
 interface PricingPlan {
 	id: number;
@@ -149,7 +150,7 @@ export default function PricingPage() {
 										))}
 									</ul>
 									<Button className="!px-6 transition-all duration-100 group-hover:duration-1000 bg-transparent text-white border group-hover:bg-white group-hover:text-black w-full mt-auto rounded-full uppercase font-semibold flex items-center cursor-pointer justify-center h-8 text-[11px]">
-										Odaberi plan
+										<Link href="/prijava">Odaberi plan</Link>
 									</Button>
 								</div>
 							</div>

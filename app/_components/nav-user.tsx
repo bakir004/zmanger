@@ -25,6 +25,8 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "./ui/sidebar";
+import { useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
 	user,
@@ -36,6 +38,17 @@ export function NavUser({
 	};
 }) {
 	const { isMobile } = useSidebar();
+	const { signOut } = useClerk();
+	const router = useRouter();
+
+	const handleUpgrade = () => {
+		router.push("/prijava");
+	};
+
+	const handleLogout = async () => {
+		await signOut();
+		router.push("/");
+	};
 
 	return (
 		<SidebarMenu>
@@ -77,30 +90,15 @@ export function NavUser({
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
+							<DropdownMenuItem onClick={handleUpgrade}>
 								<Sparkles />
-								Upgrade to Pro
+								Kupi Pro plan
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<BadgeCheck />
-								Account
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<CreditCard />
-								Billing
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<Bell />
-								Notifications
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						<DropdownMenuItem onClick={handleLogout}>
 							<LogOut />
-							Log out
+							Odjavi se
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

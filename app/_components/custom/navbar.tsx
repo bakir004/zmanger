@@ -38,16 +38,18 @@ export default function Navbar() {
 											</Link>
 										</NavigationMenuLink>
 										<NavigationMenuLink asChild>
-											<Link href="#">
-												<div className="font-medium">Documentation</div>
-												<div className="text-muted-foreground">niggas</div>
+											<Link href="/features">
+												<div className="font-medium">Funkcionalnosti</div>
+												<div className="text-muted-foreground">
+													Osnovne funkcionalnosti Zmangera
+												</div>
 											</Link>
 										</NavigationMenuLink>
 										<NavigationMenuLink asChild>
-											<Link href="#">
-												<div className="font-medium">Blog</div>
+											<Link href="/faq">
+												<div className="font-medium">FAQ</div>
 												<div className="text-muted-foreground">
-													Read our latest blog posts.
+													Najčešće postavljena pitanja
 												</div>
 											</Link>
 										</NavigationMenuLink>
@@ -60,7 +62,7 @@ export default function Navbar() {
 								className="!bg-transparent font-light tracking-wider cursor-pointer hover:!bg-transparent focus:!bg-transparent active:!bg-transparent !shadow-none !ring-0"
 								asChild
 							>
-								<Link href="/docs">Docs</Link>
+								<Link href="/about">O Zmangeru</Link>
 							</NavigationMenuLink>
 						</NavigationMenuItem>
 					</NavigationMenuList>

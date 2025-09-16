@@ -28,15 +28,19 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "app/_components/ui/tooltip";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+	const router = useRouter();
 	const [testObject, setTestObject] = useState<Tests>({
 		name: "",
 		subject: "",
+		public: false,
 		tests: [],
 		language: "",
 	});
 	const [selectedTestId, setSelectedTestId] = useState<number | undefined>();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const getTestsFromImportDialog = (receivedTestsObject: Tests) => {
 		// Sort imported tests by ID to ensure proper order
@@ -105,8 +109,16 @@ export default function Page() {
 		? testObject.tests.find((test) => test.id === selectedTestId)
 		: undefined;
 
-	const submit = () => {
-		createTestBatch(testObject);
+	const submit = async () => {
+		try {
+			setIsSubmitting(true);
+			await createTestBatch(testObject);
+			router.push("/dashboard/testovi");
+		} catch (error) {
+			console.error("Failed to create test batch:", error);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	const updateTestNumbers = () => {
@@ -176,6 +188,7 @@ export default function Page() {
 				</Select>
 				<Button
 					disabled={
+						isSubmitting ||
 						!selectedTest ||
 						testObject.name === "" ||
 						testObject.tests.length === 0 ||
@@ -185,7 +198,7 @@ export default function Page() {
 					className="flex items-center gap-2 cursor-pointer bg-primary-gradient"
 					onClick={submit}
 				>
-					Sačuvaj testove
+					{isSubmitting ? "Čuvam..." : "Sačuvaj testove"}
 					<Save className="w-4 h-4" />
 				</Button>
 			</div>

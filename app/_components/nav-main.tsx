@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 import {
 	Collapsible,
@@ -30,9 +31,13 @@ export function NavMain({
 		items?: {
 			title: string;
 			url: string;
+			roles?: string[];
 		}[];
 	}[];
 }) {
+	const { user } = useUser();
+	const userRole = user?.publicMetadata?.role as string;
+
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>Kontrolne grupe</SidebarGroupLabel>
@@ -54,15 +59,18 @@ export function NavMain({
 							</CollapsibleTrigger>
 							<CollapsibleContent>
 								<SidebarMenuSub>
-									{item.items?.map((subItem) => (
-										<SidebarMenuSubItem key={subItem.title}>
-											<SidebarMenuSubButton asChild>
-												<Link href={subItem.url}>
-													<span>{subItem.title}</span>
-												</Link>
-											</SidebarMenuSubButton>
-										</SidebarMenuSubItem>
-									))}
+									{item.items?.map(
+										(subItem) =>
+											(subItem.roles?.includes(userRole) || !subItem.roles) && (
+												<SidebarMenuSubItem key={subItem.title}>
+													<SidebarMenuSubButton asChild>
+														<Link href={subItem.url}>
+															<span>{subItem.title}</span>
+														</Link>
+													</SidebarMenuSubButton>
+												</SidebarMenuSubItem>
+											),
+									)}
 								</SidebarMenuSub>
 							</CollapsibleContent>
 						</SidebarMenuItem>

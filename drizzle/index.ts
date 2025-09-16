@@ -7,7 +7,13 @@ import postgres from "postgres";
 
 import { env } from "app/env";
 import * as schema from "./schema";
-import type { tests, testBatches, reviews } from "./schema";
+import type {
+	tests,
+	testBatches,
+	reviews,
+	userSubmissions,
+	userSubmissionTests,
+} from "./schema";
 import type { ExtractTablesWithRelations } from "drizzle-orm";
 
 const globalForDb = globalThis as unknown as {
@@ -24,6 +30,8 @@ type Schema = {
 	tests: typeof tests;
 	testBatches: typeof testBatches;
 	reviews: typeof reviews;
+	userSubmissions: typeof userSubmissions;
+	userSubmissionTests: typeof userSubmissionTests;
 };
 export type Transaction = PostgresJsTransaction<
 	Schema,

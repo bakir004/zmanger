@@ -130,14 +130,10 @@ export async function deleteTestBatch(id: number) {
 		async () => {
 			try {
 				const { userId } = await auth();
-				if (!userId) {
-					throw new Error("Unauthorized");
-				}
-
 				const deleteTestBatchController = getInjection(
 					"IDeleteTestBatchController",
 				);
-				return await deleteTestBatchController(id);
+				return await deleteTestBatchController(userId ?? undefined, id);
 			} catch (error) {
 				console.error("Error deleting test batch:", error);
 				throw error;

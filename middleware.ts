@@ -13,6 +13,12 @@ const isAdminRoute = createRouteMatcher([
 	"/api/admin(.*)",
 ]);
 
+const isModeratorRoute = createRouteMatcher([
+	"/dashboard/obavijesti(.*)",
+	"/dashboard/testovi/dodaj(.*)",
+	"/dashboard/testovi(.*)",
+]);
+
 export default clerkMiddleware(async (auth, req) => {
 	// Protect all non-public routes
 	if (!isPublicRoute(req)) {
@@ -34,9 +40,24 @@ export default clerkMiddleware(async (auth, req) => {
 
 		// Check if user has admin role in publicMetadata
 		const isAdmin = (user.publicMetadata as any)?.role === "admin";
-
 		if (!isAdmin) {
 			// Redirect to unauthorized page
+			return Response.redirect(new URL("/unauthorized", req.url));
+		}
+	}
+
+	if (isModeratorRoute(req)) {
+		const { userId } = await auth.protect();
+
+		if (!userId) {
+			return Response.redirect(new URL("/sign-in", req.url));
+		}
+		const { clerkClient } = await import("@clerk/nextjs/server");
+		const clerk = await clerkClient();
+		const user = await clerk.users.getUser(userId);
+		const isModerator = (user.publicMetadata as any)?.role === "moderator";
+		const isAdmin = (user.publicMetadata as any)?.role === "admin";
+		if (!isModerator && !isAdmin) {
 			return Response.redirect(new URL("/unauthorized", req.url));
 		}
 	}

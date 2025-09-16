@@ -1,16 +1,22 @@
 probably wont look at this file ever again
 
+9. sep 2025.
+
+[ ] faq, features, root ui
+
+
+
 31. 8. 2025. - getting back at it
 
 [x] make a quick billing page on landing
 [x] implement a dashboard that will be used to control privileges
-[ ] go through every endpoint authorization and authentication
-[ ] every endpoint input parsing, error handling, logging
+[x] go through every endpoint authorization and authentication
+[x] every endpoint input parsing, error handling, logging
 [x] c10 ui final touches
-[ ] c10 user ui make it functional
+[x] c10 user ui make it functional
 -- end of c10 (hopefully) -- 
-[ ] dashboard tests edit
-[ ] dashboard tests view, possibly some info regarding tests success rate
+[x] dashboard tests edit
+[x] dashboard tests view, possibly some info regarding tests success rate
 
 
 

@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createFile } from "../../actions";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const formSchema = z.object({
 	fileName: z
@@ -58,8 +59,10 @@ export function FileCreateForm({
 		try {
 			await createFile(values.fileName, "file", parentId);
 			queryClient.invalidateQueries({ queryKey: ["files"] });
+			toast.success("Datoteka je uspješno dodana");
 		} catch (error) {
-			console.error(error);
+			// console.error(error);
+			toast.error(`Greška pri dodavanju datoteke: ${(error as Error).message}`);
 		}
 		close();
 	}

@@ -2,16 +2,11 @@
 
 import type * as React from "react";
 import {
-	BookOpen,
-	Bot,
-	Command,
 	ExternalLink,
 	FileCode2,
-	Frame,
 	LayoutTemplate,
-	PieChart,
-	Settings2,
-	SquareTerminal,
+	Bell,
+	Shield,
 } from "lucide-react";
 
 import { NavMain } from "../../../_components/nav-main";
@@ -26,9 +21,6 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarMenuSub,
-	SidebarMenuSubButton,
-	SidebarMenuSubItem,
 	SidebarRail,
 } from "../../../_components/ui/sidebar";
 import { useUser } from "@clerk/nextjs";
@@ -46,95 +38,34 @@ const data = {
 				{
 					title: "Pregled testova",
 					url: "/dashboard/testovi",
+					roles: ["admin", "moderator"],
 				},
 				{
 					title: "Dodaj testove",
 					url: "/dashboard/testovi/dodaj",
+					roles: ["admin", "moderator"],
 				},
 			],
 		},
-		// {
-		// 	title: "Models",
-		// 	url: "#",
-		// 	icon: Bot,
-		// 	items: [
-		// 		{
-		// 			title: "Genesis",
-		// 			url: "#",
-		// 		},
-		// 		{
-		// 			title: "Explorer",
-		// 			url: "#",
-		// 		},
-		// 		{
-		// 			title: "Quantum",
-		// 			url: "#",
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	title: "Documentation",
-		// 	url: "#",
-		// 	icon: BookOpen,
-		// 	items: [
-		// 		{
-		// 			title: "Introduction",
-		// 			url: "#",
-		// 		},
-		// 		{
-		// 			title: "Get Started",
-		// 			url: "#",
-		// 		},
-		// 		{
-		// 			title: "Tutorials",
-		// 			url: "#",
-		// 		},
-		// 		{
-		// 			title: "Changelog",
-		// 			url: "#",
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	title: "Settings",
-		// 	url: "#",
-		// 	icon: Settings2,
-		// 	items: [
-		// 		{
-		// 			title: "General",
-		// 			url: "#",
-		// 		},
-		// 		{
-		// 			title: "Team",
-		// 			url: "#",
-		// 		},
-		// 		{
-		// 			title: "Billing",
-		// 			url: "#",
-		// 		},
-		// 		{
-		// 			title: "Limits",
-		// 			url: "#",
-		// 		},
-		// 	],
-		// },
-	],
-	projects: [
 		{
-			name: "Design Engineering",
+			title: "Moderacija",
 			url: "#",
-			icon: Frame,
-		},
-		{
-			name: "Sales & Marketing",
-			url: "#",
-			icon: PieChart,
+			icon: Shield,
+			isActive: false,
+			items: [
+				{
+					title: "Obavještenja",
+					url: "/dashboard/obavijesti",
+					roles: ["admin", "moderator"],
+				},
+			],
 		},
 	],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { user } = useUser();
+	const userRole = user?.publicMetadata?.role as string;
 	const userObject = {
 		name: `${user?.firstName ?? "Učitavam..."} ${user?.lastName ?? ""}`,
 		email: user?.emailAddresses[0]?.emailAddress ?? "Učitavam email adresu...",
@@ -164,8 +95,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						</Link>
 					</SidebarMenuItem>
 				</SidebarMenu>
-				<NavMain items={data.navMain} />
-				<NavProjects projects={data.projects} />
+				{(userRole === "admin" || userRole === "moderator") && (
+					<NavMain items={data.navMain} />
+				)}
+				{userRole === "admin" && <NavProjects />}
 			</SidebarContent>
 			<SidebarFooter>
 				<NavUser user={userObject} />

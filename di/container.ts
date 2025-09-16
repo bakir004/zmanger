@@ -8,6 +8,8 @@ import { createTransactionManagerModule } from "./modules/database.module";
 import { createExternalServicesModule } from "./modules/external-services.module";
 import type { IInstrumentationService } from "~/application/services/instrumentation.service.interface";
 import { createFilesModule } from "./modules/files.module";
+import { createNotificationsModule } from "./modules/notifications.module";
+import { createUserSubmissionsModule } from "./modules/user-submissions.module";
 
 const ApplicationContainer = createContainer();
 
@@ -22,6 +24,14 @@ ApplicationContainer.load(
 	createExternalServicesModule(),
 );
 ApplicationContainer.load(Symbol("FilesModule"), createFilesModule());
+ApplicationContainer.load(
+	Symbol("NotificationsModule"),
+	createNotificationsModule(),
+);
+ApplicationContainer.load(
+	Symbol("UserSubmissionsModule"),
+	createUserSubmissionsModule(),
+);
 
 export function getInjection<K extends keyof typeof DI_SYMBOLS>(
 	symbol: K,

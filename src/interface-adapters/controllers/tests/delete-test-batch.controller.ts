@@ -11,12 +11,17 @@ export const deleteTestBatchController =
 		instrumentationService: IInstrumentationService,
 		deleteTestBatchUseCase: IDeleteTestBatchUseCase,
 	) =>
-	async (id: number): Promise<void> => {
+	async (userId: string | undefined, id: number): Promise<void> => {
 		return await instrumentationService.startSpan(
 			{
 				name: "deleteTestBatchController",
 			},
 			async () => {
+				if (!userId)
+					throw new UnauthenticatedError(
+						"Must be logged in to delete test batch",
+					);
+
 				await deleteTestBatchUseCase({ id });
 			},
 		);
