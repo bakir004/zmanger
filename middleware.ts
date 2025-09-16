@@ -20,6 +20,20 @@ const isModeratorRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+	// Handle CORS preflight early
+	if (req.method === "OPTIONS") {
+		const origin = req.headers.get("origin") ?? "*";
+		return new Response(null, {
+			status: 204,
+			headers: {
+				"Access-Control-Allow-Origin": origin,
+				Vary: "Origin",
+				"Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,PATCH,OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type, Authorization",
+				"Access-Control-Allow-Credentials": "true",
+			},
+		});
+	}
 	// Protect all non-public routes
 	if (!isPublicRoute(req)) {
 		await auth.protect();

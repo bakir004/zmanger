@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { headers as nextHeaders } from "next/headers";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export async function GET() {
@@ -35,10 +36,24 @@ export async function GET() {
 			unsafeMetadata: user.unsafeMetadata,
 		}));
 
-		return NextResponse.json({
-			users: transformedUsers,
-			total: users.totalCount,
+		const requestHeaders = nextHeaders();
+		const origin = requestHeaders.get("origin");
+		const corsHeaders = new Headers({
+			"Access-Control-Allow-Origin": origin ?? "*",
+			Vary: "Origin",
+			"Access-Control-Allow-Credentials": "true",
 		});
+
+		return new NextResponse(
+			JSON.stringify({ users: transformedUsers, total: users.totalCount }),
+			{
+				status: 200,
+				headers: new Headers({
+					...Object.fromEntries(corsHeaders.entries()),
+					"Content-Type": "application/json",
+				}),
+			},
+		);
 	} catch (error) {
 		console.error("Error fetching users:", error);
 		return NextResponse.json(
@@ -46,4 +61,19 @@ export async function GET() {
 			{ status: 500 },
 		);
 	}
+}
+
+export async function OPTIONS() {
+	const requestHeaders = nextHeaders();
+	const origin = requestHeaders.get("origin");
+	return new NextResponse(null, {
+		status: 204,
+		headers: new Headers({
+			"Access-Control-Allow-Origin": origin ?? "*",
+			Vary: "Origin",
+			"Access-Control-Allow-Methods": "GET,OPTIONS",
+			"Access-Control-Allow-Headers": "Content-Type, Authorization",
+			"Access-Control-Allow-Credentials": "true",
+		}),
+	});
 }
