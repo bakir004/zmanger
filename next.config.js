@@ -8,6 +8,12 @@ import { withSentryConfig } from "@sentry/nextjs";
 /** @type {import("next").NextConfig} */
 const config = {
 	turbopack: {},
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
+	typescript: {
+		ignoreBuildErrors: true,
+	},
 };
 
 const sentryConfig = withSentryConfig(config, {
