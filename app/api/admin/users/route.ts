@@ -14,7 +14,7 @@ export async function GET() {
 		// Fetch all users from Clerk
 		const clerk = await clerkClient();
 		const users = await clerk.users.getUserList({
-			limit: 100, // Adjust as needed
+			limit: 300, // Adjust as needed
 			orderBy: "-created_at",
 		});
 
