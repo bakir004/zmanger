@@ -7,6 +7,7 @@ import { dark } from "@clerk/themes";
 import Provider from "./_components/theme-provider";
 import { QueryProvider } from "./providers/query-provider";
 import { Toaster } from "app/_components/ui/sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
 	title: "Zmanger",
@@ -38,6 +39,7 @@ export default function RootLayout({
 					<Provider>
 						<QueryProvider>{children}</QueryProvider>
 					</Provider>
+					<SpeedInsights />
 				</body>
 			</html>
 		</ClerkProvider>

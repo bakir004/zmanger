@@ -32,7 +32,7 @@ export const createFileUseCase =
 
 				const userPlan = user.publicMetadata.plan;
 
-				if (userPlan === "pro" && currentFileCount + 1 > 10) {
+				if (userPlan === "pro" && currentFileCount + 1 > 6) {
 					throw new Error("User does not have pro+ plan");
 					// biome-ignore lint/style/noUselessElse: <explanation>
 				} else if (userPlan === "pro+" && currentFileCount + 1 > 100) {

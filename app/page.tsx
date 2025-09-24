@@ -1,7 +1,25 @@
 import { lexend } from "./_fonts/fonts";
 import { Button } from "./_components/ui/button";
-import { Dot, MoveRight } from "lucide-react";
+import {
+	Dot,
+	MoveRight,
+	Sparkles,
+	Zap,
+	ShieldCheck,
+	Terminal,
+	ExternalLink,
+	DollarSign,
+} from "lucide-react";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "./_components/ui/card";
 import Navbar from "./_components/custom/navbar";
+import Link from "next/link";
+import { Faq1 } from "./_components/custom/faq";
 
 export default function HomePage() {
 	return (
@@ -30,10 +48,12 @@ export default function HomePage() {
 					<p className="w-[25ch] text-sm sm:text-lg sm:leading-6 lg:text-xl md:text-lg md:leading-6 lg:leading-7 mt-2 font-light">
 						Zmanger je open-source platforma koja predstavlja alternativu za c9.
 					</p>
-					<Button className="bg-gradient-to-br from-[#52e8ff] to-[#468beb] !px-6 mt-4 rounded-full uppercase font-semibold flex items-center cursor-pointer justify-center h-8 text-[11px]">
-						Saznaj više
-						<MoveRight />
-					</Button>
+					<Link href="/dashboard">
+						<Button className="bg-gradient-to-br from-[#52e8ff] to-[#468beb] !px-6 mt-4 rounded-full uppercase font-semibold flex items-center cursor-pointer justify-center h-8 text-[11px]">
+							Započni
+							<MoveRight />
+						</Button>
+					</Link>
 				</div>
 				<div className="absolute w-[69.4%] aspect-video sm:left-[8.8%] left-[calc(8.8%-40px)] top-[54.9%] rounded-sm text-white bg-gray-800">
 					<img
@@ -63,7 +83,87 @@ export default function HomePage() {
 					algoritmi
 				</p>
 			</section>
-			<section className="bg-white text-black">svasta</section>
+			<section className="bg-white text-black pb-24">
+				<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+					<h2 className="text-2xl sm:text-3xl font-bold text-center mb-10">
+						Zašto koristiti Zmanger?
+					</h2>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+						<Card className="border-gray-200 bg-white">
+							<CardHeader className="flex items-start gap-3">
+								<div className="p-2 rounded-md bg-blue-100 text-blue-700">
+									<Terminal className="h-5 w-5" />
+								</div>
+								<CardTitle className="text-lg">
+									Platforma za kodiranje
+								</CardTitle>
+								<CardDescription className="text-black">
+									Zmanger sada uključuje razvojno okruženje slično c9 koje se
+									zove c10. Kreirajte svoje fileove i foldere, kodirajte, i
+									pokrenite vaš kod samostalno ili kroz testove.
+								</CardDescription>
+							</CardHeader>
+							<CardContent />
+						</Card>
+
+						<Card className="border-gray-200 bg-white">
+							<CardHeader className="flex items-start gap-3">
+								<div className="p-2 rounded-md bg-emerald-100 text-emerald-700">
+									<Zap className="h-5 w-5" />
+								</div>
+								<CardTitle className="text-lg">
+									Testovi za TP / ASP / NA
+								</CardTitle>
+								<CardDescription className="text-black">
+									Moderatori ubacuju najnovije testove za zadaće sva tri
+									predmeta.
+								</CardDescription>
+							</CardHeader>
+							<CardContent />
+						</Card>
+
+						<Card className="border-gray-200 bg-white">
+							<CardHeader className="flex items-start gap-3">
+								<div className="p-2 rounded-md bg-purple-100 text-purple-700">
+									<ShieldCheck className="h-5 w-5" />
+								</div>
+								<CardTitle className="text-lg">Podrška 24/7</CardTitle>
+								<CardDescription className="text-	black">
+									Za bilo kakve probleme ili bugove, javite se administratoru
+									Zmangera.
+								</CardDescription>
+							</CardHeader>
+							<CardContent />
+						</Card>
+					</div>
+				</div>
+				<div className="w-full flex flex-col justify-center">
+					<h2 className="text-2xl px-4 sm:text-3xl font-bold text-center mb-4">
+						Zašto čekati Zamger testove?
+					</h2>
+					<p className="md:text-lg text-center px-4">
+						Zamger testovi su javni, pa zašto onda ne bismo sami testirali naš
+						kod? <br /> Otvorite vaš dashboard i počnite, ili pogledajte cijene.
+					</p>
+					<div className="flex gap-2 justify-center">
+						<Link href="/dashboard" className="">
+							<Button className="mt-4 cursor-pointer flex gap-2 items-center bg-primary-gradient">
+								Otiđi na dashboard
+								<ExternalLink className="-mt-0.5" />
+							</Button>
+						</Link>
+						<Link href="/pricing" className="">
+							<Button className="mt-4 cursor-pointer flex gap-2 items-center bg-secondary-gradient">
+								Cijene
+								<DollarSign className="" />
+							</Button>
+						</Link>
+					</div>
+				</div>
+			</section>
+			<section className="w-full">
+				<Faq1 />
+			</section>
 		</main>
 	);
 }

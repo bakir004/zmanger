@@ -14,15 +14,15 @@ import { ExternalLink } from "lucide-react";
 
 export default function Navbar() {
 	return (
-		<nav className="absolute text-gray-300 top-0 left-0 right-0 z-20 h-16 px-8 flex items-center justify-between">
-			<div className="logo-and-nav flex items-center gap-10 cursor-pointer">
-				<Link href="/" className="flex gap-3 items-center">
+		<nav className="absolute text-gray-300 top-0 left-0 right-0 z-20 h-16 px-4 md:px-8 flex items-center justify-between">
+			<div className="logo-and-nav flex items-center gap-2 md:gap-10 cursor-pointer">
+				<Link href="/" className="flex gap-2 md:gap-3 items-center">
 					<img className="w-8" src="/logo-white.png" alt="logo" />
 					<p className={`text-lg scale-y-105 ${lexend.className}`}>Zmanger</p>
 				</Link>
-				<NavigationMenu className="mt-1 hidden md:block">
+				<NavigationMenu className="mt-1">
 					<NavigationMenuList>
-						<NavigationMenuItem>
+						{/* <NavigationMenuItem>
 							<NavigationMenuTrigger className="!bg-transparent font-light tracking-wider cursor-pointer hover:!bg-transparent focus:!bg-transparent active:!bg-transparent !shadow-none !ring-0">
 								Resursi
 							</NavigationMenuTrigger>
@@ -56,21 +56,21 @@ export default function Navbar() {
 									</li>
 								</ul>
 							</NavigationMenuContent>
-						</NavigationMenuItem>
+						</NavigationMenuItem> */}
 						<NavigationMenuItem>
 							<NavigationMenuLink
 								className="!bg-transparent font-light tracking-wider cursor-pointer hover:!bg-transparent focus:!bg-transparent active:!bg-transparent !shadow-none !ring-0"
 								asChild
 							>
-								<Link href="/about">O Zmangeru</Link>
+								<Link href="/pricing">Cijene</Link>
 							</NavigationMenuLink>
 						</NavigationMenuItem>
 					</NavigationMenuList>
 				</NavigationMenu>
 			</div>
-			<div className="items-center gap-2 hidden md:flex">
+			<div className="items-center gap-2 flex">
 				<Link href="https://github.com/bakir004/zmanger">
-					<Button variant={"link"} className="cursor-pointer">
+					<Button variant={"link"} className="cursor-pointer hidden md:flex">
 						<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
 							<title>github</title>
 							<defs>
@@ -110,9 +110,9 @@ export default function Navbar() {
 					</SignInButton>
 				</SignedOut>
 				<SignedIn>
-					<Link href="/dashboard">
+					<Link href="/dashboard" className="">
 						<Button className="mr-2 flex cursor-pointer items-center gap-2 bg-gradient-to-br to-[#e38b6c] from-[#e7b771]">
-							Dashboard
+							<p className="hidden md:inline">Dashboard</p>
 							<ExternalLink className="-mt-0.5" />
 						</Button>
 					</Link>

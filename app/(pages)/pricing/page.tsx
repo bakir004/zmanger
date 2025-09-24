@@ -41,7 +41,7 @@ const pricingPlans: PricingPlan[] = [
 		features: [
 			"Sve iz besplatnog plana",
 			"Mogućnost pokretanja Zamger testova bilo kada",
-			"Maksimalno 10 datoteka",
+			"Maksimalno 6 datoteka",
 		],
 		popular: true,
 		theme: "epic",
@@ -52,11 +52,7 @@ const pricingPlans: PricingPlan[] = [
 		price: "19.99 KM",
 		period: "semestar",
 		description: "Za ozbiljne studente koji vole olakšan workflow",
-		features: [
-			"Sve iz Pro plana",
-			"Neograničen broj datoteka",
-			"Prioritetno testiranje",
-		],
+		features: ["Sve iz Pro plana", "Neograničen broj datoteka"],
 		theme: "legendary",
 	},
 ];
